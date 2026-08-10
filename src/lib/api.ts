@@ -1,4 +1,12 @@
+import { Capacitor } from "@capacitor/core";
 import { AIAnalysisResult, AISearchResult, Item } from "../types";
+
+// On native (iOS/Android) there's no local server to hit with a relative path,
+// so point at the deployed backend. On web, keep using relative paths so it
+// keeps working against whatever host is serving the app (e.g. localhost in dev).
+const API_BASE_URL = Capacitor.isNativePlatform()
+  ? "https://rembr.onrender.com"
+  : "";
 
 export async function analyzeImageWithAI(
   imageBase64: string,
@@ -7,7 +15,7 @@ export async function analyzeImageWithAI(
   isRescan = false
 ): Promise<AIAnalysisResult> {
   try {
-    const res = await fetch("/api/analyze-image", {
+    const res = await fetch(`${API_BASE_URL}/api/analyze-image`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ imageBase64, mode, mimeType, isRescan }),
@@ -43,7 +51,7 @@ export async function searchItemsWithAI(
   items: Item[]
 ): Promise<AISearchResult> {
   try {
-    const res = await fetch("/api/ai-search", {
+    const res = await fetch(`${API_BASE_URL}/api/ai-search`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, items }),
