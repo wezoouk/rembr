@@ -484,6 +484,21 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
           </button>
         </div>
       </div>
+
+      {/* FLOATING SAVE POPUP — pinned to the screen itself so it stays
+          reachable even when a mobile keyboard covers the footer button. */}
+      {photo && spaceName.trim() && (
+        <div className="fixed bottom-5 inset-x-0 z-[60] flex justify-center px-4 pointer-events-none animate-fade-in">
+          <button
+            type="button"
+            onClick={handleSave}
+            className="pointer-events-auto flex items-center gap-2 py-3.5 px-6 bg-[#C2847A] hover:bg-[#B0736A] text-white font-bold rounded-full text-sm shadow-2xl active:scale-95 transition-all cursor-pointer"
+          >
+            <Check className="w-5 h-5" />
+            <span>Save Space & Items</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
