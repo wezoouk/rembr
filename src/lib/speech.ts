@@ -57,6 +57,8 @@ export class VoiceListener {
   private analyser: AnalyserNode | null = null;
   private animFrameId: number | null = null;
 
+  private supported: boolean;
+
   constructor(
     private onResult: SpeechRecognitionResultHandler,
     private onError?: (err: string) => void,
@@ -65,103 +67,112 @@ export class VoiceListener {
     silenceTimeoutMs = 5000
   ) {
     this.silenceTimeoutMs = silenceTimeoutMs;
-    if (typeof window !== "undefined") {
+    this.supported = isSpeechRecognitionSupported();
+  }
+
+  // Build a brand-new SpeechRecognition instance and wire up its handlers.
+  // Some browsers (especially on mobile) leave a recognition object in a
+  // stuck/unusable state after it has fired once, so re-using a single
+  // long-lived instance across multiple dictation sessions is unreliable.
+  // Creating a fresh instance each time start() is called avoids that.
+  private createRecognition(): any {
+    if (typeof window === "undefined") return null;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return null;
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      this.isListening = true;
+    };
+
+    recognition.onresult = (event: any) => {
       try {
-        const SpeechRecognition =
-          (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        let transcript = "";
+        let isFinal = false;
 
-        if (SpeechRecognition) {
-          this.recognition = new SpeechRecognition();
-          this.recognition.continuous = true;
-          this.recognition.interimResults = true;
-          this.recognition.lang = "en-US";
-
-          this.recognition.onstart = () => {
-            this.isListening = true;
-          };
-
-          this.recognition.onresult = (event: any) => {
-            try {
-              let transcript = "";
-              let isFinal = false;
-
-              if (event && event.results) {
-                for (let i = 0; i < event.results.length; i++) {
-                  if (event.results[i] && event.results[i][0]) {
-                    transcript += event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                      isFinal = true;
-                    }
-                  }
-                }
-              }
-
-              if (transcript && transcript.trim()) {
-                this.resetSilenceTimer();
-                if (this.onResult) {
-                  this.onResult(transcript.trim(), isFinal);
-                }
-              }
-
-              if (isFinal) {
-                this.stop();
-              }
-            } catch (err) {
-              console.error("Speech onresult error:", err);
-            }
-          };
-
-          this.recognition.onerror = (event: any) => {
-            const errType = event?.error;
-            console.warn("Speech recognition error:", errType);
-
-            if (errType === "no-speech") {
-              return;
-            }
-
-            this.cleanupAudioAnalyzer();
-            this.clearSilenceTimer();
-            const wasListening = this.isListening;
-            this.isListening = false;
-
-            if (wasListening) {
-              playAudioChime("stop");
-            }
-
-            if (this.onError) {
-              try {
-                if (errType === "not-allowed") {
-                  this.onError("Microphone permission denied. Please allow microphone access in your browser settings.");
-                } else if (errType !== "aborted") {
-                  this.onError(errType || "speech-error");
-                }
-              } catch (err) {
-                console.error("Speech onError handler failed:", err);
+        if (event && event.results) {
+          for (let i = 0; i < event.results.length; i++) {
+            if (event.results[i] && event.results[i][0]) {
+              transcript += event.results[i][0].transcript;
+              if (event.results[i].isFinal) {
+                isFinal = true;
               }
             }
-          };
+          }
+        }
 
-          this.recognition.onend = () => {
-            this.cleanupAudioAnalyzer();
-            this.clearSilenceTimer();
-            const wasListening = this.isListening;
-            this.isListening = false;
-            if (wasListening) {
-              playAudioChime("stop");
-            }
-            if (this.onEnd) {
-              try {
-                this.onEnd();
-              } catch (err) {
-                console.error("Speech onEnd handler failed:", err);
-              }
-            }
-          };
+        if (transcript && transcript.trim()) {
+          this.resetSilenceTimer();
+          if (this.onResult) {
+            this.onResult(transcript.trim(), isFinal);
+          }
+        }
+
+        if (isFinal) {
+          this.stop();
         }
       } catch (err) {
-        console.warn("Failed to instantiate SpeechRecognition:", err);
+        console.error("Speech onresult error:", err);
       }
-    }
+    };
+
+    recognition.onerror = (event: any) => {
+      const errType = event?.error;
+      console.warn("Speech recognition error:", errType);
+
+      if (errType === "no-speech") {
+        return;
+      }
+
+      this.cleanupAudioAnalyzer();
+      this.clearSilenceTimer();
+      const wasListening = this.isListening;
+      this.isListening = false;
+
+      if (wasListening) {
+        playAudioChime("stop");
+      }
+
+      if (this.onError) {
+        try {
+          if (errType === "not-allowed") {
+            this.onError("Microphone permission denied. Please allow microphone access in your browser settings.");
+          } else if (errType !== "aborted") {
+            this.onError(errType || "speech-error");
+          }
+        } catch (err) {
+          console.error("Speech onError handler failed:", err);
+        }
+      }
+    };
+
+    recognition.onend = () => {
+      this.cleanupAudioAnalyzer();
+      this.clearSilenceTimer();
+      const wasListening = this.isListening;
+      this.isListening = false;
+      if (wasListening) {
+        playAudioChime("stop");
+      }
+      // Drop the reference so the next start() always builds a fresh instance.
+      if (this.recognition === recognition) {
+        this.recognition = null;
+      }
+      if (this.onEnd) {
+        try {
+          this.onEnd();
+        } catch (err) {
+          console.error("Speech onEnd handler failed:", err);
+        }
+      }
+    };
+
+    return recognition;
   }
 
   private resetSilenceTimer() {
@@ -237,41 +248,52 @@ export class VoiceListener {
   }
 
   async start() {
-    if (this.recognition) {
-      try {
-        if (this.isListening) {
-          this.stop();
-        }
-
-        // Try getting mic stream for level analyzer
-        if (typeof navigator !== "undefined" && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            this.startAudioAnalyzer(stream);
-          } catch (micErr) {
-            console.warn("Microphone access prompt error:", micErr);
-          }
-        }
-
-        this.recognition.start();
-        this.isListening = true;
-        playAudioChime("start");
-      } catch (e: any) {
-        console.warn("Failed to start speech recognition:", e);
-        if (e?.name === "InvalidStateError" || e?.message?.includes("already started")) {
-          this.isListening = true;
-          return;
-        }
-        this.isListening = false;
-        this.cleanupAudioAnalyzer();
-        this.clearSilenceTimer();
-        if (this.onError) {
-          this.onError("Failed to start voice recognition.");
-        }
-      }
-    } else {
+    if (!this.supported) {
       if (this.onError) {
         this.onError("Speech recognition is not supported in this browser.");
+      }
+      return;
+    }
+
+    if (this.isListening) {
+      this.stop();
+    }
+
+    // Always build a fresh recognition instance for this session (see
+    // createRecognition() for why re-using one across sessions breaks).
+    this.recognition = this.createRecognition();
+    if (!this.recognition) {
+      if (this.onError) {
+        this.onError("Speech recognition is not supported in this browser.");
+      }
+      return;
+    }
+
+    try {
+      // Try getting mic stream for level analyzer
+      if (typeof navigator !== "undefined" && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          this.startAudioAnalyzer(stream);
+        } catch (micErr) {
+          console.warn("Microphone access prompt error:", micErr);
+        }
+      }
+
+      this.recognition.start();
+      this.isListening = true;
+      playAudioChime("start");
+    } catch (e: any) {
+      console.warn("Failed to start speech recognition:", e);
+      if (e?.name === "InvalidStateError" || e?.message?.includes("already started")) {
+        this.isListening = true;
+        return;
+      }
+      this.isListening = false;
+      this.cleanupAudioAnalyzer();
+      this.clearSilenceTimer();
+      if (this.onError) {
+        this.onError("Failed to start voice recognition.");
       }
     }
   }
