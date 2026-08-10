@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Native Capacitor platforms (built locally, not needed for the server deploy)
+android/
+ios/

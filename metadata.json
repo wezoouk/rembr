@@ -1,0 +1,6 @@
+{
+  "name": "Rembr",
+  "description": "A mobile-first app to remember where you put things using photos, voice input, space scanning, and AI object detection.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
