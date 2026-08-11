@@ -43,7 +43,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
           <ul className="list-disc pl-4 space-y-1 mt-1.5">
             <li>Tap the mic and say a full phrase like <i>"Remember my spare keys are in the top kitchen drawer"</i> — it splits into item name and location automatically.</li>
             <li>Type the Item Name and Location fields directly.</li>
-            <li>Snap a photo, then tap <b>Scan Photo with AI</b> to auto-fill the name, location guess and tags.</li>
+            <li>Snap a photo, then tap <b>Identify Object with AI</b> to auto-fill the name, location guess and tags.</li>
           </ul>
           <p className="mt-1.5">A floating <b>Save</b> button appears once you've typed a name, so it's always reachable even with the keyboard open.</p>
         </>

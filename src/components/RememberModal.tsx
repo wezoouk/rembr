@@ -640,7 +640,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-3 bg-[#F2A93B] hover:bg-[#E0961F] text-white text-sm font-extrabold rounded-full flex items-center gap-2 shadow-xl shadow-[#F2A93B]/50 disabled:opacity-60 transition-all active:scale-95 whitespace-nowrap"
                 >
                   <Sparkles className={`w-4 h-4 ${isAnalyzing ? "animate-spin" : ""}`} />
-                  <span>{isAnalyzing ? "Scanning..." : "Scan Photo with AI"}</span>
+                  <span>{isAnalyzing ? "Identifying..." : "Identify Object with AI"}</span>
                 </button>
                 <button
                   onClick={() => {
@@ -660,7 +660,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           {isAnalyzing && (
             <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex items-center gap-3 text-xs text-[#7CA65B] dark:text-[#A8C98B] font-semibold animate-pulse">
               <Sparkles className="w-5 h-5 animate-spin" />
-              <span>AI is analyzing photo context & detecting location...</span>
+              <span>AI is identifying the object & detecting its location...</span>
             </div>
           )}
 

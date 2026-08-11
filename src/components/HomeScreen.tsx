@@ -333,7 +333,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {/* LIVE QUICK RESULTS — appears as soon as you start typing */}
           {searchFocused && quickQuery.trim() && (
-            <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 bg-white dark:bg-[#211F1B] rounded-2xl shadow-lg overflow-hidden">
+            <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 bg-white dark:bg-[#211F1B] border-2 border-[#7CA65B] rounded-2xl shadow-lg overflow-hidden">
               {quickResults.length > 0 ? (
                 <>
                   {quickResults.map((item) => (

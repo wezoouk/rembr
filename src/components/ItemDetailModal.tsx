@@ -36,6 +36,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   onRememberNewSpot,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [name, setName] = useState(item.name);
   const [locationName, setLocationName] = useState(item.location_name);
   const [description, setDescription] = useState(item.description || "");
@@ -348,25 +349,45 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               </button>
 
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] rounded-2xl text-xs font-semibold flex items-center gap-1"
-                >
-                  <Edit3 className="w-4 h-4" />
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={() => {
-                    if (confirm(`Delete "${item.name}"?`)) {
-                      onDelete(item.id);
-                      onClose();
-                    }
-                  }}
-                  className="p-3 text-[#7CA65B] hover:bg-[#7CA65B]/10 rounded-2xl text-xs font-semibold"
-                  title="Delete Item"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {!showDeleteConfirm ? (
+                  <>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] rounded-2xl text-xs font-semibold flex items-center gap-1"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="p-3 bg-[#B0473A]/10 text-[#B0473A] hover:bg-[#B0473A]/20 rounded-2xl text-xs font-semibold"
+                      title="Delete Item"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-1.5 p-1 bg-[#B0473A]/10 border border-[#B0473A]/30 rounded-2xl">
+                    <span className="text-[11px] font-bold text-[#B0473A] px-1.5">Delete this item?</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onDelete(item.id);
+                        onClose();
+                      }}
+                      className="px-2.5 py-1.5 bg-[#B0473A] hover:bg-[#9A3C31] text-white text-[11px] font-bold rounded-xl shadow"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-2.5 py-1.5 bg-white dark:bg-[#1E1C19] text-[#44433F] dark:text-[#E5E3DA] text-[11px] font-semibold rounded-xl"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (

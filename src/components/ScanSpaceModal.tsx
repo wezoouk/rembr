@@ -435,7 +435,9 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 <img
                   src={photo}
                   alt="Scanned Space"
-                  className="max-h-[48vh] w-auto block mx-auto"
+                  className={`w-auto block mx-auto transition-all duration-300 ${
+                    detectedItems.length > 0 ? "max-h-[22vh]" : "max-h-[48vh]"
+                  }`}
                 />
 
                 {/* Bounding Box Highlights Overlaid */}

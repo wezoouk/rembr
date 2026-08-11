@@ -25,6 +25,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
   const [isRescanning, setIsRescanning] = useState(false);
   const [currentSpace, setCurrentSpace] = useState<Space>(space);
   const [rescanBanner, setRescanBanner] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Find linked items in main catalog
@@ -315,25 +316,45 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
 
         {/* Footer Actions */}
         <div className="pt-3.5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0 flex items-center justify-between">
-          <button
-            onClick={() => {
-              if (confirm(`Delete space "${currentSpace.name}"?`)) {
-                onDeleteSpace(currentSpace.id);
-                onClose();
-              }
-            }}
-            className="py-2.5 px-3 text-[#7CA65B] hover:bg-[#7CA65B]/10 rounded-xl text-xs font-semibold flex items-center gap-1.5"
-          >
-            <Trash2 className="w-4 h-4" />
-            <span>Delete Space</span>
-          </button>
+          {!showDeleteConfirm ? (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="py-2.5 px-3 bg-[#B0473A]/10 text-[#B0473A] hover:bg-[#B0473A]/20 rounded-xl text-xs font-semibold flex items-center gap-1.5"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Delete Space</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 p-1 bg-[#B0473A]/10 border border-[#B0473A]/30 rounded-2xl">
+              <span className="text-[11px] font-bold text-[#B0473A] px-1.5">Delete this space?</span>
+              <button
+                type="button"
+                onClick={() => {
+                  onDeleteSpace(currentSpace.id);
+                  onClose();
+                }}
+                className="px-2.5 py-1.5 bg-[#B0473A] hover:bg-[#9A3C31] text-white text-[11px] font-bold rounded-xl shadow"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-2.5 py-1.5 bg-white dark:bg-[#1E1C19] text-[#44433F] dark:text-[#E5E3DA] text-[11px] font-semibold rounded-xl"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
 
-          <button
-            onClick={onClose}
-            className="py-2.5 px-5 bg-[#30302E] dark:bg-[#E5E3DA] text-white dark:text-[#30302E] font-bold rounded-2xl text-xs"
-          >
-            Done
-          </button>
+          {!showDeleteConfirm && (
+            <button
+              onClick={onClose}
+              className="py-2.5 px-5 bg-[#30302E] dark:bg-[#E5E3DA] text-white dark:text-[#30302E] font-bold rounded-2xl text-xs"
+            >
+              Done
+            </button>
+          )}
         </div>
       </div>
     </div>
