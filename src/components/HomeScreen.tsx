@@ -21,6 +21,7 @@ import { Item, Space, BorrowedItem } from "../types";
 import { formatRelativeTime, formatShortDateTime } from "../lib/imageUtils";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { DictationIndicator } from "./DictationIndicator";
+import { ItemLocationRing } from "./ItemLocationRing";
 
 interface HomeScreenProps {
   items: Item[];
@@ -191,6 +192,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           }`}
           referrerPolicy="no-referrer"
         />
+        {item.bbox && !blurRecentlySaved && <ItemLocationRing bbox={item.bbox} />}
         {blurRecentlySaved && (
           <div className="absolute inset-0 bg-black/15 group-hover:opacity-0 transition-opacity flex items-center justify-center pointer-events-none">
             <EyeOff className="w-4 h-4 text-white/90 drop-shadow" />

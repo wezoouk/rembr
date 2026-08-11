@@ -18,6 +18,7 @@ import { Item, ConfidenceLevel } from "../types";
 import { formatFriendlyDateTime } from "../lib/imageUtils";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { DictationIndicator } from "./DictationIndicator";
+import { ItemLocationRing } from "./ItemLocationRing";
 
 interface ItemDetailModalProps {
   item: Item;
@@ -146,18 +147,24 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
         {/* Scrollable Body */}
         <div className="overflow-y-auto py-4 space-y-4 pr-1 flex-1">
-          {/* Main Photo View */}
-          <div className="rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] relative flex items-center justify-center">
-            <img
-              src={item.image_path}
-              alt={item.name}
-              className="w-full max-h-[60vh] object-contain"
-            />
-            {item.space_name && (
-              <span className="absolute bottom-3 left-3 bg-[#7CA65B] text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md">
-                Part of: {item.space_name}
-              </span>
-            )}
+          {/* Main Photo View — inner wrapper is sized exactly to the rendered
+              image (not the full card width) so the location ring's percent-
+              based position lines up with the actual photo, not empty
+              letterbox space around it. */}
+          <div className="rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] flex items-center justify-center">
+            <div className="relative inline-block max-w-full">
+              <img
+                src={item.image_path}
+                alt={item.name}
+                className="block max-h-[60vh] w-auto max-w-full object-contain"
+              />
+              {item.bbox && <ItemLocationRing bbox={item.bbox} />}
+              {item.space_name && (
+                <span className="absolute bottom-3 left-3 bg-[#7CA65B] text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md">
+                  Part of: {item.space_name}
+                </span>
+              )}
+            </div>
           </div>
 
           {!isEditing ? (

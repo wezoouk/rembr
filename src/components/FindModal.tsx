@@ -23,6 +23,7 @@ import { searchItemsWithAI } from "../lib/api";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { formatFriendlyDateTime, formatRelativeTime } from "../lib/imageUtils";
 import { DictationIndicator } from "./DictationIndicator";
+import { ItemLocationRing } from "./ItemLocationRing";
 
 interface FindModalProps {
   items: Item[];
@@ -461,6 +462,7 @@ export const FindModal: React.FC<FindModalProps> = ({
                         className={imageClasses}
                         referrerPolicy="no-referrer"
                       />
+                      {item.bbox && <ItemLocationRing bbox={item.bbox} />}
                       <div className="absolute top-2 right-2 p-1.5 bg-[#30302E]/80 text-white rounded-xl backdrop-blur-md">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </div>
