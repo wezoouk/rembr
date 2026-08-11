@@ -30,9 +30,11 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     onClick: () => void;
     active?: boolean;
     badge?: number;
-  }> = ({ icon, label, onClick, active, badge }) => (
+    dataTour?: string;
+  }> = ({ icon, label, onClick, active, badge, dataTour }) => (
     <button
       onClick={onClick}
+      data-tour={dataTour}
       className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 relative transition-colors ${
         active ? "text-[#7CA65B]" : "text-[#83827C] dark:text-[#7A7972] hover:text-[#44433F] dark:hover:text-[#E5E3DA]"
       }`}
@@ -125,12 +127,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       {/* BOTTOM TAB BAR */}
       <nav className="fixed bottom-0 inset-x-0 z-40 bg-[#F5F4EF]/95 dark:bg-[#161412]/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
         <div className="max-w-2xl mx-auto px-2 flex items-center">
-          <NavButton icon={<Home className="w-5 h-5" />} label="Home" onClick={onGoHome} active />
+          <NavButton icon={<Home className="w-5 h-5" />} label="Home" onClick={onGoHome} active dataTour="nav-home" />
           <NavButton icon={<Search className="w-5 h-5" />} label="Items" onClick={onOpenFind} />
 
           <div className="flex-1 flex items-center justify-center">
             <button
               onClick={() => setShowQuickAdd(true)}
+              data-tour="nav-add"
               className="w-12 h-12 -mt-4 rounded-full bg-[#7CA65B] hover:bg-[#6B9149] text-white shadow-lg flex items-center justify-center active:scale-95 transition-all"
               title="Quick add"
             >
@@ -144,11 +147,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               label="Loaned"
               onClick={onOpenBorrowed}
               badge={activeOverdueCount}
+              dataTour="nav-loaned"
             />
           ) : (
             <div className="flex-1" />
           )}
-          <NavButton icon={<MoreHorizontal className="w-5 h-5" />} label="More" onClick={onOpenMore} />
+          <NavButton icon={<MoreHorizontal className="w-5 h-5" />} label="More" onClick={onOpenMore} dataTour="nav-more" />
         </div>
       </nav>
     </>

@@ -294,6 +294,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="relative">
           <form
             onSubmit={handleQuickSearchSubmit}
+            data-tour="hero-search"
             className="relative flex items-center bg-[#EFEEE7] dark:bg-[#211F1B] rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
           >
             <Search className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2] ml-3 shrink-0" />
@@ -417,6 +418,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* HERO REMEMBER CARD */}
       <button
         onClick={onOpenRemember}
+        data-tour="remember-card"
         className="group relative w-full text-left rounded-[28px] overflow-hidden shadow-md active:scale-[0.99] transition-all h-44"
       >
         <img
@@ -442,6 +444,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className={`grid gap-3 ${!hideBorrowedSection ? "grid-cols-2" : "grid-cols-1"}`}>
         <button
           onClick={onOpenScanSpace}
+          data-tour="scan-space-card"
           className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
         >
           {/* Placeholder background — drop a real photo in public/images/
@@ -466,6 +469,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {!hideBorrowedSection && (
           <button
             onClick={onOpenBorrowed}
+            data-tour="lend-item-card"
             className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
           >
             {/* Placeholder background — drop a real photo in public/images/

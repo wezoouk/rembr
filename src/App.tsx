@@ -300,7 +300,7 @@ export default function App() {
 
       {/* MODALS */}
       {showOnboarding && (
-        <OnboardingModal onComplete={handleCompleteOnboarding} />
+        <OnboardingModal onComplete={handleCompleteOnboarding} hideBorrowedSection={settings.hideBorrowedSection} />
       )}
 
       {showRememberModal && (

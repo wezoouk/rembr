@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Camera, Mic, Search, ShieldCheck, ArrowRight, CheckCircle2, HandHeart } from "lucide-react";
+import { OnboardingTour } from "./OnboardingTour";
 
 interface OnboardingModalProps {
   onComplete: () => void;
+  hideBorrowedSection?: boolean;
 }
 
-export const OnboardingModal: React.FC<OnboardingModalProps> = ({ onComplete }) => {
+export const OnboardingModal: React.FC<OnboardingModalProps> = ({ onComplete, hideBorrowedSection }) => {
+  const [showTour, setShowTour] = useState(false);
+
+  if (showTour) {
+    return <OnboardingTour hideBorrowedSection={hideBorrowedSection} onFinish={onComplete} />;
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-[#161412]/70 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white dark:bg-[#211F1B] rounded-[32px] max-w-md w-full p-6 shadow-2xl overflow-hidden relative">
@@ -99,13 +107,19 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ onComplete }) 
           <span>Your household photos stay private on your device.</span>
         </div>
 
-        {/* Get Started Button */}
+        {/* Take the Tour Button */}
         <button
-          onClick={onComplete}
+          onClick={() => setShowTour(true)}
           className="w-full py-4 px-6 bg-[#7CA65B] hover:bg-[#6B9149] text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 text-base transition-all active:scale-[0.99]"
         >
-          <span>Get Started</span>
+          <span>Take the Tour</span>
           <ArrowRight className="w-5 h-5" />
+        </button>
+        <button
+          onClick={onComplete}
+          className="w-full mt-2.5 py-2 text-xs font-semibold text-[#83827C] dark:text-[#A8A7A2] hover:text-[#44433F] dark:hover:text-[#E5E3DA] transition-colors"
+        >
+          Skip, I'll explore myself
         </button>
       </div>
     </div>
