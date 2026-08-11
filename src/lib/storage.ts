@@ -1,8 +1,8 @@
-import { Item, Space, AppSettings, ItemHistoryRecord } from "../types";
+import { Item, Space, AppSettings, ItemHistoryRecord, BorrowedItem, ReminderInterval } from "../types";
 import { DEMO_PHOTOS } from "./sampleImages";
 
 const DB_NAME = "FindMyStuffDB";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 
@@ -30,6 +30,11 @@ function getDB(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains("settings")) {
         db.createObjectStore("settings", { keyPath: "key" });
+      }
+      if (!db.objectStoreNames.contains("borrowed")) {
+        const borrowedStore = db.createObjectStore("borrowed", { keyPath: "id" });
+        borrowedStore.createIndex("is_returned", "is_returned", { unique: false });
+        borrowedStore.createIndex("date_borrowed", "date_borrowed", { unique: false });
       }
     };
 
@@ -93,8 +98,28 @@ const DEFAULT_SETTINGS: AppSettings = {
   blurRecentlySaved: false,
   blurLocationRecentlySaved: false,
   allowDuplicateItems: false,
-  hideLocationsSection: false,
+  hideLocationsSection: true,
+  hideBorrowedSection: false,
 };
+
+// Compute the ISO date string for the next reminder nag, given the borrow date
+// and chosen interval. Returns undefined when no reminder is wanted.
+export function computeNextReminderAt(
+  dateBorrowedIso: string,
+  interval: ReminderInterval,
+  fromIso?: string
+): string | undefined {
+  if (interval === "none") return undefined;
+  const daysMap: Record<Exclude<ReminderInterval, "none">, number> = {
+    "3days": 3,
+    "1week": 7,
+    "2weeks": 14,
+  };
+  const base = fromIso ? new Date(fromIso) : new Date(dateBorrowedIso);
+  const days = daysMap[interval as Exclude<ReminderInterval, "none">];
+  base.setDate(base.getDate() + days);
+  return base.toISOString();
+}
 
 // Data Store Accessors
 export async function getAllItems(): Promise<Item[]> {
@@ -330,6 +355,76 @@ export async function clearAllData(): Promise<void> {
   } catch (err) {
     localStorage.removeItem("fms_items");
     localStorage.removeItem("fms_spaces");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Borrowed Items Accessors
+// ---------------------------------------------------------------------------
+
+export async function getAllBorrowedItems(): Promise<BorrowedItem[]> {
+  try {
+    const db = await getDB();
+    const tx = db.transaction("borrowed", "readonly");
+    const store = tx.objectStore("borrowed");
+    const items = await new Promise<BorrowedItem[]>((resolve, reject) => {
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+    return items.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  } catch (err) {
+    console.warn("Falling back to localStorage for borrowed items:", err);
+    const local = localStorage.getItem("fms_borrowed");
+    if (!local) return [];
+    return JSON.parse(local);
+  }
+}
+
+export async function saveBorrowedItem(item: BorrowedItem): Promise<void> {
+  const itemToSave: BorrowedItem = { ...item, updated_at: new Date().toISOString() };
+  try {
+    const db = await getDB();
+    const tx = db.transaction("borrowed", "readwrite");
+    const store = tx.objectStore("borrowed");
+    await new Promise<void>((resolve, reject) => {
+      const req = store.put(itemToSave);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  } catch (err) {
+    console.warn("LocalStorage fallback for saveBorrowedItem:", err);
+    try {
+      const items = await getAllBorrowedItems();
+      const index = items.findIndex((i) => i.id === itemToSave.id);
+      if (index >= 0) {
+        items[index] = itemToSave;
+      } else {
+        items.unshift(itemToSave);
+      }
+      localStorage.setItem("fms_borrowed", JSON.stringify(items));
+    } catch (e) {
+      console.error("Failed to persist borrowed item in fallback storage:", e);
+    }
+  }
+}
+
+export async function deleteBorrowedItem(id: string): Promise<void> {
+  try {
+    const db = await getDB();
+    const tx = db.transaction("borrowed", "readwrite");
+    const store = tx.objectStore("borrowed");
+    await new Promise<void>((resolve, reject) => {
+      const req = store.delete(id);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  } catch (err) {
+    const items = await getAllBorrowedItems();
+    const filtered = items.filter((i) => i.id !== id);
+    localStorage.setItem("fms_borrowed", JSON.stringify(filtered));
   }
 }
 

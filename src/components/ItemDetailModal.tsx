@@ -147,11 +147,11 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
         {/* Scrollable Body */}
         <div className="overflow-y-auto py-4 space-y-4 pr-1 flex-1">
           {/* Main Photo View */}
-          <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] relative">
+          <div className="rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] relative flex items-center justify-center">
             <img
               src={item.image_path}
               alt={item.name}
-              className="w-full h-full object-cover"
+              className="w-full max-h-[60vh] object-contain"
             />
             {item.space_name && (
               <span className="absolute bottom-3 left-3 bg-[#C2847A] text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md">

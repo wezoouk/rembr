@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Item, Space, AppSettings } from "./types";
+import { Item, Space, AppSettings, BorrowedItem } from "./types";
 import {
   getAllItems,
   getAllSpaces,
@@ -11,6 +11,9 @@ import {
   saveSettings,
   resetDemoData,
   clearAllData,
+  getAllBorrowedItems,
+  saveBorrowedItem,
+  deleteBorrowedItem,
 } from "./lib/storage";
 import { Header } from "./components/Header";
 import { HomeScreen } from "./components/HomeScreen";
@@ -22,14 +25,18 @@ import { ItemDetailModal } from "./components/ItemDetailModal";
 import { SpaceDetailModal } from "./components/SpaceDetailModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { LocationsModal } from "./components/LocationsModal";
+import { BorrowedModal } from "./components/BorrowedModal";
 
 export default function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [spaces, setSpaces] = useState<Space[]>([]);
+  const [borrowedItems, setBorrowedItems] = useState<BorrowedItem[]>([]);
   const [settings, setSettings] = useState<AppSettings>({
     darkMode: false,
     retainOriginalPhotos: true,
     hasCompletedOnboarding: false,
+    hideLocationsSection: true,
+    hideBorrowedSection: false,
   });
 
   // Active Modals
@@ -39,6 +46,7 @@ export default function App() {
   const [findInitialQuery, setFindInitialQuery] = useState("");
   const [showScanSpaceModal, setShowScanSpaceModal] = useState(false);
   const [showLocationsModal, setShowLocationsModal] = useState(false);
+  const [showBorrowedModal, setShowBorrowedModal] = useState(false);
   const [locationsInitialName, setLocationsInitialName] = useState<string | null>(null);
   const [rememberInitialLocation, setRememberInitialLocation] = useState<string>("");
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -63,6 +71,9 @@ export default function App() {
 
       const fetchedSpaces = await getAllSpaces();
       setSpaces(fetchedSpaces);
+
+      const fetchedBorrowed = await getAllBorrowedItems();
+      setBorrowedItems(fetchedBorrowed);
     } catch (err) {
       console.warn("Failed to load initial storage data:", err);
     }
@@ -141,6 +152,36 @@ export default function App() {
     setSpaces(updatedSpaces);
   };
 
+  const handleSaveBorrowedItem = async (item: BorrowedItem) => {
+    setBorrowedItems((prev) => [item, ...prev.filter((i) => i.id !== item.id)]);
+    try {
+      await saveBorrowedItem(item);
+      setBorrowedItems(await getAllBorrowedItems());
+    } catch (err) {
+      console.warn("Error persisting borrowed item:", err);
+    }
+  };
+
+  const handleUpdateBorrowedItem = async (item: BorrowedItem) => {
+    setBorrowedItems((prev) => prev.map((i) => (i.id === item.id ? item : i)));
+    try {
+      await saveBorrowedItem(item);
+      setBorrowedItems(await getAllBorrowedItems());
+    } catch (err) {
+      console.warn("Error persisting updated borrowed item:", err);
+    }
+  };
+
+  const handleDeleteBorrowedItem = async (id: string) => {
+    setBorrowedItems((prev) => prev.filter((i) => i.id !== id));
+    try {
+      await deleteBorrowedItem(id);
+      setBorrowedItems(await getAllBorrowedItems());
+    } catch (err) {
+      console.warn("Error deleting borrowed item:", err);
+    }
+  };
+
   const handleResetDemoData = async () => {
     await resetDemoData();
     await loadAllData();
@@ -183,6 +224,7 @@ export default function App() {
     setShowScanSpaceModal(false);
     setShowLocationsModal(false);
     setShowSettingsModal(false);
+    setShowBorrowedModal(false);
     setSelectedItem(null);
     setSelectedSpace(null);
   };
@@ -204,9 +246,11 @@ export default function App() {
         <HomeScreen
           items={items}
           spaces={spaces}
+          borrowedItems={borrowedItems}
           blurRecentlySaved={settings.blurRecentlySaved}
           blurLocationRecentlySaved={settings.blurLocationRecentlySaved}
           hideLocationsSection={settings.hideLocationsSection}
+          hideBorrowedSection={settings.hideBorrowedSection}
           onOpenRemember={() => {
             setRememberInitialLocation("");
             setShowRememberModal(true);
@@ -214,10 +258,14 @@ export default function App() {
           onOpenFind={handleOpenFindWithQuery}
           onOpenScanSpace={() => setShowScanSpaceModal(true)}
           onOpenLocations={handleOpenLocations}
+          onOpenBorrowed={() => setShowBorrowedModal(true)}
           onSelectItem={(item) => setSelectedItem(item)}
           onSelectSpace={(space) => setSelectedSpace(space)}
           onUpdateItem={handleUpdateItem}
           onDeleteItem={handleDeleteItem}
+          onMarkBorrowedReturned={(item) =>
+            handleUpdateBorrowedItem({ ...item, is_returned: true, returned_at: new Date().toISOString() })
+          }
         />
       </main>
 
@@ -298,6 +346,16 @@ export default function App() {
             setSelectedSpace(null);
             setSelectedItem(item);
           }}
+        />
+      )}
+
+      {showBorrowedModal && (
+        <BorrowedModal
+          borrowedItems={borrowedItems}
+          onClose={() => setShowBorrowedModal(false)}
+          onSave={handleSaveBorrowedItem}
+          onUpdate={handleUpdateBorrowedItem}
+          onDelete={handleDeleteBorrowedItem}
         />
       )}
 

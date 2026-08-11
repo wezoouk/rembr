@@ -210,11 +210,11 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
           )}
 
           {/* Interactive Space Photo View */}
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm">
+          <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm">
             <img
               src={currentSpace.image_path}
               alt={currentSpace.name}
-              className="w-full h-full object-cover"
+              className="w-full h-auto block"
             />
 
             {/* Bounding Box Highlights Overlaid */}

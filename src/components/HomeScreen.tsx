@@ -16,8 +16,12 @@ import {
   X,
   AlertCircle,
   EyeOff,
+  HandHeart,
+  Bell,
+  User,
+  CheckCircle2,
 } from "lucide-react";
-import { Item, Space } from "../types";
+import { Item, Space, BorrowedItem } from "../types";
 import { formatRelativeTime, formatShortDateTime } from "../lib/imageUtils";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { DictationIndicator } from "./DictationIndicator";
@@ -25,33 +29,41 @@ import { DictationIndicator } from "./DictationIndicator";
 interface HomeScreenProps {
   items: Item[];
   spaces: Space[];
+  borrowedItems?: BorrowedItem[];
   blurRecentlySaved?: boolean;
   blurLocationRecentlySaved?: boolean;
   hideLocationsSection?: boolean;
+  hideBorrowedSection?: boolean;
   onOpenRemember: () => void;
   onOpenFind: (initialQuery?: string) => void;
   onOpenScanSpace: () => void;
   onOpenLocations: (locationName?: string) => void;
+  onOpenBorrowed: () => void;
   onSelectItem: (item: Item) => void;
   onSelectSpace: (space: Space) => void;
   onUpdateItem?: (item: Item) => void;
   onDeleteItem?: (id: string) => void;
+  onMarkBorrowedReturned?: (item: BorrowedItem) => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   items,
   spaces,
+  borrowedItems = [],
   blurRecentlySaved = false,
   blurLocationRecentlySaved = false,
   hideLocationsSection = false,
+  hideBorrowedSection = false,
   onOpenRemember,
   onOpenFind,
   onOpenScanSpace,
   onOpenLocations,
+  onOpenBorrowed,
   onSelectItem,
   onSelectSpace,
   onUpdateItem,
   onDeleteItem,
+  onMarkBorrowedReturned,
 }) => {
   const [quickQuery, setQuickQuery] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -70,6 +82,26 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const locationGroups = Array.from(locationMap.values()).sort(
     (a, b) => b.items.length - a.items.length
   );
+
+  // Borrowed items still out on loan, soonest reminder first
+  const activeBorrowed = borrowedItems
+    .filter((b) => !b.is_returned)
+    .sort((a, b) => {
+      const aTime = a.next_reminder_at ? new Date(a.next_reminder_at).getTime() : Infinity;
+      const bTime = b.next_reminder_at ? new Date(b.next_reminder_at).getTime() : Infinity;
+      return aTime - bTime;
+    });
+  const overdueBorrowed = activeBorrowed.filter(
+    (b) => b.reminder_interval !== "none" && b.next_reminder_at && new Date(b.next_reminder_at).getTime() <= Date.now()
+  );
+
+  const visibleActionCount = 3 + (!hideLocationsSection ? 1 : 0) + (!hideBorrowedSection ? 1 : 0);
+  const actionGridClass =
+    visibleActionCount >= 5
+      ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-5"
+      : visibleActionCount === 4
+      ? "grid-cols-2 md:grid-cols-4"
+      : "grid-cols-1 sm:grid-cols-3 md:grid-cols-3";
 
   const voiceListenerRef = useRef<VoiceListener | null>(null);
 
@@ -187,14 +219,33 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         />
       </div>
 
+      {/* OVERDUE BORROWED REMINDER BANNER */}
+      {!hideBorrowedSection && overdueBorrowed.length > 0 && (
+        <button
+          onClick={onOpenBorrowed}
+          className="w-full text-left p-3.5 bg-[#C2847A]/15 border-2 border-[#C2847A] rounded-2xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
+        >
+          <div className="relative shrink-0">
+            <span className="absolute w-8 h-8 rounded-full bg-[#C2847A] opacity-40 animate-ping"></span>
+            <div className="relative w-8 h-8 rounded-full bg-[#C2847A] text-white flex items-center justify-center">
+              <Bell className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-black text-[#A85B50] dark:text-[#E2A097] uppercase tracking-wider">
+              {overdueBorrowed.length} borrowed item{overdueBorrowed.length === 1 ? "" : "s"} overdue
+            </p>
+            <p className="text-xs font-semibold text-[#4A443F] dark:text-[#E8E4E1] truncate mt-0.5">
+              {overdueBorrowed.slice(0, 2).map((b) => `${b.borrowed_to} has your ${b.item_name}`).join(" · ")}
+              {overdueBorrowed.length > 2 ? "…" : ""}
+            </p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-[#C2847A] shrink-0" />
+        </button>
+      )}
+
       {/* CORE ACTION BUTTONS */}
-      <div
-        className={`grid ${
-          hideLocationsSection
-            ? "grid-cols-1 sm:grid-cols-3 md:grid-cols-3"
-            : "grid-cols-2 md:grid-cols-4"
-        } gap-3`}
-      >
+      <div className={`grid ${actionGridClass} gap-3`}>
         {/* 1. REMEMBER */}
         <button
           onClick={onOpenRemember}
@@ -246,6 +297,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </h2>
               <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
                 Browse by spot ({locationGroups.length})
+              </p>
+            </div>
+          </button>
+        )}
+
+        {/* BORROWED (If not hidden) */}
+        {!hideBorrowedSection && (
+          <button
+            onClick={onOpenBorrowed}
+            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#5A7D9A]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between relative"
+          >
+            {overdueBorrowed.length > 0 && (
+              <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#C2847A] text-white text-[10px] font-bold flex items-center justify-center shadow">
+                {overdueBorrowed.length}
+              </span>
+            )}
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+              <HandHeart className="w-6 h-6 sm:w-7 sm:h-7" />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+                Borrowed
+              </h2>
+              <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+                {activeBorrowed.length > 0 ? `${activeBorrowed.length} out on loan` : "Track lent items"}
               </p>
             </div>
           </button>
@@ -375,6 +451,69 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 )}
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* BORROWED ITEMS OUT ON LOAN */}
+      {!hideBorrowedSection && activeBorrowed.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
+              <HandHeart className="w-3.5 h-3.5 text-[#5A7D9A]" />
+              Borrowed & Out on Loan
+            </h2>
+            <button
+              onClick={onOpenBorrowed}
+              className="text-xs font-bold text-[#5A7D9A] dark:text-[#7A9DBA] hover:underline flex items-center gap-0.5"
+            >
+              View All ({activeBorrowed.length})
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {activeBorrowed.slice(0, 4).map((b) => {
+              const overdue =
+                b.reminder_interval !== "none" &&
+                b.next_reminder_at &&
+                new Date(b.next_reminder_at).getTime() <= Date.now();
+              return (
+                <div
+                  key={b.id}
+                  onClick={onOpenBorrowed}
+                  className={`group cursor-pointer bg-white dark:bg-[#23201C] border rounded-2xl p-3 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 ${
+                    overdue ? "border-[#C2847A]" : "border-[#E8E4E1] dark:border-[#38332E]"
+                  }`}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] flex items-center justify-center shrink-0">
+                    <HandHeart className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-xs sm:text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                      {b.item_name}
+                    </h3>
+                    <p className="text-[11px] text-[#5A7D9A] dark:text-[#7A9DBA] font-medium truncate flex items-center gap-1 mt-0.5">
+                      <User className="w-3 h-3 shrink-0" />
+                      {b.borrowed_to}
+                    </p>
+                  </div>
+                  {onMarkBorrowedReturned && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onMarkBorrowedReturned(b);
+                      }}
+                      className="p-1.5 rounded-lg text-[#8C847E] hover:text-[#6B7E6D] hover:bg-[#6B7E6D]/10 transition-colors shrink-0"
+                      title="Mark as returned"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}

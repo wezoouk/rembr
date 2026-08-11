@@ -604,11 +604,11 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm">
+              <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm flex items-center justify-center">
                 <img
                   src={photo}
                   alt="Captured location"
-                  className="w-full h-full object-cover"
+                  className="w-full max-h-[420px] object-contain"
                 />
                 <button
                   type="button"

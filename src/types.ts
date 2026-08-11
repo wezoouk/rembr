@@ -53,6 +53,24 @@ export interface AppSettings {
   blurLocationRecentlySaved?: boolean;
   allowDuplicateItems?: boolean;
   hideLocationsSection?: boolean;
+  hideBorrowedSection?: boolean;
+}
+
+// How long after the borrow date to send the first reminder. "none" = no reminder.
+export type ReminderInterval = "3days" | "1week" | "2weeks" | "none";
+
+export interface BorrowedItem {
+  id: string;
+  item_name: string;
+  borrowed_to: string; // person's name
+  image_path?: string; // optional photo of the item
+  date_borrowed: string; // ISO string
+  reminder_interval: ReminderInterval;
+  next_reminder_at?: string; // ISO string - when the next nag is due
+  is_returned: boolean;
+  returned_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AIAnalysisResult {

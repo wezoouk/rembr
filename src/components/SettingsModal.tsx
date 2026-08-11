@@ -12,6 +12,7 @@ import {
   EyeOff,
   MapPin,
   Copy,
+  HandHeart,
 } from "lucide-react";
 import { AppSettings } from "../types";
 
@@ -68,6 +69,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onUpdateSettings({
       ...settings,
       hideLocationsSection: !settings.hideLocationsSection,
+    });
+  };
+
+  const toggleHideBorrowedSection = () => {
+    onUpdateSettings({
+      ...settings,
+      hideBorrowedSection: !settings.hideBorrowedSection,
     });
   };
 
@@ -259,6 +267,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
                   !settings.hideLocationsSection ? "translate-x-6" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* SHOW / HIDE BORROWED SECTION TOGGLE */}
+          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+            <div className="flex items-center gap-2.5">
+              <HandHeart className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <div>
+                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                  Show Borrowed Section
+                </span>
+                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                  Display the Borrowed items tracker and reminders on the home screen
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={toggleHideBorrowedSection}
+              className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
+                !settings.hideBorrowedSection ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+              }`}
+            >
+              <div
+                className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                  !settings.hideBorrowedSection ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>
