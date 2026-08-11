@@ -422,7 +422,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         className="group relative w-full text-left rounded-3xl overflow-hidden shadow-md active:scale-[0.99] transition-all h-32"
       >
         <img
-          src={heroPhoto || "/images/remember-placeholder.jpg"}
+          src={heroPhoto || "/images/remember-placeholder.png"}
           alt=""
           className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -445,9 +445,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
         >
           {/* Placeholder background — drop a real photo in public/images/
-              named scan-space-placeholder.jpg to replace this. */}
+              named scan-space-placeholder.png to replace this. */}
           <img
-            src="/images/scan-space-placeholder.jpg"
+            src="/images/scan-space-placeholder.png"
             alt=""
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -470,9 +470,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
           >
             {/* Placeholder background — drop a real photo in public/images/
-                named lend-item-placeholder.jpg to replace this. */}
+                named lend-item-placeholder.png to replace this. */}
             <img
-              src="/images/lend-item-placeholder.jpg"
+              src="/images/lend-item-placeholder.png"
               alt=""
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
@@ -653,10 +653,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               >
                 <div className="aspect-square rounded-3xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1E1C19] relative">
                   {/* Falls back to a placeholder photo (public/images/
-                      location-placeholder.jpg) until this location has a
+                      location-placeholder.png) until this location has a
                       saved item photo of its own. */}
                   <img
-                    src={group.items[0]?.image_path || "/images/location-placeholder.jpg"}
+                    src={group.items[0]?.image_path || "/images/location-placeholder.png"}
                     alt={group.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     referrerPolicy="no-referrer"
