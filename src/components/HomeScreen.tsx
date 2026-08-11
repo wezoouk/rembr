@@ -511,12 +511,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {items.length === 0 ? (
-          <div className="text-center py-10 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl">
+          <div className="text-center py-10 px-6 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl">
             <Camera className="w-8 h-8 text-[#83827C] mx-auto mb-2" />
-            <p className="text-sm font-semibold text-[#44433F] dark:text-[#E5E3DA]">Nothing remembered yet</p>
-            <p className="text-xs text-[#83827C] mt-1">
-              Tap <span className="font-bold text-[#5F8A48] dark:text-[#A8C98B]">Remember something</span> above to save your first item
+            <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
+              You don't have any items saved yet
             </p>
+            <p className="text-xs text-[#83827C] mt-1 mb-3">
+              Want to add your first one?
+            </p>
+            <button
+              type="button"
+              onClick={onOpenRemember}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-full shadow-sm transition-colors"
+            >
+              <Camera className="w-3.5 h-3.5" />
+              Add your first item
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">

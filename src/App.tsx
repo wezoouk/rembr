@@ -328,6 +328,11 @@ export default function App() {
           onUpdateItem={handleUpdateItem}
           onDeleteItem={handleDeleteItem}
           onAddNewItemInLocation={handleAddNewItemInLocation}
+          onOpenRemember={() => {
+            setShowLocationsModal(false);
+            setRememberInitialLocation("");
+            setShowRememberModal(true);
+          }}
         />
       )}
 
@@ -343,6 +348,11 @@ export default function App() {
           onUpdateItem={handleUpdateItem}
           onDeleteItem={handleDeleteItem}
           onRememberNewSpot={handleRememberNewSpot}
+          onOpenRemember={() => {
+            setShowFindModal(false);
+            setRememberInitialLocation("");
+            setShowRememberModal(true);
+          }}
         />
       )}
 

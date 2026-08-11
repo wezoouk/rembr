@@ -37,6 +37,7 @@ interface LocationsModalProps {
   onUpdateItem?: (item: Item) => void;
   onDeleteItem?: (id: string) => void;
   onAddNewItemInLocation?: (locationName: string) => void;
+  onOpenRemember?: () => void;
 }
 
 export const LocationsModal: React.FC<LocationsModalProps> = ({
@@ -48,6 +49,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
   onUpdateItem,
   onDeleteItem,
   onAddNewItemInLocation,
+  onOpenRemember,
 }) => {
   const [filterQuery, setFilterQuery] = useState("");
   const [selectedLocationName, setSelectedLocationName] = useState<string | null>(
@@ -204,7 +206,28 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
               </div>
 
               {/* Locations Grid */}
-              {filteredLocations.length === 0 ? (
+              {items.length === 0 ? (
+                /* Nothing saved in the whole app yet — this is not a failed
+                   filter, so don't say "no matching locations found". */
+                <div className="text-center py-12 bg-white dark:bg-[#211F1B] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+                  <MapPin className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
+                  <p className="text-base font-bold text-[#30302E] dark:text-[#E5E3DA]">
+                    You don't have any items saved yet
+                  </p>
+                  <p className="text-xs text-[#83827C] mt-1 mb-3">
+                    Want to add your first one?
+                  </p>
+                  {onOpenRemember && (
+                    <button
+                      type="button"
+                      onClick={onOpenRemember}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-full shadow-sm transition-colors"
+                    >
+                      Add your first item
+                    </button>
+                  )}
+                </div>
+              ) : filteredLocations.length === 0 ? (
                 <div className="text-center py-12 bg-white dark:bg-[#211F1B] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
                   <MapPin className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
                   <p className="text-base font-bold text-[#30302E] dark:text-[#E5E3DA]">

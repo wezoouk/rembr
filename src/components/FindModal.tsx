@@ -33,6 +33,7 @@ interface FindModalProps {
   onUpdateItem: (item: Item) => void;
   onDeleteItem: (id: string) => void;
   onRememberNewSpot: (item: Item) => void;
+  onOpenRemember?: () => void;
 }
 
 export const FindModal: React.FC<FindModalProps> = ({
@@ -43,6 +44,7 @@ export const FindModal: React.FC<FindModalProps> = ({
   onUpdateItem,
   onDeleteItem,
   onRememberNewSpot,
+  onOpenRemember,
 }) => {
   const [query, setQuery] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
@@ -359,7 +361,28 @@ export const FindModal: React.FC<FindModalProps> = ({
 
         {/* RESULTS LIST */}
         <div className="overflow-y-auto space-y-4 pr-1 flex-1">
-          {matchedItems.length === 0 ? (
+          {items.length === 0 ? (
+            /* Nothing saved in the whole app yet — this is not a failed
+               search, so don't say "no matching item found". */
+            <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+              <Search className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
+              <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
+                You don't have any items saved yet
+              </p>
+              <p className="text-xs text-[#83827C] mt-1 mb-3">
+                Want to add your first one?
+              </p>
+              {onOpenRemember && (
+                <button
+                  type="button"
+                  onClick={onOpenRemember}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-full shadow-sm transition-colors"
+                >
+                  Add your first item
+                </button>
+              )}
+            </div>
+          ) : matchedItems.length === 0 ? (
             <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
               <Search className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
               <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
