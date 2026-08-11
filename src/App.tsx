@@ -248,7 +248,7 @@ export default function App() {
       />
 
       {/* Main Body */}
-      <main className="max-w-2xl mx-auto px-4 py-5">
+      <main className="max-w-2xl mx-auto px-4 py-3">
         <HomeScreen
           items={items}
           spaces={spaces}

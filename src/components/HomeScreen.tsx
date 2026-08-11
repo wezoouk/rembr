@@ -262,10 +262,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         )}
       </div>
 
-      <div className="p-3">
+      <div className="p-2.5">
         <h3 className="font-bold text-sm text-[#30302E] dark:text-[#F2F0EA] truncate">{item.name}</h3>
         <p
-          className={`text-xs text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1.5 mt-1 font-medium ${
+          className={`text-xs text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1.5 mt-0.5 font-medium ${
             blurLocationRecentlySaved ? "blur-sm group-hover:blur-none select-none" : ""
           }`}
         >
@@ -280,17 +280,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   );
 
   return (
-    <div className="space-y-7 pb-28">
+    <div className="space-y-3.5 pb-24">
       {/* GREETING */}
       <div>
-        <h1 className="text-2xl font-extrabold text-[#30302E] dark:text-[#F2F0EA] tracking-tight">
+        <h1 className="text-xl font-extrabold text-[#30302E] dark:text-[#F2F0EA] tracking-tight">
           {getGreeting()} 👋
         </h1>
-        <p className="text-sm text-[#83827C] dark:text-[#A8A7A2] mt-0.5">What are you trying to find?</p>
+        <p className="text-xs text-[#83827C] dark:text-[#A8A7A2] mt-0.5">What are you trying to find?</p>
       </div>
 
       {/* HERO SEARCH / ASK BAR */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <div className="relative">
           <form
             onSubmit={handleQuickSearchSubmit}
@@ -394,7 +394,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {!hideBorrowedSection && overdueBorrowed.length > 0 && (
         <button
           onClick={onOpenBorrowed}
-          className="w-full text-left p-3.5 bg-[#5B84C4]/12 rounded-2xl flex items-center gap-3 hover:bg-[#5B84C4]/18 transition-all active:scale-[0.99]"
+          className="w-full text-left p-2.5 bg-[#5B84C4]/12 rounded-2xl flex items-center gap-3 hover:bg-[#5B84C4]/18 transition-all active:scale-[0.99]"
         >
           <div className="relative shrink-0">
             <span className="absolute w-8 h-8 rounded-full bg-[#5B84C4] opacity-30 animate-ping" />
@@ -419,7 +419,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <button
         onClick={onOpenRemember}
         data-tour="remember-card"
-        className="group relative w-full text-left rounded-[28px] overflow-hidden shadow-md active:scale-[0.99] transition-all h-44"
+        className="group relative w-full text-left rounded-3xl overflow-hidden shadow-md active:scale-[0.99] transition-all h-32"
       >
         <img
           src={heroPhoto || "/images/remember-placeholder.jpg"}
@@ -428,24 +428,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
 
-        <div className="relative h-full p-5 flex flex-col justify-end">
-          <div className="w-9 h-9 rounded-2xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center mb-2">
-            <Camera className="w-4.5 h-4.5" />
+        <div className="relative h-full p-3.5 flex flex-col justify-end">
+          <div className="w-7 h-7 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center mb-1">
+            <Camera className="w-4 h-4" />
           </div>
-          <h2 className="text-xl font-extrabold text-white">Remember something</h2>
-          <p className="text-xs text-white/75 mt-0.5 mb-3">Take a photo or just tell me where you put it</p>
-          <span className="inline-flex w-fit items-center gap-1.5 px-4 py-2 bg-[#7CA65B] text-white text-xs font-bold rounded-full shadow-lg">
-            Add new item
-          </span>
+          <h2 className="text-base font-extrabold text-white leading-tight">Remember something</h2>
+          <p className="text-[11px] text-white/75 mt-0.5">Take a photo or just tell me where you put it</p>
         </div>
       </button>
 
       {/* SECONDARY ACTIONS */}
-      <div className={`grid gap-3 ${!hideBorrowedSection ? "grid-cols-2" : "grid-cols-1"}`}>
+      <div className={`grid gap-2 ${!hideBorrowedSection ? "grid-cols-2" : "grid-cols-1"}`}>
         <button
           onClick={onOpenScanSpace}
           data-tour="scan-space-card"
-          className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
+          className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
         >
           {/* Placeholder background — drop a real photo in public/images/
               named scan-space-placeholder.jpg to replace this. */}
@@ -455,13 +452,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
-          <div className="relative h-full p-3.5 flex flex-col justify-between">
-            <div className="w-8 h-8 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
-              <Grid className="w-4 h-4" />
+          <div className="relative h-full p-2.5 flex flex-col justify-between">
+            <div className="w-6 h-6 rounded-lg bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
+              <Grid className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Scan a space</h3>
-              <p className="text-[11px] text-white/75 mt-0.5">Catalog a drawer, shelf or room</p>
+              <h3 className="text-xs font-bold text-white">Scan a space</h3>
+              <p className="text-[10px] text-white/75 mt-0.5 leading-tight">Catalog a drawer or shelf</p>
             </div>
           </div>
         </button>
@@ -470,7 +467,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             onClick={onOpenBorrowed}
             data-tour="lend-item-card"
-            className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
+            className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
           >
             {/* Placeholder background — drop a real photo in public/images/
                 named lend-item-placeholder.jpg to replace this. */}
@@ -481,17 +478,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
             {overdueBorrowed.length > 0 && (
-              <span className="absolute top-3 right-3 z-10 w-5 h-5 rounded-full bg-[#B0473A] text-white text-[10px] font-bold flex items-center justify-center">
+              <span className="absolute top-2 right-2 z-10 w-5 h-5 rounded-full bg-[#B0473A] text-white text-[10px] font-bold flex items-center justify-center">
                 {overdueBorrowed.length}
               </span>
             )}
-            <div className="relative h-full p-3.5 flex flex-col justify-between">
-              <div className="w-8 h-8 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
-                <HandHeart className="w-4 h-4" />
+            <div className="relative h-full p-2.5 flex flex-col justify-between">
+              <div className="w-6 h-6 rounded-lg bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
+                <HandHeart className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Lend an item</h3>
-                <p className="text-[11px] text-white/75 mt-0.5">Keep track of things you've lent out</p>
+                <h3 className="text-xs font-bold text-white">Lend an item</h3>
+                <p className="text-[10px] text-white/75 mt-0.5 leading-tight">Track who has what</p>
               </div>
             </div>
           </button>
@@ -500,12 +497,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* PINNED */}
       {pinnedItems.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2">
           <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
             <Pin className="w-3.5 h-3.5 text-[#5B84C4] fill-[#5B84C4]" />
             Pinned
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {pinnedItems.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}
@@ -549,7 +546,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {recentItems.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}
@@ -559,7 +556,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* OUT ON LOAN — friendly strip */}
       {!hideBorrowedSection && activeBorrowed.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2">
           <div className="flex items-center justify-between">
             <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
               Out on loan
@@ -633,7 +630,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* WHERE YOUR THINGS ARE — swipeable location cards */}
       {!hideLocationsSection && locationGroups.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2">
           <div className="flex items-center justify-between">
             <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
               Where your things are
@@ -680,7 +677,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* SCANNED SPACES */}
       {spaces.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2">
           <div className="flex items-center justify-between">
             <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
               Scanned spaces

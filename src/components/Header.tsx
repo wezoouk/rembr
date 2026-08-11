@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ settings, onUpdateSettings, onOp
 
   return (
     <header className="sticky top-0 z-30 bg-[#F5F4EF]/90 dark:bg-[#161412]/90 backdrop-blur-md transition-colors">
-      <div className="max-w-2xl mx-auto px-4 pt-4 pb-2 flex items-center justify-between gap-2">
+      <div className="max-w-2xl mx-auto px-4 pt-2.5 pb-1.5 flex items-center justify-between gap-2">
         <button
           onClick={onGoHome}
           className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
