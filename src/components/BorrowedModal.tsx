@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   X,
   HandHeart,
@@ -12,10 +12,34 @@ import {
   Clock,
   AlertCircle,
   RotateCcw,
+  Mic,
+  MicOff,
 } from "lucide-react";
 import { BorrowedItem, ReminderInterval } from "../types";
 import { computeNextReminderAt } from "../lib/storage";
 import { scheduleBorrowedReminder, cancelBorrowedReminder } from "../lib/notifications";
+import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
+import { DictationIndicator } from "./DictationIndicator";
+
+// Intelligent phrase parsing for voice dictation, e.g. "lent my sander to John"
+function parseSpokenBorrowPhrase(phrase: string): { item?: string; person?: string } {
+  const clean = phrase.trim().replace(/^(i lent|i loaned|i borrowed out|lent|loaned|borrowed out|borrowed my|my)\s+/i, "");
+  const prepRegex = /\s+(to|out to|over to)\s+/i;
+  const match = clean.match(prepRegex);
+
+  if (match && match.index !== undefined) {
+    const item = clean.slice(0, match.index).trim();
+    const person = clean.slice(match.index + match[0].length).trim();
+    if (item && person) {
+      return {
+        item: item.charAt(0).toUpperCase() + item.slice(1),
+        person: person.charAt(0).toUpperCase() + person.slice(1),
+      };
+    }
+  }
+
+  return { item: clean.charAt(0).toUpperCase() + clean.slice(1) };
+}
 
 interface BorrowedModalProps {
   onClose: () => void;
@@ -89,6 +113,65 @@ export const BorrowedModal: React.FC<BorrowedModalProps> = ({
   const [changingReminderFor, setChangingReminderFor] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // Voice dictation
+  const [isListening, setIsListening] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [listeningTarget, setListeningTarget] = useState<"both" | "item" | "person" | null>(null);
+  const voiceListenerRef = useRef<VoiceListener | null>(null);
+  const activeTargetRef = useRef<"both" | "item" | "person" | null>(null);
+  activeTargetRef.current = listeningTarget;
+
+  useEffect(() => {
+    if (isSpeechRecognitionSupported()) {
+      voiceListenerRef.current = new VoiceListener(
+        (transcript, isFinal) => {
+          const target = activeTargetRef.current;
+          if (target === "person") {
+            setBorrowedTo(transcript);
+          } else if (target === "item") {
+            setItemName(transcript);
+          } else {
+            const parsed = parseSpokenBorrowPhrase(transcript);
+            if (parsed.item) setItemName(parsed.item);
+            if (parsed.person) setBorrowedTo(parsed.person);
+          }
+          if (isFinal) {
+            setIsListening(false);
+            setListeningTarget(null);
+          }
+        },
+        () => {
+          setIsListening(false);
+          setListeningTarget(null);
+        },
+        () => {
+          setIsListening(false);
+          setListeningTarget(null);
+        },
+        (level) => setAudioLevel(level)
+      );
+    }
+    return () => {
+      if (voiceListenerRef.current) voiceListenerRef.current.stop();
+    };
+  }, []);
+
+  const toggleVoiceInput = async (target: "both" | "item" | "person" = "both") => {
+    if (!voiceListenerRef.current) {
+      alert("Voice speech recognition is not supported on this browser.");
+      return;
+    }
+    if (isListening) {
+      voiceListenerRef.current.stop();
+      setIsListening(false);
+      setListeningTarget(null);
+    } else {
+      setListeningTarget(target);
+      setIsListening(true);
+      await voiceListenerRef.current.start();
+    }
+  };
+
   const activeItems = useMemo(
     () =>
       borrowedItems
@@ -116,6 +199,12 @@ export const BorrowedModal: React.FC<BorrowedModalProps> = ({
   const handleStartSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!itemName.trim() || !borrowedTo.trim()) return;
+
+    if (voiceListenerRef.current && isListening) {
+      voiceListenerRef.current.stop();
+      setIsListening(false);
+      setListeningTarget(null);
+    }
 
     const nowIso = new Date().toISOString();
     const borrowedIso = new Date(dateBorrowed + "T12:00:00").toISOString();
@@ -237,17 +326,88 @@ export const BorrowedModal: React.FC<BorrowedModalProps> = ({
         <div className="overflow-y-auto py-4 space-y-5 pr-1 flex-1">
           {/* ADD FORM */}
           <form onSubmit={handleStartSave} className="space-y-3 p-4 bg-[#5A7D9A]/8 border border-[#5A7D9A]/25 rounded-2xl">
+            {/* VOICE / DICTATION FAST BANNER */}
+            <div className="p-3.5 bg-[#5A7D9A]/10 border border-[#5A7D9A]/30 rounded-2xl flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#5A7D9A] dark:text-[#7A9DBA] uppercase tracking-wider flex items-center gap-1.5">
+                  <Mic className="w-4 h-4" /> Speak Full Phrase
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleVoiceInput("both")}
+                  className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm select-none active:scale-95 cursor-pointer ${
+                    isListening && listeningTarget === "both"
+                      ? "bg-[#C2847A] text-white animate-bounce"
+                      : "bg-[#5A7D9A] text-white hover:bg-[#4A6D8A]"
+                  }`}
+                >
+                  {isListening && listeningTarget === "both" ? (
+                    <>
+                      <MicOff className="w-3.5 h-3.5" />
+                      <span>Listening...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-3.5 h-3.5" />
+                      <span>Tap to Dictate</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <p className="text-xs text-[#4A443F] dark:text-[#A3B0A5]">
+                Say e.g., <span className="italic font-medium text-[#2D2A26] dark:text-[#E8E4E1]">"Lent my sander to John"</span>
+              </p>
+            </div>
+
+            <DictationIndicator
+              isListening={isListening}
+              transcript={
+                listeningTarget === "item"
+                  ? itemName
+                  : listeningTarget === "person"
+                  ? borrowedTo
+                  : `${itemName} ${borrowedTo}`.trim()
+              }
+              audioLevel={audioLevel}
+              onStop={() => toggleVoiceInput(listeningTarget || "both")}
+              label={
+                listeningTarget === "item"
+                  ? "Listening for Item Name..."
+                  : listeningTarget === "person"
+                  ? "Listening for Person's Name..."
+                  : "Listening for Item & Person Phrase..."
+              }
+            />
+
             <div>
               <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1.5">
                 Item *
               </label>
-              <input
-                type="text"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-                placeholder='e.g., "Sander", "Grill"'
-                className="w-full py-3 px-4 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-white dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5A7D9A]"
-              />
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={itemName}
+                  onChange={(e) => setItemName(e.target.value)}
+                  placeholder='e.g., "Sander", "Grill"'
+                  className="w-full py-3 pl-4 pr-12 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-white dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5A7D9A]"
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleVoiceInput("item")}
+                  className={`absolute right-2 p-2.5 rounded-xl transition-all select-none active:scale-95 cursor-pointer ${
+                    isListening && listeningTarget === "item"
+                      ? "bg-[#C2847A] text-white animate-bounce"
+                      : "bg-[#F2EDE9] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#E8E4E1]"
+                  }`}
+                  title="Tap to dictate item name"
+                >
+                  {isListening && listeningTarget === "item" ? (
+                    <MicOff className="w-4 h-4" />
+                  ) : (
+                    <Mic className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div>
@@ -261,8 +421,24 @@ export const BorrowedModal: React.FC<BorrowedModalProps> = ({
                   value={borrowedTo}
                   onChange={(e) => setBorrowedTo(e.target.value)}
                   placeholder="Person's name"
-                  className="w-full py-3 pl-10 pr-4 text-sm font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-white dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5A7D9A]"
+                  className="w-full py-3 pl-10 pr-12 text-sm font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-white dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5A7D9A]"
                 />
+                <button
+                  type="button"
+                  onClick={() => toggleVoiceInput("person")}
+                  className={`absolute right-2 p-2 rounded-xl transition-all select-none active:scale-95 cursor-pointer ${
+                    isListening && listeningTarget === "person"
+                      ? "bg-[#C2847A] text-white animate-bounce"
+                      : "bg-[#F2EDE9] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#E8E4E1]"
+                  }`}
+                  title="Tap to dictate person's name"
+                >
+                  {isListening && listeningTarget === "person" ? (
+                    <MicOff className="w-4 h-4" />
+                  ) : (
+                    <Mic className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 
