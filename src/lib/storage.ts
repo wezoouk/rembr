@@ -100,6 +100,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   allowDuplicateItems: false,
   hideLocationsSection: true,
   hideBorrowedSection: false,
+  autoSecondScanPass: true,
 };
 
 // Compute the ISO date string for the next reminder nag, given the borrow date

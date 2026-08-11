@@ -54,6 +54,7 @@ export interface AppSettings {
   allowDuplicateItems?: boolean;
   hideLocationsSection?: boolean;
   hideBorrowedSection?: boolean;
+  autoSecondScanPass?: boolean;
 }
 
 // How long after the borrow date to send the first reminder. "none" = no reminder.

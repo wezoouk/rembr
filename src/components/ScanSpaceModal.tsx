@@ -23,17 +23,22 @@ import { DEMO_PHOTOS } from "../lib/sampleImages";
 interface ScanSpaceModalProps {
   onClose: () => void;
   onSaveSpace: (space: Space) => void;
+  autoSecondScanPass?: boolean;
 }
 
 export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   onClose,
   onSaveSpace,
+  autoSecondScanPass = true,
 }) => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [spaceName, setSpaceName] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isSecondPass, setIsSecondPass] = useState(false);
+  const [hasAutoRescanned, setHasAutoRescanned] = useState(false);
+  const [rescanBanner, setRescanBanner] = useState<string | null>(null);
   const [detectedItems, setDetectedItems] = useState<
     Array<{
       name: string;
@@ -121,6 +126,8 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   const handleSetPhoto = async (photoDataUrl: string) => {
     const compressed = await compressImage(photoDataUrl, 1200, 1200);
     setPhoto(compressed);
+    setHasAutoRescanned(false);
+    setRescanBanner(null);
     // Auto-scan disabled per user request. User clicks "Scan Space with AI" when ready.
   };
 
@@ -146,12 +153,19 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
       console.warn("Error scanning space:", err);
     } finally {
       setIsAnalyzing(false);
+      // Automatically run a second pass to catch anything the first pass
+      // missed, if enabled in Settings — only once per photo.
+      if (autoSecondScanPass && !hasAutoRescanned) {
+        setHasAutoRescanned(true);
+        handleRescan(true);
+      }
     }
   };
 
-  const handleRescan = async () => {
+  const handleRescan = async (isAutomatic = false) => {
     if (!photo) return;
     setIsAnalyzing(true);
+    setIsSecondPass(isAutomatic);
     try {
       const result = await analyzeImageWithAI(photo, "space", "image/jpeg", true);
       const newItems = result.detectedItems || [
@@ -163,16 +177,18 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
       const existingNames = new Set(detectedItems.map((i) => i.name.toLowerCase()));
       const uniqueNewItems = newItems.filter((i) => !existingNames.has(i.name.toLowerCase()));
 
+      const prefix = isAutomatic ? "Auto second pass" : "Rescan";
       if (uniqueNewItems.length > 0) {
         setDetectedItems((prev) => [...prev, ...uniqueNewItems]);
-        alert(`Deep Rescan complete! Found ${uniqueNewItems.length} missed item(s): ${uniqueNewItems.map(i => i.name).join(", ")}`);
+        setRescanBanner(`${prefix} found ${uniqueNewItems.length} more item${uniqueNewItems.length === 1 ? "" : "s"}: ${uniqueNewItems.map((i) => i.name).join(", ")}`);
       } else {
-        alert("Deep Rescan complete! No additional missed items detected.");
+        setRescanBanner(`${prefix} complete — no additional items found.`);
       }
     } catch (err) {
       console.warn("Rescan error:", err);
     } finally {
       setIsAnalyzing(false);
+      setIsSecondPass(false);
     }
   };
 
@@ -331,54 +347,75 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
               </div>
             </div>
           ) : (
-            <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm">
-              <img
-                src={photo}
-                alt="Scanned Space"
-                className="w-full h-auto block"
-              />
+            <div className="flex items-center justify-center py-1">
+              <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm w-full">
+                <img
+                  src={photo}
+                  alt="Scanned Space"
+                  className="w-full h-auto block"
+                />
 
-              {/* Bounding Box Highlights Overlaid */}
-              {detectedItems.map((item, idx) => {
-                const [ymin, xmin, ymax, xmax] = item.bbox || [20, 20, 50, 50];
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      top: `${ymin}%`,
-                      left: `${xmin}%`,
-                      width: `${Math.max(15, xmax - xmin)}%`,
-                      height: `${Math.max(15, ymax - ymin)}%`,
-                    }}
-                    className="absolute border-2 border-[#6B7E6D] bg-[#6B7E6D]/20 rounded-lg flex items-start p-1 pointer-events-none"
-                  >
-                    <span className="bg-[#6B7E6D] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
-                      {item.name}
-                    </span>
+                {/* Bounding Box Highlights Overlaid */}
+                {detectedItems.map((item, idx) => {
+                  const [ymin, xmin, ymax, xmax] = item.bbox || [20, 20, 50, 50];
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        top: `${ymin}%`,
+                        left: `${xmin}%`,
+                        width: `${Math.max(15, xmax - xmin)}%`,
+                        height: `${Math.max(15, ymax - ymin)}%`,
+                      }}
+                      className="absolute border-2 border-[#6B7E6D] bg-[#6B7E6D]/20 rounded-lg flex items-start p-1 pointer-events-none"
+                    >
+                      <span className="bg-[#6B7E6D] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                        {item.name}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {detectedItems.length === 0 ? (
+                  /* No scan yet — big call-to-action dead center of the image */
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                    <button
+                      type="button"
+                      onClick={() => photo && triggerAISpaceAnalysis(photo)}
+                      disabled={isAnalyzing}
+                      className="px-6 py-4 bg-[#F2A93B] hover:bg-[#E0961F] text-white text-base font-extrabold rounded-full flex items-center gap-2.5 shadow-2xl shadow-[#F2A93B]/60 disabled:opacity-60 transition-all active:scale-95 cursor-pointer whitespace-nowrap ring-4 ring-white/40"
+                    >
+                      <Sparkles className={`w-5 h-5 ${isAnalyzing ? "animate-spin" : ""}`} />
+                      <span>{isAnalyzing ? "Scanning..." : "Scan Space with AI"}</span>
+                    </button>
                   </div>
-                );
-              })}
+                ) : (
+                  /* Items already found — smaller docked re-scan control so it
+                     doesn't cover the detected item boxes */
+                  <button
+                    type="button"
+                    onClick={() => handleRescan(false)}
+                    disabled={isAnalyzing}
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-3 bg-[#F2A93B] hover:bg-[#E0961F] text-white text-sm font-extrabold rounded-full flex items-center gap-2 shadow-xl shadow-[#F2A93B]/50 disabled:opacity-60 transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+                  >
+                    <Sparkles className={`w-4 h-4 ${isAnalyzing ? "animate-spin" : ""}`} />
+                    <span>{isAnalyzing ? "Scanning..." : "Re-Scan Space with AI"}</span>
+                  </button>
+                )}
 
-              <button
-                type="button"
-                onClick={() => photo && triggerAISpaceAnalysis(photo)}
-                disabled={isAnalyzing}
-                className="absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-3 bg-[#F2A93B] hover:bg-[#E0961F] text-white text-sm font-extrabold rounded-full flex items-center gap-2 shadow-xl shadow-[#F2A93B]/50 disabled:opacity-60 transition-all active:scale-95 cursor-pointer whitespace-nowrap"
-              >
-                <Sparkles className={`w-4 h-4 ${isAnalyzing ? "animate-spin" : ""}`} />
-                <span>{isAnalyzing ? "Scanning..." : detectedItems.length > 0 ? "Re-Scan Space with AI" : "Scan Space with AI"}</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setPhoto(null);
-                  setDetectedItems([]);
-                }}
-                className="absolute top-3 right-3 p-2 bg-[#2D2A26]/80 hover:bg-[#2D2A26] text-white rounded-xl backdrop-blur-md text-xs font-semibold flex items-center gap-1"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                Retake
-              </button>
+                <button
+                  onClick={() => {
+                    setPhoto(null);
+                    setDetectedItems([]);
+                    setRescanBanner(null);
+                    setHasAutoRescanned(false);
+                  }}
+                  className="absolute top-3 right-3 p-2 bg-[#2D2A26]/80 hover:bg-[#2D2A26] text-white rounded-xl backdrop-blur-md text-xs font-semibold flex items-center gap-1"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Retake
+                </button>
+              </div>
             </div>
           )}
 
@@ -386,7 +423,18 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
           {isAnalyzing && (
             <div className="p-3 bg-[#C2847A]/10 border border-[#C2847A]/20 rounded-2xl flex items-center gap-3 text-xs text-[#C2847A] dark:text-[#DA9E94] font-semibold animate-pulse">
               <Sparkles className="w-5 h-5 animate-spin" />
-              <span>AI scanning image and detecting all visible objects...</span>
+              <span>{isSecondPass ? "Running automatic second pass for missed items..." : "AI scanning image and detecting all visible objects..."}</span>
+            </div>
+          )}
+
+          {/* RESCAN RESULT BANNER */}
+          {rescanBanner && !isAnalyzing && (
+            <div className="p-3 bg-[#6B7E6D]/10 border border-[#6B7E6D]/20 rounded-2xl flex items-start gap-2.5 text-xs text-[#4A443F] dark:text-[#A3B0A5]">
+              <CheckCircle2 className="w-4 h-4 text-[#6B7E6D] shrink-0 mt-0.5" />
+              <span className="flex-1">{rescanBanner}</span>
+              <button onClick={() => setRescanBanner(null)} className="text-[#8C847E] hover:text-black dark:hover:text-white shrink-0">
+                <X className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
 
@@ -417,17 +465,17 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
             </div>
           </div>
 
-          {/* DETECTED OBJECTS LIST */}
+          {/* ITEMS FOUND LIST */}
           {detectedItems.length > 0 && (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider">
-                  AI Detected Objects ({detectedItems.length})
+                  Items Found ({detectedItems.length})
                 </span>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={handleRescan}
+                    onClick={() => handleRescan(false)}
                     disabled={isAnalyzing}
                     className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] hover:underline flex items-center gap-1 disabled:opacity-50"
                   >
@@ -445,19 +493,29 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-1.5">
                 {detectedItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#C2847A]/10 border border-[#C2847A]/20 rounded-xl text-xs font-semibold text-[#2D2A26] dark:text-[#E8E4E1]"
+                    className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[#C2847A]/8 border border-[#C2847A]/20 rounded-xl"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#C2847A] shrink-0" />
-                    <span>{item.name}</span>
+                    <CheckCircle2 className="w-4 h-4 text-[#C2847A] shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-bold text-[#2D2A26] dark:text-[#E8E4E1] block truncate">
+                        {item.name}
+                      </span>
+                      {item.tags && item.tags.length > 0 && (
+                        <span className="text-[10px] text-[#8C847E] dark:text-[#A3B0A5] truncate block">
+                          {item.tags.join(", ")}
+                        </span>
+                      )}
+                    </div>
                     <button
                       onClick={() => removeDetectedItem(idx)}
-                      className="p-0.5 text-[#8C847E] hover:text-[#C2847A] ml-1 rounded"
+                      className="p-1.5 text-[#8C847E] hover:text-[#C2847A] hover:bg-[#C2847A]/10 rounded-lg shrink-0"
+                      title="Remove item"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 ))}

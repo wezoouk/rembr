@@ -14,6 +14,7 @@ import {
   Copy,
   HandHeart,
   HelpCircle,
+  ScanLine,
 } from "lucide-react";
 import { AppSettings } from "../types";
 
@@ -79,6 +80,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onUpdateSettings({
       ...settings,
       hideBorrowedSection: !settings.hideBorrowedSection,
+    });
+  };
+
+  const toggleAutoSecondScanPass = () => {
+    onUpdateSettings({
+      ...settings,
+      autoSecondScanPass: !settings.autoSecondScanPass,
     });
   };
 
@@ -297,6 +305,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
                   !settings.hideBorrowedSection ? "translate-x-6" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* AUTO SECOND SCAN PASS TOGGLE */}
+          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+            <div className="flex items-center gap-2.5">
+              <ScanLine className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <div>
+                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                  Auto Second Scan Pass
+                </span>
+                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                  Automatically re-scan a space photo once more to catch items the first pass missed
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={toggleAutoSecondScanPass}
+              className={`w-12 h-6 rounded-full transition-colors relative p-1 shrink-0 ${
+                settings.autoSecondScanPass ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+              }`}
+            >
+              <div
+                className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                  settings.autoSecondScanPass ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>

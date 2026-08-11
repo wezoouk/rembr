@@ -326,6 +326,7 @@ export default function App() {
         <ScanSpaceModal
           onClose={() => setShowScanSpaceModal(false)}
           onSaveSpace={handleSaveSpace}
+          autoSecondScanPass={settings.autoSecondScanPass}
         />
       )}
 
