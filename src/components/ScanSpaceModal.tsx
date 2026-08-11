@@ -26,6 +26,37 @@ interface ScanSpaceModalProps {
   autoSecondScanPass?: boolean;
 }
 
+// Normalize a detected-item name for fuzzy comparison — strips articles and
+// punctuation so "Batteries" and "AA Batteries" are recognized as the same
+// physical object re-detected on a rescan, not two different items.
+function normalizeItemName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/^(a|an|the)\s+/, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+// Two detections count as "the same item" if their names fuzzy-match OR
+// their bounding boxes sit in roughly the same spot on the photo — the AI
+// re-scanning the same image can reword an item ("Tape Roll" -> "Roll of
+// Tape") while still pointing at the same physical object.
+function isSameDetectedItem(
+  a: { name: string; bbox: [number, number, number, number] },
+  b: { name: string; bbox: [number, number, number, number] }
+): boolean {
+  const nameA = normalizeItemName(a.name);
+  const nameB = normalizeItemName(b.name);
+  const nameMatches = Boolean(nameA) && Boolean(nameB) && (nameA === nameB || nameA.includes(nameB) || nameB.includes(nameA));
+
+  const [ay1, ax1, ay2, ax2] = a.bbox || [0, 0, 0, 0];
+  const [by1, bx1, by2, bx2] = b.bbox || [0, 0, 0, 0];
+  const distance = Math.hypot((ay1 + ay2) / 2 - (by1 + by2) / 2, (ax1 + ax2) / 2 - (bx1 + bx2) / 2);
+  const sameSpot = distance < 12;
+
+  return nameMatches || sameSpot;
+}
+
 export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   onClose,
   onSaveSpace,
@@ -36,6 +67,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [hasScannedOnce, setHasScannedOnce] = useState(false);
   const [isSecondPass, setIsSecondPass] = useState(false);
   const [hasAutoRescanned, setHasAutoRescanned] = useState(false);
   const [rescanBanner, setRescanBanner] = useState<string | null>(null);
@@ -149,6 +181,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
     const compressed = await compressImage(photoDataUrl, 1200, 1200);
     setPhoto(compressed);
     setHasAutoRescanned(false);
+    setHasScannedOnce(false);
     setRescanBanner(null);
     // Auto-scan disabled per user request. User clicks "Scan Space with AI" when ready.
   };
@@ -190,6 +223,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
         setHasAutoRescanned(true);
         handleRescan(true);
       } else {
+        setHasScannedOnce(true);
         scrollToItemsList();
       }
     }
@@ -206,9 +240,11 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
         { name: "Spare USB Drive", confidence: "High confidence", tags: ["tech", "storage"], bbox: [60, 40, 75, 55] },
       ];
 
-      // Filter out items already in detectedItems by name
-      const existingNames = new Set(detectedItems.map((i) => i.name.toLowerCase()));
-      const uniqueNewItems = newItems.filter((i) => !existingNames.has(i.name.toLowerCase()));
+      // Filter out items that are really just re-detections of items we
+      // already have (fuzzy name match or same spot on the photo).
+      const uniqueNewItems = newItems.filter(
+        (newItem) => !detectedItems.some((existing) => isSameDetectedItem(existing, newItem))
+      );
 
       const prefix = isAutomatic ? "Auto second pass" : "Rescan";
       if (uniqueNewItems.length > 0) {
