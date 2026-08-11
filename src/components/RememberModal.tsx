@@ -81,8 +81,18 @@ export const RememberModal: React.FC<RememberModalProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const voiceListenerRef = useRef<VoiceListener | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const photoSectionRef = useRef<HTMLDivElement | null>(null);
   const activeTargetRef = useRef<"both" | "item" | "location" | null>(null);
   activeTargetRef.current = listeningTarget;
+
+  // Automatically scroll the captured photo into view — no manual scrolling needed.
+  useEffect(() => {
+    if (photo) {
+      requestAnimationFrame(() => {
+        photoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [photo]);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -604,7 +614,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm flex items-center justify-center">
+              <div ref={photoSectionRef} className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm flex items-center justify-center scroll-mt-4">
                 <img
                   src={photo}
                   alt="Captured location"

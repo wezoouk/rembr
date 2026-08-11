@@ -51,6 +51,18 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const voiceListenerRef = useRef<VoiceListener | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const photoSectionRef = useRef<HTMLDivElement | null>(null);
+
+  // Automatically scroll the captured photo into view — the user shouldn't
+  // have to manually scroll down to see what they just took a picture of.
+  useEffect(() => {
+    if (photo) {
+      // Let the new layout paint first, then scroll it into view.
+      requestAnimationFrame(() => {
+        photoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [photo]);
 
   useEffect(() => {
     if (isSpeechRecognitionSupported()) {
@@ -347,12 +359,12 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center py-1">
-              <div className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm w-full">
+            <div ref={photoSectionRef} className="flex items-center justify-center py-1 scroll-mt-4">
+              <div className="relative inline-block mx-auto rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm">
                 <img
                   src={photo}
                   alt="Scanned Space"
-                  className="w-full h-auto block"
+                  className="max-h-[48vh] w-auto block mx-auto"
                 />
 
                 {/* Bounding Box Highlights Overlaid */}
@@ -438,34 +450,8 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
             </div>
           )}
 
-          {/* SPACE NAME */}
-          <div>
-            <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1.5">
-              Space Name *
-            </label>
-            <div className="relative flex items-center">
-              <input
-                type="text"
-                value={spaceName}
-                onChange={(e) => setSpaceName(e.target.value)}
-                placeholder='e.g., "Office Top Drawer", "Garage Toolbox"'
-                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C2847A]"
-              />
-              <button
-                type="button"
-                onClick={toggleVoiceInput}
-                className={`absolute right-2 p-2.5 rounded-xl transition-all ${
-                  isListening
-                    ? "bg-[#C2847A] text-white animate-bounce"
-                    : "bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1]"
-                }`}
-              >
-                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* ITEMS FOUND LIST */}
+          {/* ITEMS FOUND LIST — shown right under the photo, before the name
+              field, so it's visible immediately without scrolling past it. */}
           {detectedItems.length > 0 && (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
@@ -522,6 +508,33 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
               </div>
             </div>
           )}
+
+          {/* SPACE NAME */}
+          <div>
+            <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1.5">
+              Space Name *
+            </label>
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={spaceName}
+                onChange={(e) => setSpaceName(e.target.value)}
+                placeholder='e.g., "Office Top Drawer", "Garage Toolbox"'
+                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C2847A]"
+              />
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                className={`absolute right-2 p-2.5 rounded-xl transition-all ${
+                  isListening
+                    ? "bg-[#C2847A] text-white animate-bounce"
+                    : "bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1]"
+                }`}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Footer Actions */}
