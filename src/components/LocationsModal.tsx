@@ -137,21 +137,21 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fade-in">
-      <div className="bg-[#F5F4EF] dark:bg-[#262624] border border-[#E5E3DA] dark:border-[#3E3D3A] w-full max-w-2xl rounded-3xl sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-[#F5F4EF] dark:bg-[#161412] w-full max-w-2xl rounded-3xl sm:rounded-[36px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-4 sm:p-6 bg-white dark:bg-[#2B2A28] border-b border-[#E5E3DA] dark:border-[#3E3D3A] flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-6 bg-white dark:bg-[#211F1B] border-b border-[#E5E3DA] dark:border-[#3E3D3A] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             {activeGroup ? (
               <button
                 type="button"
                 onClick={() => setSelectedLocationName(null)}
-                className="p-2 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#30302E] dark:text-[#E5E3DA] rounded-2xl transition-colors flex items-center gap-1.5 text-xs font-bold cursor-pointer"
+                className="p-2 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#30302E] dark:text-[#E5E3DA] rounded-2xl transition-colors flex items-center gap-1.5 text-xs font-bold cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>All Locations</span>
               </button>
             ) : (
-              <div className="w-10 h-10 bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 bg-[#7CA65B]/15 text-[#7CA65B] dark:text-[#A8C98B] rounded-2xl flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
             )}
@@ -172,7 +172,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2.5 text-[#83827C] hover:text-[#30302E] dark:hover:text-white hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] rounded-2xl transition-colors cursor-pointer"
+            className="p-2.5 text-[#83827C] hover:text-[#30302E] dark:hover:text-white hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19] rounded-2xl transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -184,7 +184,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
           {!activeGroup && (
             <>
               {/* Filter Search Bar */}
-              <div className="relative flex items-center bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl p-1 shadow-sm">
+              <div className="relative flex items-center bg-white dark:bg-[#211F1B] rounded-2xl p-1 shadow-sm">
                 <Search className="w-4 h-4 text-[#83827C] ml-3 shrink-0" />
                 <input
                   type="text"
@@ -205,7 +205,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
 
               {/* Locations Grid */}
               {filteredLocations.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-[#2B2A28] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+                <div className="text-center py-12 bg-white dark:bg-[#211F1B] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
                   <MapPin className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
                   <p className="text-base font-bold text-[#30302E] dark:text-[#E5E3DA]">
                     No matching locations found
@@ -226,16 +226,16 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                       <div
                         key={group.name}
                         onClick={() => setSelectedLocationName(group.name)}
-                        className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/50 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3 relative overflow-hidden"
+                        className="group cursor-pointer bg-white dark:bg-[#211F1B] hover:border-[#7CA65B]/50 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3 relative overflow-hidden"
                       >
                         {/* Location Header */}
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] rounded-xl flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 bg-[#7CA65B]/15 text-[#7CA65B] dark:text-[#A8C98B] rounded-xl flex items-center justify-center shrink-0">
                               <MapPin className="w-4 h-4" />
                             </div>
                             <div>
-                              <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] group-hover:text-[#D97757] dark:group-hover:text-[#E8A785] transition-colors leading-tight">
+                              <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] group-hover:text-[#7CA65B] dark:group-hover:text-[#A8C98B] transition-colors leading-tight">
                                 {group.name}
                               </h3>
                               <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] font-medium mt-0.5">
@@ -244,13 +244,13 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                             </div>
                           </div>
 
-                          <span className="text-xs font-extrabold bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] px-2.5 py-1 rounded-full shrink-0">
+                          <span className="text-xs font-extrabold bg-[#7CA65B]/15 text-[#7CA65B] dark:text-[#A8C98B] px-2.5 py-1 rounded-full shrink-0">
                             {group.itemCount} {group.itemCount === 1 ? "item" : "items"}
                           </span>
                         </div>
 
                         {/* Image Preview Collage */}
-                        <div className="grid grid-cols-4 gap-1.5 bg-[#EFEEE7] dark:bg-[#1F1E1C] p-1.5 rounded-2xl">
+                        <div className="grid grid-cols-4 gap-1.5 bg-[#EFEEE7] dark:bg-[#100F0D] p-1.5 rounded-2xl">
                           {group.previewImages.slice(0, 4).map((imgUrl, i) => (
                             <div
                               key={i}
@@ -268,7 +268,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                             Array.from({ length: 4 - group.previewImages.length }).map((_, i) => (
                               <div
                                 key={`empty-${i}`}
-                                className="aspect-square rounded-xl bg-[#E5E3DA]/50 dark:bg-[#33322F]/50 flex items-center justify-center"
+                                className="aspect-square rounded-xl bg-[#E5E3DA]/50 dark:bg-[#1E1C19]/50 flex items-center justify-center"
                               >
                                 <Layers className="w-3.5 h-3.5 text-[#83827C]/40" />
                               </div>
@@ -280,7 +280,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                           <span className="text-[#83827C] dark:text-[#A8A7A2] font-medium truncate max-w-[180px]">
                             {sampleNames}
                           </span>
-                          <span className="font-bold text-[#D97757] dark:text-[#E8A785] flex items-center gap-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform">
+                          <span className="font-bold text-[#7CA65B] dark:text-[#A8C98B] flex items-center gap-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform">
                             View Items
                             <ChevronRight className="w-3.5 h-3.5" />
                           </span>
@@ -297,9 +297,9 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
           {activeGroup && (
             <div className="space-y-4">
               {/* Location Controls Banner */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] p-3 rounded-2xl shadow-sm">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-white dark:bg-[#211F1B] p-3 rounded-2xl shadow-sm">
                 {/* Search within location */}
-                <div className="relative flex-1 flex items-center bg-[#F5F4EF] dark:bg-[#262624] rounded-xl px-2.5 py-1">
+                <div className="relative flex-1 flex items-center bg-[#F5F4EF] dark:bg-[#161412] rounded-xl px-2.5 py-1">
                   <Search className="w-3.5 h-3.5 text-[#83827C] mr-2 shrink-0" />
                   <input
                     type="text"
@@ -322,7 +322,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                 {onAddNewItemInLocation && (
                   <button
                     onClick={() => onAddNewItemInLocation(activeGroup.name)}
-                    className="py-2 px-3.5 bg-[#D97757] hover:bg-[#C15F3C] text-white text-xs font-bold rounded-xl shadow transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+                    className="py-2 px-3.5 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-xl shadow transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Item Here</span>
@@ -332,7 +332,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
 
               {/* Items List Grid */}
               {activeLocationItems.length === 0 ? (
-                <div className="text-center py-10 bg-white dark:bg-[#2B2A28] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+                <div className="text-center py-10 bg-white dark:bg-[#211F1B] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
                   <FolderOpen className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
                   <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
                     No items found in this location
@@ -349,10 +349,10 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                     <div
                       key={item.id}
                       onClick={() => onSelectItem(item)}
-                      className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-3 shadow-sm hover:shadow-md transition-all flex gap-3 relative overflow-hidden"
+                      className="group cursor-pointer bg-white dark:bg-[#211F1B] rounded-3xl p-3 shadow-sm hover:shadow-md transition-all flex gap-3 relative overflow-hidden"
                     >
                       {/* Thumbnail Photo */}
-                      <div className="w-20 h-20 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
+                      <div className="w-20 h-20 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] shrink-0 relative">
                         <img
                           src={item.image_path}
                           alt={item.name}
@@ -368,7 +368,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                       <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                         <div>
                           <div className="flex items-start justify-between gap-1">
-                            <h4 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] group-hover:text-[#D97757] dark:group-hover:text-[#E8A785] truncate">
+                            <h4 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] group-hover:text-[#7CA65B] dark:group-hover:text-[#A8C98B] truncate">
                               {item.name}
                             </h4>
                           </div>
@@ -378,7 +378,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                           </p>
 
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#D97757] dark:text-[#E8A785] bg-[#D97757]/10 px-1.5 py-0.5 rounded-md">
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#7CA65B] dark:text-[#A8C98B] bg-[#7CA65B]/10 px-1.5 py-0.5 rounded-md">
                               <Clock className="w-2.5 h-2.5" />
                               {formatShortDateTime(item.created_at || item.updated_at)}
                             </span>
@@ -392,7 +392,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                               onClick={(e) => e.stopPropagation()}
                               className="flex items-center gap-1"
                             >
-                              <span className="text-[10px] font-bold text-[#D97757]">Delete?</span>
+                              <span className="text-[10px] font-bold text-[#7CA65B]">Delete?</span>
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -400,7 +400,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                                   if (onDeleteItem) onDeleteItem(item.id);
                                   setDeletingItemId(null);
                                 }}
-                                className="px-1.5 py-0.5 bg-[#D97757] text-white text-[10px] font-bold rounded"
+                                className="px-1.5 py-0.5 bg-[#7CA65B] text-white text-[10px] font-bold rounded"
                               >
                                 Yes
                               </button>
@@ -427,7 +427,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                                 }}
                                 className={`p-1 rounded-lg transition-colors ${
                                   item.is_pinned
-                                    ? "bg-[#D97757] text-white"
+                                    ? "bg-[#7CA65B] text-white"
                                     : "text-[#83827C] hover:text-[#30302E] dark:hover:text-white"
                                 }`}
                                 title={item.is_pinned ? "Unpin item" : "Pin item"}
@@ -440,7 +440,7 @@ export const LocationsModal: React.FC<LocationsModalProps> = ({
                                   e.stopPropagation();
                                   setDeletingItemId(item.id);
                                 }}
-                                className="p-1 rounded-lg text-[#83827C] hover:text-[#D97757] transition-colors"
+                                className="p-1 rounded-lg text-[#83827C] hover:text-[#7CA65B] transition-colors"
                                 title="Delete item"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />

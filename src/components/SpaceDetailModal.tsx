@@ -128,12 +128,12 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#161412]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#211F1B] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-[#7CA65B]/10 text-[#7CA65B] dark:text-[#A8C98B] flex items-center justify-center">
               <FolderOpen className="w-5 h-5" />
             </div>
             <div>
@@ -147,7 +147,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -156,9 +156,9 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
         {/* Scrollable Body */}
         <div className="overflow-y-auto py-4 space-y-4 pr-1 flex-1">
           {/* RESCAN ACTION CONTROLS */}
-          <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex flex-wrap items-center justify-between gap-2">
+          <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#D97757]" />
+              <Sparkles className="w-4 h-4 text-[#7CA65B]" />
               <span className="text-xs font-bold text-[#30302E] dark:text-[#E5E3DA]">
                 Check for Missed Items?
               </span>
@@ -167,7 +167,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
               <button
                 onClick={() => runDeepRescan(currentSpace.image_path)}
                 disabled={isRescanning}
-                className="px-3 py-1.5 bg-[#D97757] hover:bg-[#C15F3C] text-white text-xs font-bold rounded-xl shadow flex items-center gap-1.5 disabled:opacity-50"
+                className="px-3 py-1.5 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-xl shadow flex items-center gap-1.5 disabled:opacity-50"
               >
                 <RotateCcw className={`w-3.5 h-3.5 ${isRescanning ? "animate-spin" : ""}`} />
                 <span>Deep Rescan Photo</span>
@@ -176,7 +176,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isRescanning}
-                className="px-3 py-1.5 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl flex items-center gap-1.5 disabled:opacity-50"
+                className="px-3 py-1.5 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl flex items-center gap-1.5 disabled:opacity-50"
                 title="Upload new photo angle to scan"
               >
                 <Upload className="w-3.5 h-3.5" />
@@ -194,14 +194,14 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
 
           {/* RESCAN STATUS / BANNER */}
           {isRescanning && (
-            <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-center gap-2.5 text-xs text-[#D97757] font-semibold animate-pulse">
+            <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex items-center gap-2.5 text-xs text-[#7CA65B] font-semibold animate-pulse">
               <Sparkles className="w-4 h-4 animate-spin shrink-0" />
               <span>AI is re-examining the photo to find missed or hidden items...</span>
             </div>
           )}
 
           {rescanBanner && !isRescanning && (
-            <div className="p-3 bg-[#D97757]/15 border border-[#D97757]/30 text-[#30302E] dark:text-[#E5E3DA] rounded-2xl text-xs font-semibold flex items-center justify-between gap-2">
+            <div className="p-3 bg-[#7CA65B]/15 border border-[#7CA65B]/30 text-[#30302E] dark:text-[#E5E3DA] rounded-2xl text-xs font-semibold flex items-center justify-between gap-2">
               <span>✨ {rescanBanner}</span>
               <button onClick={() => setRescanBanner(null)} className="text-[#83827C] hover:text-black">
                 <X className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
           )}
 
           {/* Interactive Space Photo View */}
-          <div className="relative rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] border border-[#E5E3DA] dark:border-[#3E3D3A] shadow-sm">
+          <div className="relative rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] shadow-sm">
             <img
               src={currentSpace.image_path}
               alt={currentSpace.name}
@@ -234,13 +234,13 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
                   }}
                   className={`absolute border-2 rounded-xl transition-all cursor-pointer flex items-start p-1 ${
                     isSelected
-                      ? "border-[#D97757] bg-[#D97757]/40 shadow-lg scale-105 z-20"
-                      : "border-[#D97757] bg-[#D97757]/20 hover:bg-[#D97757]/30 z-10"
+                      ? "border-[#7CA65B] bg-[#7CA65B]/40 shadow-lg scale-105 z-20"
+                      : "border-[#7CA65B] bg-[#7CA65B]/20 hover:bg-[#7CA65B]/30 z-10"
                   }`}
                 >
                   <span
                     className={`text-[10px] font-bold px-1.5 py-0.5 rounded shadow ${
-                      isSelected ? "bg-[#D97757] text-white" : "bg-[#D97757] text-white"
+                      isSelected ? "bg-[#7CA65B] text-white" : "bg-[#7CA65B] text-white"
                     }`}
                   >
                     {det.item_name}
@@ -259,7 +259,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
               <button
                 type="button"
                 onClick={handleAddManualMissedItem}
-                className="text-xs text-[#D97757] font-semibold hover:underline flex items-center gap-1"
+                className="text-xs text-[#7CA65B] font-semibold hover:underline flex items-center gap-1"
               >
                 <Plus className="w-3 h-3" />
                 <span>Add Missed Item</span>
@@ -279,12 +279,12 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
                     onClick={() => setSelectedItemIdx(isSelected ? null : idx)}
                     className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2 ${
                       isSelected
-                        ? "bg-[#D97757]/10 border-[#D97757]"
-                        : "bg-[#EFEEE7] dark:bg-[#33322F] border-[#E5E3DA] dark:border-[#3E3D3A] hover:bg-[#E5E3DA]"
+                        ? "bg-[#7CA65B]/10 border-[#7CA65B]"
+                        : "bg-[#EFEEE7] dark:bg-[#1E1C19] border-[#E5E3DA] dark:border-[#3E3D3A] hover:bg-[#E5E3DA]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-[#D97757] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#7CA65B] shrink-0" />
                       <div>
                         <p className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA]">
                           {det.item_name}
@@ -301,7 +301,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
                           e.stopPropagation();
                           onSelectItem(linkedItem);
                         }}
-                        className="px-2.5 py-1 bg-[#D97757] text-white text-xs font-semibold rounded-lg shadow hover:bg-[#C15F3C]"
+                        className="px-2.5 py-1 bg-[#7CA65B] text-white text-xs font-semibold rounded-lg shadow hover:bg-[#6B9149]"
                       >
                         View Record
                       </button>
@@ -322,7 +322,7 @@ export const SpaceDetailModal: React.FC<SpaceDetailModalProps> = ({
                 onClose();
               }
             }}
-            className="py-2.5 px-3 text-[#D97757] hover:bg-[#D97757]/10 rounded-xl text-xs font-semibold flex items-center gap-1.5"
+            className="py-2.5 px-3 text-[#7CA65B] hover:bg-[#7CA65B]/10 rounded-xl text-xs font-semibold flex items-center gap-1.5"
           >
             <Trash2 className="w-4 h-4" />
             <span>Delete Space</span>

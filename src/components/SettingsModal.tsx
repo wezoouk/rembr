@@ -91,8 +91,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-md w-full p-5 sm:p-6 shadow-2xl relative my-auto overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#161412]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#211F1B] rounded-[32px] max-w-md w-full p-5 sm:p-6 shadow-2xl relative my-auto overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A]">
           <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -110,10 +110,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         <div className="py-4 space-y-4 text-sm">
           {/* PRIVACY BADGE */}
-          <div className="p-3.5 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-[#D97757] dark:text-[#E8A785] shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-[#7CA65B] dark:text-[#A8C98B] shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-[#D97757] dark:text-[#E8A785] text-xs uppercase tracking-wider">
+              <p className="font-bold text-[#7CA65B] dark:text-[#A8C98B] text-xs uppercase tracking-wider">
                 100% On-Device Storage
               </p>
               <p className="text-xs text-[#44433F] dark:text-[#A8A7A2] mt-0.5">
@@ -123,10 +123,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* APPEARANCE TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               {settings.darkMode ? (
-                <Moon className="w-5 h-5 text-[#E8A785]" />
+                <Moon className="w-5 h-5 text-[#A8C98B]" />
               ) : (
                 <Sun className="w-5 h-5 text-[#83827C]" />
               )}
@@ -137,7 +137,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleDarkMode}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.darkMode ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.darkMode ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -149,7 +149,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* RETAIN FULL RESOLUTION PHOTOS */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <HardDrive className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -164,7 +164,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleRetainPhotos}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.retainOriginalPhotos ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.retainOriginalPhotos ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -176,7 +176,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BLUR RECENTLY SAVED PHOTO TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <EyeOff className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -191,7 +191,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleBlurRecentlySaved}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.blurRecentlySaved ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.blurRecentlySaved ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -203,7 +203,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BLUR LOCATION RECENTLY SAVED TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <MapPin className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -218,7 +218,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleBlurLocationRecentlySaved}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.blurLocationRecentlySaved ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.blurLocationRecentlySaved ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -230,7 +230,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* ALLOW DUPLICATE ITEMS TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <Copy className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -245,7 +245,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleAllowDuplicateItems}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.allowDuplicateItems ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.allowDuplicateItems ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -257,7 +257,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* SHOW / HIDE LOCATIONS SECTION TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <MapPin className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -272,7 +272,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleHideLocationsSection}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                !settings.hideLocationsSection ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                !settings.hideLocationsSection ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -284,7 +284,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* SHOW / HIDE BORROWED SECTION TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <HandHeart className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -299,7 +299,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleHideBorrowedSection}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                !settings.hideBorrowedSection ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                !settings.hideBorrowedSection ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -311,7 +311,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* AUTO SECOND SCAN PASS TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
             <div className="flex items-center gap-2.5">
               <ScanLine className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
@@ -326,7 +326,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleAutoSecondScanPass}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 shrink-0 ${
-                settings.autoSecondScanPass ? "bg-[#D97757]" : "bg-[#E5E3DA]"
+                settings.autoSecondScanPass ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -341,7 +341,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {onOpenHelp && (
             <button
               onClick={onOpenHelp}
-              className="w-full flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A] transition-colors"
+              className="w-full flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] rounded-2xl transition-colors"
             >
               <div className="flex items-center gap-2.5">
                 <HelpCircle className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
@@ -362,7 +362,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   onClose();
                 }
               }}
-              className="w-full py-3 px-4 bg-[#D97757]/10 hover:bg-[#D97757]/20 text-[#D97757] dark:text-[#E8A785] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#D97757]/20"
+              className="w-full py-3 px-4 bg-[#7CA65B]/10 hover:bg-[#7CA65B]/20 text-[#7CA65B] dark:text-[#A8C98B] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#7CA65B]/20"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Restore Sample Demo Data</span>
@@ -372,14 +372,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="w-full py-3 px-4 bg-[#D97757]/10 hover:bg-[#D97757]/20 text-[#D97757] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#D97757]/20"
+                className="w-full py-3 px-4 bg-[#7CA65B]/10 hover:bg-[#7CA65B]/20 text-[#7CA65B] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#7CA65B]/20"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Delete All My Data</span>
               </button>
             ) : (
-              <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/30 rounded-2xl space-y-2 text-xs">
-                <p className="font-bold text-[#D97757] flex items-center gap-1">
+              <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/30 rounded-2xl space-y-2 text-xs">
+                <p className="font-bold text-[#7CA65B] flex items-center gap-1">
                   <AlertTriangle className="w-4 h-4" />
                   Are you sure you want to delete all saved items?
                 </p>
@@ -399,7 +399,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       setShowDeleteConfirm(false);
                       onClose();
                     }}
-                    className="flex-1 py-2 bg-[#D97757] text-white rounded-xl font-bold"
+                    className="flex-1 py-2 bg-[#7CA65B] text-white rounded-xl font-bold"
                   >
                     Yes, Delete Everything
                   </button>

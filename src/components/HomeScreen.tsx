@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   Camera,
   Search,
@@ -8,17 +8,13 @@ import {
   Mic,
   MicOff,
   ChevronRight,
-  FolderOpen,
   Sparkles,
   MapPin,
-  Tag,
   Trash2,
-  X,
   AlertCircle,
   EyeOff,
   HandHeart,
   Bell,
-  User,
   CheckCircle2,
 } from "lucide-react";
 import { Item, Space, BorrowedItem } from "../types";
@@ -44,6 +40,23 @@ interface HomeScreenProps {
   onUpdateItem?: (item: Item) => void;
   onDeleteItem?: (id: string) => void;
   onMarkBorrowedReturned?: (item: BorrowedItem) => void;
+}
+
+// Blue family only — blue is reserved for the Borrowed/Loaned feature.
+const AVATAR_COLORS = ["#5B84C4", "#4A70AC", "#7B95C9", "#3E5F94"];
+
+function avatarColorFor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 5) return "Still up? 🌙";
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -74,34 +87,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const locationMap = new Map<string, { name: string; items: Item[] }>();
   items.forEach((item) => {
     const loc = (item.location_name || "General Storage").trim();
-    if (!locationMap.has(loc)) {
-      locationMap.set(loc, { name: loc, items: [] });
-    }
+    if (!locationMap.has(loc)) locationMap.set(loc, { name: loc, items: [] });
     locationMap.get(loc)!.items.push(item);
   });
-  const locationGroups = Array.from(locationMap.values()).sort(
-    (a, b) => b.items.length - a.items.length
-  );
+  const locationGroups = Array.from(locationMap.values()).sort((a, b) => b.items.length - a.items.length);
 
-  // Borrowed items still out on loan, soonest reminder first
-  const activeBorrowed = borrowedItems
-    .filter((b) => !b.is_returned)
-    .sort((a, b) => {
-      const aTime = a.next_reminder_at ? new Date(a.next_reminder_at).getTime() : Infinity;
-      const bTime = b.next_reminder_at ? new Date(b.next_reminder_at).getTime() : Infinity;
-      return aTime - bTime;
-    });
+  const activeBorrowed = useMemo(
+    () =>
+      borrowedItems
+        .filter((b) => !b.is_returned)
+        .sort((a, b) => {
+          const aTime = a.next_reminder_at ? new Date(a.next_reminder_at).getTime() : Infinity;
+          const bTime = b.next_reminder_at ? new Date(b.next_reminder_at).getTime() : Infinity;
+          return aTime - bTime;
+        }),
+    [borrowedItems]
+  );
   const overdueBorrowed = activeBorrowed.filter(
     (b) => b.reminder_interval !== "none" && b.next_reminder_at && new Date(b.next_reminder_at).getTime() <= Date.now()
   );
-
-  const visibleActionCount = 3 + (!hideLocationsSection ? 1 : 0) + (!hideBorrowedSection ? 1 : 0);
-  const actionGridClass =
-    visibleActionCount >= 5
-      ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-5"
-      : visibleActionCount === 4
-      ? "grid-cols-2 md:grid-cols-4"
-      : "grid-cols-1 sm:grid-cols-3 md:grid-cols-3";
 
   const voiceListenerRef = useRef<VoiceListener | null>(null);
 
@@ -110,9 +114,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       voiceListenerRef.current = new VoiceListener(
         (transcript, isFinal) => {
           setQuickQuery(transcript);
-          if (isFinal) {
-            setIsListening(false);
-          }
+          if (isFinal) setIsListening(false);
         },
         () => setIsListening(false),
         () => setIsListening(false),
@@ -120,9 +122,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       );
     }
     return () => {
-      if (voiceListenerRef.current) {
-        voiceListenerRef.current.stop();
-      }
+      if (voiceListenerRef.current) voiceListenerRef.current.stop();
     };
   }, []);
 
@@ -131,7 +131,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       alert("Voice recognition is not supported on this browser.");
       return;
     }
-
     if (isListening) {
       voiceListenerRef.current.stop();
       setIsListening(false);
@@ -142,7 +141,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   const pinnedItems = items.filter((item) => item.is_pinned);
-  const recentItems = items.slice(0, 8);
+  const recentItems = items.filter((item) => !item.is_pinned).slice(0, 6);
+  const heroPhoto = items[0]?.image_path;
 
   const handleQuickSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,66 +150,159 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       voiceListenerRef.current.stop();
       setIsListening(false);
     }
-    if (quickQuery.trim()) {
-      onOpenFind(quickQuery.trim());
-    } else {
-      onOpenFind();
-    }
+    if (quickQuery.trim()) onOpenFind(quickQuery.trim());
+    else onOpenFind();
   };
 
+  // Shared photo-forward item card, used for both Pinned and Recently Saved
+  const ItemCard: React.FC<{ item: Item }> = ({ item }) => (
+    <div
+      onClick={() => onSelectItem(item)}
+      className="group text-left bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer relative"
+    >
+      <div className="aspect-[4/3] relative overflow-hidden bg-[#E5E3DA] dark:bg-[#100F0D]">
+        <img
+          src={item.image_path}
+          alt={item.name}
+          className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${
+            blurRecentlySaved ? "blur-md group-hover:blur-none" : ""
+          }`}
+          referrerPolicy="no-referrer"
+        />
+        {blurRecentlySaved && (
+          <div className="absolute inset-0 bg-black/15 group-hover:opacity-0 transition-opacity flex items-center justify-center pointer-events-none">
+            <EyeOff className="w-4 h-4 text-white/90 drop-shadow" />
+          </div>
+        )}
+        <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onUpdateItem) onUpdateItem({ ...item, is_pinned: !item.is_pinned });
+            }}
+            className={`p-1.5 rounded-xl shadow-md transition-transform hover:scale-105 ${
+              item.is_pinned ? "bg-[#7CA65B] text-white" : "bg-black/60 text-white"
+            }`}
+          >
+            <Pin className={`w-3.5 h-3.5 ${item.is_pinned ? "fill-current" : ""}`} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeletingItemId(item.id);
+            }}
+            className="p-1.5 bg-black/60 hover:bg-[#B0473A] text-white rounded-xl shadow-md transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+        {item.is_pinned && (
+          <span className="absolute top-2 left-2 bg-[#7CA65B] text-white p-1 rounded-lg shadow opacity-100 group-hover:opacity-0 transition-opacity">
+            <Pin className="w-3 h-3 fill-current" />
+          </span>
+        )}
+
+        {deletingItemId === item.id && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm p-3 flex flex-col items-center justify-center text-center gap-2 z-10 animate-fade-in"
+          >
+            <AlertCircle className="w-5 h-5 text-[#E8988A]" />
+            <span className="text-xs font-bold text-white">Delete this item?</span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onDeleteItem) onDeleteItem(item.id);
+                  setDeletingItemId(null);
+                }}
+                className="px-2.5 py-1 bg-[#B0473A] hover:bg-[#9A3C31] text-white text-xs font-bold rounded-xl"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeletingItemId(null);
+                }}
+                className="px-2.5 py-1 bg-white/20 text-white text-xs font-semibold rounded-xl"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="p-3">
+        <h3 className="font-bold text-sm text-[#30302E] dark:text-[#F2F0EA] truncate">{item.name}</h3>
+        <p
+          className={`text-xs text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1.5 mt-1 font-medium ${
+            blurLocationRecentlySaved ? "blur-sm group-hover:blur-none select-none" : ""
+          }`}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#7CA65B] shrink-0" />
+          <span className="truncate">{item.location_name}</span>
+        </p>
+        <p className="text-[11px] text-[#83827C] dark:text-[#7A7972] mt-0.5">
+          Saved {formatRelativeTime(item.created_at || item.updated_at)}
+        </p>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="space-y-6 pb-20">
-      {/* Search Bar / Voice Quick Launcher */}
+    <div className="space-y-7 pb-28">
+      {/* GREETING */}
+      <div>
+        <h1 className="text-2xl font-extrabold text-[#30302E] dark:text-[#F2F0EA] tracking-tight">
+          {getGreeting()} 👋
+        </h1>
+        <p className="text-sm text-[#83827C] dark:text-[#A8A7A2] mt-0.5">What are you trying to find?</p>
+      </div>
+
+      {/* HERO SEARCH / ASK BAR */}
       <div className="space-y-2">
         <form
           onSubmit={handleQuickSearchSubmit}
-          className="relative flex items-center shadow-sm rounded-2xl bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] overflow-hidden p-1"
+          className="relative flex items-center bg-[#EFEEE7] dark:bg-[#211F1B] rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
         >
-          <Search className="w-5 h-5 text-[#83827C] ml-3 shrink-0" />
+          <Search className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2] ml-3 shrink-0" />
           <input
             type="text"
             value={quickQuery}
             onChange={(e) => setQuickQuery(e.target.value)}
-            placeholder='Ask "Where are my keys?" or "Passport"...'
-            className="w-full py-3 pl-3 pr-28 text-base text-[#30302E] dark:text-[#E5E3DA] bg-transparent placeholder-[#83827C] focus:outline-none"
+            placeholder="Ask Rembr... where are my keys?"
+            className="w-full py-2.5 pl-3 pr-2 text-[15px] text-[#30302E] dark:text-[#F2F0EA] bg-transparent placeholder-[#83827C] dark:placeholder-[#7A7972] focus:outline-none"
           />
-          <div className="absolute right-2 flex items-center gap-1.5">
-            {/* Dictate Button */}
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={toggleVoiceInput}
-              className={`px-3 py-2.5 rounded-xl shadow transition-all flex items-center gap-1.5 text-xs font-bold select-none active:scale-95 cursor-pointer ${
+              className={`p-2.5 rounded-full transition-all select-none active:scale-95 cursor-pointer ${
                 isListening
-                  ? "bg-[#D97757] text-white animate-pulse"
-                  : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A]"
+                  ? "bg-[#7CA65B] text-white animate-pulse"
+                  : "bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10"
               }`}
-              title={isListening ? "Tap to stop dictating" : "Tap to start dictating"}
+              title={isListening ? "Tap to stop dictating" : "Ask by voice"}
             >
-              {isListening ? (
-                <>
-                  <MicOff className="w-4 h-4" />
-                  <span className="hidden sm:inline">Listening</span>
-                </>
-              ) : (
-                <>
-                  <Mic className="w-4 h-4" />
-                  <span className="hidden sm:inline">Dictate</span>
-                </>
-              )}
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </button>
-
-            {/* Search Button */}
             <button
-              type="submit"
-              className="p-2.5 bg-[#D97757] hover:bg-[#C15F3C] text-white rounded-xl shadow transition-all"
-              title="Search Saved Stuff"
+              type="button"
+              onClick={onOpenRemember}
+              className="p-2.5 rounded-full bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10 transition-all"
+              title="Snap a photo to remember something"
             >
-              <Search className="w-4 h-4" />
+              <Camera className="w-4 h-4" />
             </button>
           </div>
         </form>
 
-        {/* PROMINENT DICTATION STATUS BADGE & AUDIO WAVEFORM */}
         <DictationIndicator
           isListening={isListening}
           transcript={quickQuery}
@@ -219,297 +312,210 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         />
       </div>
 
-      {/* OVERDUE BORROWED REMINDER BANNER */}
+      {/* OVERDUE BORROWED BANNER */}
       {!hideBorrowedSection && overdueBorrowed.length > 0 && (
         <button
           onClick={onOpenBorrowed}
-          className="w-full text-left p-3.5 bg-[#D97757]/15 border-2 border-[#D97757] rounded-2xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
+          className="w-full text-left p-3.5 bg-[#5B84C4]/12 rounded-2xl flex items-center gap-3 hover:bg-[#5B84C4]/18 transition-all active:scale-[0.99]"
         >
           <div className="relative shrink-0">
-            <span className="absolute w-8 h-8 rounded-full bg-[#D97757] opacity-40 animate-ping"></span>
-            <div className="relative w-8 h-8 rounded-full bg-[#D97757] text-white flex items-center justify-center">
+            <span className="absolute w-8 h-8 rounded-full bg-[#5B84C4] opacity-30 animate-ping" />
+            <div className="relative w-8 h-8 rounded-full bg-[#5B84C4] text-white flex items-center justify-center">
               <Bell className="w-4 h-4" />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black text-[#C15F3C] dark:text-[#E8A785] uppercase tracking-wider">
-              {overdueBorrowed.length} borrowed item{overdueBorrowed.length === 1 ? "" : "s"} overdue
+            <p className="text-xs font-black text-[#4A70AC] dark:text-[#8FADDE] uppercase tracking-wider">
+              {overdueBorrowed.length} item{overdueBorrowed.length === 1 ? "" : "s"} overdue
             </p>
             <p className="text-xs font-semibold text-[#44433F] dark:text-[#E5E3DA] truncate mt-0.5">
               {overdueBorrowed.slice(0, 2).map((b) => `${b.borrowed_to} has your ${b.item_name}`).join(" · ")}
               {overdueBorrowed.length > 2 ? "…" : ""}
             </p>
           </div>
-          <ChevronRight className="w-5 h-5 text-[#D97757] shrink-0" />
+          <ChevronRight className="w-5 h-5 text-[#5B84C4] shrink-0" />
         </button>
       )}
 
-      {/* CORE ACTION BUTTONS */}
-      <div className={`grid ${actionGridClass} gap-3`}>
-        {/* 1. REMEMBER */}
-        <button
-          onClick={onOpenRemember}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
-        >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-            <Camera className="w-6 h-6 sm:w-7 sm:h-7" />
-          </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
-              Remember
-            </h2>
-            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
-              Save item spot
-            </p>
-          </div>
-        </button>
-
-        {/* 2. FIND */}
-        <button
-          onClick={() => onOpenFind()}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
-        >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-            <Search className="w-6 h-6 sm:w-7 sm:h-7" />
-          </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
-              Find
-            </h2>
-            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
-              Search lost item
-            </p>
-          </div>
-        </button>
-
-        {/* 3. LOCATIONS (If not hidden) */}
-        {!hideLocationsSection && (
-          <button
-            onClick={() => onOpenLocations()}
-            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
-          >
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <MapPin className="w-6 h-6 sm:w-7 sm:h-7" />
-            </div>
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
-                Locations
-              </h2>
-              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
-                Browse by spot ({locationGroups.length})
-              </p>
-            </div>
-          </button>
+      {/* HERO REMEMBER CARD */}
+      <button
+        onClick={onOpenRemember}
+        className="group relative w-full text-left rounded-[28px] overflow-hidden shadow-md active:scale-[0.99] transition-all h-44"
+      >
+        {heroPhoto ? (
+          <img
+            src={heroPhoto}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#3F4A36] via-[#2E3628] to-[#1E1C19]" />
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
 
-        {/* BORROWED (If not hidden) */}
+        <div className="relative h-full p-5 flex flex-col justify-end">
+          <div className="w-9 h-9 rounded-2xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center mb-2">
+            <Camera className="w-4.5 h-4.5" />
+          </div>
+          <h2 className="text-xl font-extrabold text-white">Remember something</h2>
+          <p className="text-xs text-white/75 mt-0.5 mb-3">Take a photo or just tell me where you put it</p>
+          <span className="inline-flex w-fit items-center gap-1.5 px-4 py-2 bg-[#7CA65B] text-white text-xs font-bold rounded-full shadow-lg">
+            Add new item
+          </span>
+        </div>
+      </button>
+
+      {/* SECONDARY ACTIONS */}
+      <div className={`grid gap-3 ${!hideBorrowedSection ? "grid-cols-2" : "grid-cols-1"}`}>
+        <button
+          onClick={onOpenScanSpace}
+          className="text-left p-4 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl hover:shadow-md transition-all active:scale-[0.98] flex flex-col gap-2.5"
+        >
+          <div className="w-10 h-10 rounded-2xl bg-[#7CA65B]/15 text-[#5F8A48] dark:text-[#A8C98B] flex items-center justify-center">
+            <Grid className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA]">Scan a space</h3>
+            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] mt-0.5">Catalog a drawer, shelf or room</p>
+          </div>
+        </button>
+
         {!hideBorrowedSection && (
           <button
             onClick={onOpenBorrowed}
-            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between relative"
+            className="text-left p-4 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl hover:shadow-md transition-all active:scale-[0.98] flex flex-col gap-2.5 relative"
           >
             {overdueBorrowed.length > 0 && (
-              <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold flex items-center justify-center shadow">
+              <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#B0473A] text-white text-[10px] font-bold flex items-center justify-center">
                 {overdueBorrowed.length}
               </span>
             )}
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <HandHeart className="w-6 h-6 sm:w-7 sm:h-7" />
+            <div className="w-10 h-10 rounded-2xl bg-[#5B84C4]/15 text-[#4A70AC] dark:text-[#8FADDE] flex items-center justify-center">
+              <HandHeart className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
-                Borrowed
-              </h2>
-              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
-                {activeBorrowed.length > 0 ? `${activeBorrowed.length} out on loan` : "Track lent items"}
-              </p>
+              <h3 className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA]">Lend an item</h3>
+              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] mt-0.5">Keep track of things you've lent out</p>
             </div>
           </button>
         )}
-
-        {/* 4. SCAN A SPACE */}
-        <button
-          onClick={onOpenScanSpace}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
-        >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-            <Grid className="w-6 h-6 sm:w-7 sm:h-7" />
-          </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
-              Scan Space
-            </h2>
-            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
-              Catalog drawer/shelf
-            </p>
-          </div>
-        </button>
       </div>
 
-      {/* PINNED / FAVOURITES */}
+      {/* PINNED */}
       {pinnedItems.length > 0 && (
         <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
-              <Pin className="w-3.5 h-3.5 text-[#D97757] fill-[#D97757]" />
-              Pinned Items
-            </h2>
-            <span className="text-xs text-[#83827C] dark:text-[#A8A7A2]">
-              {pinnedItems.length} items
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+            <Pin className="w-3.5 h-3.5 text-[#5B84C4] fill-[#5B84C4]" />
+            Pinned
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
             {pinnedItems.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => onSelectItem(item)}
-                className="group text-left bg-white/70 dark:bg-[#2B2A28]/70 border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between overflow-hidden relative"
-              >
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] relative mb-2.5">
-                  <img
-                    src={item.image_path}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onUpdateItem) {
-                          onUpdateItem({ ...item, is_pinned: false });
-                        }
-                      }}
-                      className="p-1.5 bg-[#D97757] text-white rounded-xl shadow-md hover:scale-105 transition-transform"
-                      title="Unpin Item"
-                    >
-                      <Pin className="w-3.5 h-3.5 fill-current" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeletingItemId(item.id);
-                      }}
-                      className="p-1.5 bg-black/60 hover:bg-[#D97757] text-white rounded-xl shadow-md transition-colors"
-                      title="Delete Item"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
-                    {item.name}
-                  </h3>
-                  <p className="text-xs text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-0.5 font-medium">
-                    <MapPin className="w-3 h-3 text-[#D97757] shrink-0" />
-                    <span className="truncate">{item.location_name}</span>
-                  </p>
-                  <p className="text-[10px] text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-1 font-medium">
-                    <Clock className="w-2.5 h-2.5 text-[#D97757] shrink-0" />
-                    <span className="truncate">Recorded: {formatShortDateTime(item.created_at || item.updated_at)}</span>
-                  </p>
-                </div>
-
-                {deletingItemId === item.id && (
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="absolute inset-0 bg-white/95 dark:bg-[#2B2A28]/95 backdrop-blur-sm p-3 rounded-3xl flex flex-col items-center justify-center text-center gap-2 z-10 animate-fade-in"
-                  >
-                    <AlertCircle className="w-5 h-5 text-[#D97757]" />
-                    <span className="text-xs font-bold text-[#30302E] dark:text-[#E5E3DA]">Are you sure?</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onDeleteItem) {
-                            onDeleteItem(item.id);
-                          }
-                          setDeletingItemId(null);
-                        }}
-                        className="px-2.5 py-1 bg-[#D97757] hover:bg-[#C15F3C] text-white text-xs font-bold rounded-xl shadow"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeletingItemId(null);
-                        }}
-                        className="px-2 py-1 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <ItemCard key={item.id} item={item} />
             ))}
           </div>
         </section>
       )}
 
-      {/* BORROWED ITEMS OUT ON LOAN */}
+      {/* RECENTLY SAVED — photo-forward cards */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
+            Recently saved
+          </h2>
+          {items.length > 0 && (
+            <button
+              onClick={() => onOpenFind()}
+              className="text-xs font-bold text-[#5F8A48] dark:text-[#A8C98B] hover:underline flex items-center gap-0.5"
+            >
+              View all
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {items.length === 0 ? (
+          <div className="text-center py-10 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl">
+            <Camera className="w-8 h-8 text-[#83827C] mx-auto mb-2" />
+            <p className="text-sm font-semibold text-[#44433F] dark:text-[#E5E3DA]">Nothing remembered yet</p>
+            <p className="text-xs text-[#83827C] mt-1">
+              Tap <span className="font-bold text-[#5F8A48] dark:text-[#A8C98B]">Remember something</span> above to save your first item
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {recentItems.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* OUT ON LOAN — friendly strip */}
       {!hideBorrowedSection && activeBorrowed.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
-              <HandHeart className="w-3.5 h-3.5 text-[#D97757]" />
-              Borrowed & Out on Loan
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
+              Out on loan
             </h2>
             <button
               onClick={onOpenBorrowed}
-              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
+              className="text-xs font-bold text-[#4A70AC] dark:text-[#8FADDE] hover:underline flex items-center gap-0.5"
             >
-              View All ({activeBorrowed.length})
+              View all
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="space-y-2">
             {activeBorrowed.slice(0, 4).map((b) => {
               const overdue =
-                b.reminder_interval !== "none" &&
-                b.next_reminder_at &&
-                new Date(b.next_reminder_at).getTime() <= Date.now();
+                b.reminder_interval !== "none" && b.next_reminder_at && new Date(b.next_reminder_at).getTime() <= Date.now();
               return (
                 <div
                   key={b.id}
                   onClick={onOpenBorrowed}
-                  className={`group cursor-pointer bg-white dark:bg-[#2B2A28] border rounded-2xl p-3 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 ${
-                    overdue ? "border-[#D97757]" : "border-[#E5E3DA] dark:border-[#3E3D3A]"
-                  }`}
+                  className="flex items-center gap-3 p-2.5 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl cursor-pointer hover:shadow-sm transition-all"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center shrink-0">
-                    <HandHeart className="w-5 h-5" />
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+                    style={{ backgroundColor: avatarColorFor(b.borrowed_to) }}
+                  >
+                    {b.borrowed_to.trim().charAt(0).toUpperCase() || "?"}
                   </div>
+                  {b.image_path ? (
+                    <img src={b.image_path} alt={b.item_name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-xl bg-[#5B84C4]/15 text-[#4A70AC] dark:text-[#8FADDE] flex items-center justify-center shrink-0">
+                      <HandHeart className="w-4 h-4" />
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-xs sm:text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
-                      {b.item_name}
-                    </h3>
-                    <p className="text-[11px] text-[#D97757] dark:text-[#E8A785] font-medium truncate flex items-center gap-1 mt-0.5">
-                      <User className="w-3 h-3 shrink-0" />
-                      {b.borrowed_to}
+                    <p className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA] truncate">
+                      {b.borrowed_to} has your {b.item_name}
+                    </p>
+                    <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
+                      Borrowed {formatRelativeTime(b.date_borrowed)}
                     </p>
                   </div>
-                  {onMarkBorrowedReturned && (
+                  {onMarkBorrowedReturned ? (
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         onMarkBorrowedReturned(b);
                       }}
-                      className="p-1.5 rounded-lg text-[#83827C] hover:text-[#D97757] hover:bg-[#D97757]/10 transition-colors shrink-0"
                       title="Mark as returned"
+                      className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 transition-colors ${
+                        overdue
+                          ? "bg-[#B0473A]/15 text-[#B0473A] hover:bg-[#7CA65B]/15 hover:text-[#5F8A48]"
+                          : "bg-[#7CA65B]/12 text-[#5F8A48] dark:text-[#A8C98B] hover:bg-[#7CA65B]/25"
+                      }`}
                     >
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-3 h-3" />
+                      {overdue ? "Overdue" : "Due soon"}
                     </button>
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-[#83827C] shrink-0" />
                   )}
                 </div>
               );
@@ -518,270 +524,91 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
       )}
 
-      {/* RECENTLY SAVED ITEMS */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#D97757]" />
-              Recently Saved
-            </h2>
-            <span className="text-[10px] bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] px-2 py-0.5 rounded-full font-bold">
-              {items.length} {items.length === 1 ? "item" : "items"}
-            </span>
-          </div>
-          <button
-            onClick={() => onOpenFind()}
-            className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
-          >
-            View All
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {recentItems.length === 0 ? (
-          <div className="text-center py-10 bg-white dark:bg-[#2B2A28] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
-            <Camera className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
-            <p className="text-sm font-semibold text-[#44433F] dark:text-[#E5E3DA]">
-              No items saved yet
-            </p>
-            <p className="text-xs text-[#83827C] mt-1">
-              Tap <span className="font-bold text-[#D97757]">Remember</span> above to save your first item!
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {recentItems.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => onSelectItem(item)}
-                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl p-2.5 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 relative overflow-hidden"
-              >
-                <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
-                  <img
-                    src={item.image_path}
-                    alt={item.name}
-                    className={`w-full h-full object-cover transition-all duration-300 ${
-                      blurRecentlySaved
-                        ? "blur-md group-hover:blur-none scale-105"
-                        : "group-hover:scale-105"
-                    }`}
-                    referrerPolicy="no-referrer"
-                  />
-                  {blurRecentlySaved && (
-                    <div className="absolute inset-0 bg-black/20 group-hover:opacity-0 transition-opacity flex items-center justify-center pointer-events-none">
-                      <EyeOff className="w-4 h-4 text-white/90 drop-shadow" />
-                    </div>
-                  )}
-                  {item.source_type === "scan" && (
-                    <span className="absolute bottom-0.5 left-0.5 bg-[#D97757] text-white text-[9px] font-bold px-1 py-0 rounded">
-                      Scan
-                    </span>
-                  )}
-                  {item.is_pinned && (
-                    <span className="absolute top-0.5 left-0.5 bg-[#D97757] text-white p-0.5 rounded shadow">
-                      <Pin className="w-2.5 h-2.5 fill-current" />
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0 pr-1">
-                  <h3 className="font-bold text-xs sm:text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
-                    {item.name}
-                  </h3>
-
-                  <p
-                    className={`text-[11px] text-[#83827C] dark:text-[#A8A7A2] font-medium truncate flex items-center gap-1 mt-0.5 transition-all duration-300 ${
-                      blurLocationRecentlySaved
-                        ? "blur-sm group-hover:blur-none hover:blur-none select-none"
-                        : ""
-                    }`}
-                  >
-                    <MapPin className="w-3 h-3 text-[#D97757] shrink-0" />
-                    <span className="truncate">{item.location_name}</span>
-                  </p>
-
-                  <p className="text-[10px] text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-0.5">
-                    <Clock className="w-2.5 h-2.5 text-[#D97757] shrink-0" />
-                    <span className="truncate">{formatShortDateTime(item.created_at || item.updated_at)}</span>
-                  </p>
-                </div>
-
-                {/* Pin & Delete Action Controls */}
-                {deletingItemId === item.id ? (
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="absolute inset-0 bg-white/95 dark:bg-[#2B2A28]/95 backdrop-blur-sm p-2 rounded-2xl flex items-center justify-between gap-1 z-10 animate-fade-in"
-                  >
-                    <span className="text-[10px] font-bold text-[#D97757] truncate">Delete?</span>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onDeleteItem) {
-                            onDeleteItem(item.id);
-                          }
-                          setDeletingItemId(null);
-                        }}
-                        className="px-2 py-0.5 bg-[#D97757] hover:bg-[#C15F3C] text-white text-[10px] font-bold rounded-lg shadow"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeletingItemId(null);
-                        }}
-                        className="px-1.5 py-0.5 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] text-[10px] font-semibold rounded-lg"
-                      >
-                        No
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-0.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onUpdateItem) {
-                          onUpdateItem({ ...item, is_pinned: !item.is_pinned });
-                        }
-                      }}
-                      className={`p-1.5 rounded-lg transition-all ${
-                        item.is_pinned
-                          ? "bg-[#D97757] text-white shadow-sm"
-                          : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#83827C] hover:text-[#30302E] dark:hover:text-white"
-                      }`}
-                      title={item.is_pinned ? "Unpin item" : "Pin item to top"}
-                    >
-                      <Pin className={`w-3.5 h-3.5 ${item.is_pinned ? "fill-current" : ""}`} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeletingItemId(item.id);
-                      }}
-                      className="p-1.5 rounded-lg text-[#83827C] hover:text-[#D97757] hover:bg-[#D97757]/10 transition-colors"
-                      title="Delete item"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* BROWSE LOCATIONS GALLERY */}
-      {locationGroups.length > 0 && !hideLocationsSection && (
+      {/* WHERE YOUR THINGS ARE — swipeable location cards */}
+      {!hideLocationsSection && locationGroups.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#D97757]" />
-              Browse Locations
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
+              Where your things are
             </h2>
             <button
               onClick={() => onOpenLocations()}
-              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
+              className="text-xs font-bold text-[#5F8A48] dark:text-[#A8C98B] hover:underline flex items-center gap-0.5"
             >
-              View All ({locationGroups.length})
+              View all
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {locationGroups.slice(0, 4).map((group) => (
+          <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1 snap-x">
+            {locationGroups.map((group) => (
               <div
                 key={group.name}
                 onClick={() => onOpenLocations(group.name)}
-                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/50 rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center justify-between gap-3"
+                className="group shrink-0 w-40 cursor-pointer snap-start"
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
-                    {group.items[0]?.image_path ? (
-                      <img
-                        src={group.items[0].image_path}
-                        alt={group.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#D97757]">
-                        <MapPin className="w-6 h-6" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate group-hover:text-[#D97757] dark:group-hover:text-[#E8A785] transition-colors">
-                      {group.name}
-                    </h3>
-                    <p className="text-xs text-[#D97757] dark:text-[#E8A785] font-semibold mt-0.5">
-                      {group.items.length} {group.items.length === 1 ? "item" : "items"} inside
-                    </p>
-                    <p className="text-[11px] text-[#83827C] truncate mt-0.5 font-medium">
-                      {group.items.map((i) => i.name).slice(0, 2).join(", ")}
+                <div className="aspect-square rounded-3xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1E1C19] relative">
+                  {group.items[0]?.image_path ? (
+                    <img
+                      src={group.items[0].image_path}
+                      alt={group.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-[#7CA65B]">
+                      <MapPin className="w-7 h-7" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <p className="text-white text-sm font-bold truncate drop-shadow">{group.name}</p>
+                    <p className="text-white/80 text-[11px] font-medium">
+                      {group.items.length} {group.items.length === 1 ? "item" : "items"}
                     </p>
                   </div>
                 </div>
-
-                <ChevronRight className="w-5 h-5 text-[#83827C] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* SCANNED SPACES GALLERY */}
+      {/* SCANNED SPACES */}
       {spaces.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
-              <FolderOpen className="w-3.5 h-3.5 text-[#D97757]" />
-              Scanned Spaces
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2]">
+              Scanned spaces
             </h2>
             <button
               onClick={onOpenScanSpace}
-              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline"
+              className="text-xs font-bold text-[#5F8A48] dark:text-[#A8C98B] hover:underline"
             >
-              Scan new space +
+              Scan new +
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1 snap-x">
             {spaces.map((space) => (
               <div
                 key={space.id}
                 onClick={() => onSelectSpace(space)}
-                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center gap-3"
+                className="group shrink-0 w-40 cursor-pointer snap-start"
               >
-                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
+                <div className="aspect-square rounded-3xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1E1C19] relative">
                   <img
                     src={space.image_path}
                     alt={space.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     referrerPolicy="no-referrer"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <p className="text-white text-sm font-bold truncate drop-shadow">{space.name}</p>
+                    <p className="text-white/80 text-[11px] font-medium">{space.detected_items_count} items</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
-                    {space.name}
-                  </h3>
-                  <p className="text-xs text-[#D97757] font-semibold mt-0.5">
-                    {space.detected_items_count} items detected
-                  </p>
-                  <p className="text-[11px] text-[#83827C] mt-0.5 flex items-center gap-1 font-medium">
-                    <Clock className="w-3 h-3 text-[#D97757]" />
-                    Scanned: {formatShortDateTime(space.created_at)}
-                  </p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-[#83827C] shrink-0" />
               </div>
             ))}
           </div>

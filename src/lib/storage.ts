@@ -92,7 +92,7 @@ const INITIAL_ITEMS: Item[] = [];
 const INITIAL_SPACES: Space[] = [];
 
 const DEFAULT_SETTINGS: AppSettings = {
-  darkMode: false,
+  darkMode: true,
   retainOriginalPhotos: true,
   hasCompletedOnboarding: false,
   blurRecentlySaved: false,

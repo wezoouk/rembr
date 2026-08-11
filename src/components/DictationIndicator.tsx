@@ -89,7 +89,7 @@ const AudioWaveformCanvas: React.FC<{ isListening: boolean; audioLevel?: number 
           Math.cos(x * 0.02 - phase * 0.8) * amp2 * envelope;
         ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = "#D97757";
+      ctx.strokeStyle = "#7CA65B";
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
@@ -141,7 +141,7 @@ const AudioWaveformCanvas: React.FC<{ isListening: boolean; audioLevel?: number 
       ref={canvasRef}
       width={400}
       height={52}
-      className="w-full h-13 rounded-xl bg-[#EFEEE7]/80 dark:bg-[#1F1E1C]/80 border border-[#D97757]/30 shadow-inner"
+      className="w-full h-13 rounded-xl bg-[#EFEEE7]/80 dark:bg-[#100F0D]/80 border border-[#7CA65B]/30 shadow-inner"
     />
   );
 };
@@ -158,23 +158,23 @@ export const DictationIndicator: React.FC<DictationIndicatorProps> = ({
 
   return (
     <div
-      className={`p-3.5 bg-[#D97757]/15 border-2 border-[#D97757] rounded-2xl shadow-xl animate-fade-in space-y-3 ${className}`}
+      className={`p-3.5 bg-[#7CA65B]/15 border-2 border-[#7CA65B] rounded-2xl shadow-xl animate-fade-in space-y-3 ${className}`}
     >
       <div className="flex items-center justify-between gap-3">
         {/* Animated Equalizer Sound Wave + Status */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative flex items-center justify-center shrink-0">
             {/* Glowing outer pulse ring */}
-            <span className="absolute w-9 h-9 rounded-full bg-[#D97757] opacity-40 animate-ping"></span>
-            <div className="relative w-9 h-9 rounded-full bg-[#D97757] text-white flex items-center justify-center shadow-md">
+            <span className="absolute w-9 h-9 rounded-full bg-[#7CA65B] opacity-40 animate-ping"></span>
+            <div className="relative w-9 h-9 rounded-full bg-[#7CA65B] text-white flex items-center justify-center shadow-md">
               <Mic className="w-4 h-4 animate-bounce" />
             </div>
           </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-[#C15F3C] dark:text-[#E8A785] uppercase tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#D97757] animate-pulse"></span>
+              <span className="text-xs font-black text-[#6B9149] dark:text-[#A8C98B] uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#7CA65B] animate-pulse"></span>
                 RECORDING / DICTATING
               </span>
             </div>
@@ -189,7 +189,7 @@ export const DictationIndicator: React.FC<DictationIndicatorProps> = ({
         <button
           type="button"
           onClick={onStop}
-          className="px-3.5 py-1.5 bg-[#D97757] hover:bg-[#C15F3C] text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow shrink-0 active:scale-95 transition-all cursor-pointer"
+          className="px-3.5 py-1.5 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow shrink-0 active:scale-95 transition-all cursor-pointer"
         >
           <Square className="w-3.5 h-3.5 fill-current" />
           <span>Stop</span>
@@ -201,8 +201,8 @@ export const DictationIndicator: React.FC<DictationIndicatorProps> = ({
 
       {/* Realtime Spoken Transcript Box */}
       {transcript ? (
-        <div className="p-2.5 bg-white/90 dark:bg-[#1F1E1C]/90 border border-[#D97757]/40 rounded-xl shadow-sm">
-          <p className="text-[10px] font-extrabold text-[#C15F3C] dark:text-[#E8A785] uppercase tracking-wider mb-0.5">
+        <div className="p-2.5 bg-white/90 dark:bg-[#100F0D]/90 border border-[#7CA65B]/40 rounded-xl shadow-sm">
+          <p className="text-[10px] font-extrabold text-[#6B9149] dark:text-[#A8C98B] uppercase tracking-wider mb-0.5">
             Hearing You Speak:
           </p>
           <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA] italic">
@@ -216,7 +216,7 @@ export const DictationIndicator: React.FC<DictationIndicatorProps> = ({
       )}
 
       {/* Auto Silence Helper Note */}
-      <div className="flex items-center justify-between text-[10px] text-[#83827C] dark:text-[#A8A7A2] font-medium pt-0.5 px-1 border-t border-[#D97757]/20">
+      <div className="flex items-center justify-between text-[10px] text-[#83827C] dark:text-[#A8A7A2] font-medium pt-0.5 px-1 border-t border-[#7CA65B]/20">
         <span>⚡ Dynamic mic level graph</span>
         <span>Tap Stop or pause 5s when done</span>
       </div>

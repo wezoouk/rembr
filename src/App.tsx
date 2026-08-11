@@ -27,13 +27,14 @@ import { SettingsModal } from "./components/SettingsModal";
 import { LocationsModal } from "./components/LocationsModal";
 import { BorrowedModal } from "./components/BorrowedModal";
 import { HelpModal } from "./components/HelpModal";
+import { BottomNav } from "./components/BottomNav";
 
 export default function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [borrowedItems, setBorrowedItems] = useState<BorrowedItem[]>([]);
   const [settings, setSettings] = useState<AppSettings>({
-    darkMode: false,
+    darkMode: true,
     retainOriginalPhotos: true,
     hasCompletedOnboarding: false,
     hideLocationsSection: true,
@@ -233,7 +234,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F4EF] dark:bg-[#262624] text-[#44433F] dark:text-[#E5E3DA] font-sans transition-colors duration-200 antialiased selection:bg-[#D97757] selection:text-white">
+    <div className="min-h-screen bg-[#F5F4EF] dark:bg-[#161412] text-[#44433F] dark:text-[#E5E3DA] font-sans transition-colors duration-200 antialiased selection:bg-[#7CA65B] selection:text-white">
       {/* Header */}
       <Header
         settings={settings}
@@ -272,6 +273,29 @@ export default function App() {
           }
         />
       </main>
+
+      {/* BOTTOM TAB BAR */}
+      <BottomNav
+        onGoHome={handleGoHome}
+        onOpenFind={() => handleOpenFindWithQuery("")}
+        onOpenRemember={() => {
+          setRememberInitialLocation("");
+          setShowRememberModal(true);
+        }}
+        onOpenScanSpace={() => setShowScanSpaceModal(true)}
+        onOpenBorrowed={() => setShowBorrowedModal(true)}
+        onOpenMore={() => setShowSettingsModal(true)}
+        hideBorrowedSection={settings.hideBorrowedSection}
+        activeOverdueCount={
+          borrowedItems.filter(
+            (b) =>
+              !b.is_returned &&
+              b.reminder_interval !== "none" &&
+              b.next_reminder_at &&
+              new Date(b.next_reminder_at).getTime() <= Date.now()
+          ).length
+        }
+      />
 
       {/* MODALS */}
       {showOnboarding && (

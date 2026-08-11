@@ -264,12 +264,12 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#161412]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#211F1B] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-[#7CA65B]/10 text-[#7CA65B] dark:text-[#A8C98B] flex items-center justify-center">
               <Grid className="w-5 h-5" />
             </div>
             <div>
@@ -283,7 +283,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -296,9 +296,9 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
             <div className="space-y-3">
               <div
                 onClick={startCamera}
-                className="group cursor-pointer aspect-video bg-[#30302E] rounded-2xl border-2 border-dashed border-[#D97757]/50 hover:border-[#D97757] p-6 flex flex-col items-center justify-center text-center transition-all"
+                className="group cursor-pointer aspect-video bg-[#30302E] rounded-2xl border-2 border-dashed border-[#7CA65B]/50 hover:border-[#7CA65B] p-6 flex flex-col items-center justify-center text-center transition-all"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#D97757]/20 text-[#E8A785] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-14 h-14 rounded-2xl bg-[#7CA65B]/20 text-[#A8C98B] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Grid className="w-7 h-7" />
                 </div>
                 <h3 className="text-base font-bold text-white">
@@ -312,7 +312,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
               <div className="flex gap-2">
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 py-3 px-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-xs flex items-center justify-center gap-2"
+                  className="flex-1 py-3 px-3 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-xs flex items-center justify-center gap-2"
                 >
                   <Upload className="w-4 h-4" />
                   <span>Upload Photo</span>
@@ -327,7 +327,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
 
                 <button
                   onClick={() => handleSetPhoto(DEMO_PHOTOS.officeJunkDrawerSpace)}
-                  className="flex-1 py-3 px-3 bg-[#D97757]/15 hover:bg-[#D97757]/25 text-[#D97757] dark:text-[#E8A785] font-semibold rounded-2xl text-xs flex items-center justify-center gap-1.5"
+                  className="flex-1 py-3 px-3 bg-[#7CA65B]/15 hover:bg-[#7CA65B]/25 text-[#7CA65B] dark:text-[#A8C98B] font-semibold rounded-2xl text-xs flex items-center justify-center gap-1.5"
                 >
                   <ImageIcon className="w-4 h-4" />
                   <span>Sample Drawer</span>
@@ -352,15 +352,15 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 </button>
                 <button
                   onClick={capturePhoto}
-                  className="w-14 h-14 rounded-full bg-white border-4 border-[#D97757] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
+                  className="w-14 h-14 rounded-full bg-white border-4 border-[#7CA65B] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#D97757]" />
+                  <div className="w-10 h-10 rounded-full bg-[#7CA65B]" />
                 </button>
               </div>
             </div>
           ) : (
             <div ref={photoSectionRef} className="flex items-center justify-center py-1 scroll-mt-4">
-              <div className="relative inline-block mx-auto rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] border border-[#E5E3DA] dark:border-[#3E3D3A] shadow-sm">
+              <div className="relative inline-block mx-auto rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] shadow-sm">
                 <img
                   src={photo}
                   alt="Scanned Space"
@@ -379,9 +379,9 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                         width: `${Math.max(15, xmax - xmin)}%`,
                         height: `${Math.max(15, ymax - ymin)}%`,
                       }}
-                      className="absolute border-2 border-[#D97757] bg-[#D97757]/20 rounded-lg flex items-start p-1 pointer-events-none"
+                      className="absolute border-2 border-[#7CA65B] bg-[#7CA65B]/20 rounded-lg flex items-start p-1 pointer-events-none"
                     >
-                      <span className="bg-[#D97757] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                      <span className="bg-[#7CA65B] text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
                         {item.name}
                       </span>
                     </div>
@@ -433,7 +433,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
 
           {/* AI ANALYSIS STATUS */}
           {isAnalyzing && (
-            <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-center gap-3 text-xs text-[#D97757] dark:text-[#E8A785] font-semibold animate-pulse">
+            <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex items-center gap-3 text-xs text-[#7CA65B] dark:text-[#A8C98B] font-semibold animate-pulse">
               <Sparkles className="w-5 h-5 animate-spin" />
               <span>{isSecondPass ? "Running automatic second pass for missed items..." : "AI scanning image and detecting all visible objects..."}</span>
             </div>
@@ -441,8 +441,8 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
 
           {/* RESCAN RESULT BANNER */}
           {rescanBanner && !isAnalyzing && (
-            <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-start gap-2.5 text-xs text-[#44433F] dark:text-[#A8A7A2]">
-              <CheckCircle2 className="w-4 h-4 text-[#D97757] shrink-0 mt-0.5" />
+            <div className="p-3 bg-[#7CA65B]/10 border border-[#7CA65B]/20 rounded-2xl flex items-start gap-2.5 text-xs text-[#44433F] dark:text-[#A8A7A2]">
+              <CheckCircle2 className="w-4 h-4 text-[#7CA65B] shrink-0 mt-0.5" />
               <span className="flex-1">{rescanBanner}</span>
               <button onClick={() => setRescanBanner(null)} className="text-[#83827C] hover:text-black dark:hover:text-white shrink-0">
                 <X className="w-3.5 h-3.5" />
@@ -463,7 +463,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                     type="button"
                     onClick={() => handleRescan(false)}
                     disabled={isAnalyzing}
-                    className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-1 disabled:opacity-50"
+                    className="text-xs font-bold text-[#7CA65B] dark:text-[#A8C98B] hover:underline flex items-center gap-1 disabled:opacity-50"
                   >
                     <RotateCcw className={`w-3.5 h-3.5 ${isAnalyzing ? "animate-spin" : ""}`} />
                     <span>Rescan for Missed Items</span>
@@ -472,7 +472,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                   <button
                     type="button"
                     onClick={addManualItem}
-                    className="text-xs text-[#D97757] font-semibold hover:underline"
+                    className="text-xs text-[#7CA65B] font-semibold hover:underline"
                   >
                     + Add Item
                   </button>
@@ -483,9 +483,9 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 {detectedItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[#D97757]/8 border border-[#D97757]/20 rounded-xl"
+                    className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[#7CA65B]/8 border border-[#7CA65B]/20 rounded-xl"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-[#D97757] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#7CA65B] shrink-0" />
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA] block truncate">
                         {item.name}
@@ -498,7 +498,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                     </div>
                     <button
                       onClick={() => removeDetectedItem(idx)}
-                      className="p-1.5 text-[#83827C] hover:text-[#D97757] hover:bg-[#D97757]/10 rounded-lg shrink-0"
+                      className="p-1.5 text-[#83827C] hover:text-[#7CA65B] hover:bg-[#7CA65B]/10 rounded-lg shrink-0"
                       title="Remove item"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -520,14 +520,14 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 value={spaceName}
                 onChange={(e) => setSpaceName(e.target.value)}
                 placeholder='e.g., "Office Top Drawer", "Garage Toolbox"'
-                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
+                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#7CA65B]"
               />
               <button
                 type="button"
                 onClick={toggleVoiceInput}
                 className={`absolute right-2 p-2.5 rounded-xl transition-all ${
                   isListening
-                    ? "bg-[#D97757] text-white animate-bounce"
+                    ? "bg-[#7CA65B] text-white animate-bounce"
                     : "bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA]"
                 }`}
               >
@@ -541,14 +541,14 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
         <div className="pt-3.5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0 flex items-center gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-3 px-4 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-sm"
+            className="flex-1 py-3 px-4 bg-[#EFEEE7] dark:bg-[#1E1C19] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-sm"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={!photo || !spaceName.trim()}
-            className="flex-1 py-3 px-4 bg-[#D97757] hover:bg-[#C15F3C] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-4 bg-[#7CA65B] hover:bg-[#6B9149] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2"
           >
             <Check className="w-5 h-5" />
             <span>Save Space & Items</span>
@@ -563,7 +563,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
           <button
             type="button"
             onClick={handleSave}
-            className="pointer-events-auto flex items-center gap-2 py-3.5 px-6 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-full text-sm shadow-2xl active:scale-95 transition-all cursor-pointer"
+            className="pointer-events-auto flex items-center gap-2 py-3.5 px-6 bg-[#7CA65B] hover:bg-[#6B9149] text-white font-bold rounded-full text-sm shadow-2xl active:scale-95 transition-all cursor-pointer"
           >
             <Check className="w-5 h-5" />
             <span>Save Space & Items</span>
