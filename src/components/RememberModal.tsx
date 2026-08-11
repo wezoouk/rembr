@@ -302,6 +302,43 @@ export const RememberModal: React.FC<RememberModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-[#161412]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      {/* FULLSCREEN CAMERA — its own top-level overlay so the shutter button
+          is always pinned to the bottom of the actual screen, never buried
+          inside a scrollable card. */}
+      {isCameraActive && (
+        <div className="fixed inset-0 z-[80] bg-black flex flex-col">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="flex-1 w-full h-full object-contain"
+          />
+          <div className="absolute inset-x-0 pt-[calc(env(safe-area-inset-top)+1rem)] px-4 flex justify-end" style={{ top: 0 }}>
+            <button
+              onClick={stopCamera}
+              className="p-2.5 bg-black/50 text-white rounded-full backdrop-blur-md"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="absolute bottom-0 inset-x-0 pt-8 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] bg-gradient-to-t from-black/85 to-transparent flex items-center justify-center gap-4">
+            <button
+              onClick={stopCamera}
+              className="px-4 py-2 bg-white/10 text-white text-xs font-semibold rounded-xl backdrop-blur-md"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={capturePhoto}
+              className="w-16 h-16 rounded-full bg-white border-4 border-[#7CA65B] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
+            >
+              <div className="w-11 h-11 rounded-full bg-[#7CA65B]" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-[#211F1B] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* DUPLICATE ITEM PROMPT OVERLAY */}
         {showDuplicatePrompt && (
@@ -589,31 +626,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                   </button>
                 </div>
               </div>
-            ) : isCameraActive ? (
-              <div className="relative bg-black rounded-2xl overflow-hidden shadow-lg h-[65vh] min-h-[320px]">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full h-full object-contain"
-                />
-                <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-4">
-                  <button
-                    onClick={stopCamera}
-                    className="px-4 py-2 bg-[#30302E]/80 text-white text-xs font-semibold rounded-xl backdrop-blur-md"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={capturePhoto}
-                    className="w-14 h-14 rounded-full bg-white border-4 border-[#7CA65B] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-[#7CA65B]" />
-                  </button>
-                </div>
-              </div>
-            ) : (
+            ) : isCameraActive ? null : (
               <div ref={photoSectionRef} className="relative rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#100F0D] shadow-sm flex items-center justify-center scroll-mt-4">
                 <img
                   src={photo}
@@ -664,7 +677,9 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           )}
         </div>
 
-        {/* Footer Actions */}
+        {/* Footer Actions — Save only lives here until there's an item name;
+            once it's ready, the pinned floating button below takes over so
+            the two never show at the same time. */}
         <div className="pt-3.5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0 flex items-center gap-3">
           <button
             onClick={onClose}
@@ -672,14 +687,16 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           >
             Cancel
           </button>
-          <button
-            onClick={() => handleSave()}
-            disabled={!itemName.trim()}
-            className="flex-1 py-3 px-4 bg-[#7CA65B] hover:bg-[#6B9149] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
-          >
-            <Check className="w-5 h-5" />
-            <span>Save Location</span>
-          </button>
+          {!itemName.trim() && (
+            <button
+              onClick={() => handleSave()}
+              disabled={!itemName.trim()}
+              className="flex-1 py-3 px-4 bg-[#7CA65B] hover:bg-[#6B9149] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <Check className="w-5 h-5" />
+              <span>Save Location</span>
+            </button>
+          )}
         </div>
       </div>
 
