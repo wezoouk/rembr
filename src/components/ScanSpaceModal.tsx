@@ -52,6 +52,16 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   const voiceListenerRef = useRef<VoiceListener | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photoSectionRef = useRef<HTMLDivElement | null>(null);
+  const itemsListRef = useRef<HTMLDivElement | null>(null);
+
+  // Bring the "Items Found" list into view once a scan finishes — it renders
+  // right below the photo, but on smaller screens that's still off-screen
+  // until the user scrolls, making it look like nothing was found.
+  const scrollToItemsList = () => {
+    requestAnimationFrame(() => {
+      itemsListRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  };
 
   // Automatically scroll the captured photo into view — the user shouldn't
   // have to manually scroll down to see what they just took a picture of.
@@ -179,6 +189,8 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
       if (autoSecondScanPass && !hasAutoRescanned) {
         setHasAutoRescanned(true);
         handleRescan(true);
+      } else {
+        scrollToItemsList();
       }
     }
   };
@@ -210,6 +222,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
     } finally {
       setIsAnalyzing(false);
       setIsSecondPass(false);
+      scrollToItemsList();
     }
   };
 
@@ -475,7 +488,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
           {/* ITEMS FOUND LIST — shown right under the photo, before the name
               field, so it's visible immediately without scrolling past it. */}
           {detectedItems.length > 0 && (
-            <div className="space-y-2.5">
+            <div ref={itemsListRef} className="space-y-2.5 scroll-mt-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider">
                   Items Found ({detectedItems.length})
