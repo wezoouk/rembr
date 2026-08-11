@@ -307,13 +307,13 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
               </div>
             </div>
           ) : isCameraActive ? (
-            <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-lg">
+            <div className="relative bg-black rounded-2xl overflow-hidden shadow-lg h-[65vh] min-h-[320px]">
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-4">
                 <button
@@ -363,9 +363,9 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
                 type="button"
                 onClick={() => photo && triggerAISpaceAnalysis(photo)}
                 disabled={isAnalyzing}
-                className="absolute bottom-3 left-3 px-3.5 py-2 bg-[#C2847A] hover:bg-[#A86E64] text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow backdrop-blur-md disabled:opacity-50 transition-all cursor-pointer"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-3 bg-[#F2A93B] hover:bg-[#E0961F] text-white text-sm font-extrabold rounded-full flex items-center gap-2 shadow-xl shadow-[#F2A93B]/50 disabled:opacity-60 transition-all active:scale-95 cursor-pointer whitespace-nowrap"
               >
-                <Sparkles className={`w-3.5 h-3.5 ${isAnalyzing ? "animate-spin" : ""}`} />
+                <Sparkles className={`w-4 h-4 ${isAnalyzing ? "animate-spin" : ""}`} />
                 <span>{isAnalyzing ? "Scanning..." : detectedItems.length > 0 ? "Re-Scan Space with AI" : "Scan Space with AI"}</span>
               </button>
 

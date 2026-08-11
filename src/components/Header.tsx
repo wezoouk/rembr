@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, ShieldCheck, Sun, Moon, Settings, Home, MapPin } from "lucide-react";
+import { Search, ShieldCheck, Sun, Moon, Settings, Home, MapPin, HelpCircle } from "lucide-react";
 import { AppSettings } from "../types";
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   onOpenFind: () => void;
   onOpenLocations?: () => void;
+  onOpenHelp: () => void;
   onGoHome: () => void;
 }
 
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenFind,
   onOpenLocations,
+  onOpenHelp,
   onGoHome,
 }) => {
   const toggleDarkMode = () => {
@@ -87,6 +89,15 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden sm:inline">Locations</span>
             </button>
           )}
+
+          <button
+            onClick={onOpenHelp}
+            className="p-2.5 text-[#6B7E6D] dark:text-[#A3B0A5] hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] rounded-xl transition-colors font-medium flex items-center gap-1.5 text-xs cursor-pointer"
+            title="Help & Tips"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span className="hidden sm:inline">Help</span>
+          </button>
 
           <button
             onClick={toggleDarkMode}

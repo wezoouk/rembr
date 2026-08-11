@@ -13,6 +13,7 @@ import {
   MapPin,
   Copy,
   HandHeart,
+  HelpCircle,
 } from "lucide-react";
 import { AppSettings } from "../types";
 
@@ -22,6 +23,7 @@ interface SettingsModalProps {
   onResetDemoData: () => void;
   onClearAllData: () => void;
   onClose: () => void;
+  onOpenHelp?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -30,6 +32,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onResetDemoData,
   onClearAllData,
   onClose,
+  onOpenHelp,
 }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -298,6 +301,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               />
             </button>
           </div>
+
+          {/* HELP & TIPS */}
+          {onOpenHelp && (
+            <button
+              onClick={onOpenHelp}
+              className="w-full flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E] transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <HelpCircle className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1]">
+                  Help & Tips
+                </span>
+              </div>
+              <span className="text-xs text-[#8C847E] dark:text-[#A3B0A5]">View</span>
+            </button>
+          )}
 
           {/* RESET DEMO DATA */}
           <div className="pt-2 border-t border-[#E8E4E1] dark:border-[#38332E] space-y-2">

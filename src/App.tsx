@@ -26,6 +26,7 @@ import { SpaceDetailModal } from "./components/SpaceDetailModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { LocationsModal } from "./components/LocationsModal";
 import { BorrowedModal } from "./components/BorrowedModal";
+import { HelpModal } from "./components/HelpModal";
 
 export default function App() {
   const [items, setItems] = useState<Item[]>([]);
@@ -47,6 +48,7 @@ export default function App() {
   const [showScanSpaceModal, setShowScanSpaceModal] = useState(false);
   const [showLocationsModal, setShowLocationsModal] = useState(false);
   const [showBorrowedModal, setShowBorrowedModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
   const [locationsInitialName, setLocationsInitialName] = useState<string | null>(null);
   const [rememberInitialLocation, setRememberInitialLocation] = useState<string>("");
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -225,6 +227,7 @@ export default function App() {
     setShowLocationsModal(false);
     setShowSettingsModal(false);
     setShowBorrowedModal(false);
+    setShowHelpModal(false);
     setSelectedItem(null);
     setSelectedSpace(null);
   };
@@ -238,6 +241,7 @@ export default function App() {
         onOpenSettings={() => setShowSettingsModal(true)}
         onOpenFind={() => handleOpenFindWithQuery("")}
         onOpenLocations={() => handleOpenLocations()}
+        onOpenHelp={() => setShowHelpModal(true)}
         onGoHome={handleGoHome}
       />
 
@@ -359,6 +363,16 @@ export default function App() {
         />
       )}
 
+      {showHelpModal && (
+        <HelpModal
+          onClose={() => setShowHelpModal(false)}
+          onReplayTour={() => {
+            setShowHelpModal(false);
+            setShowOnboarding(true);
+          }}
+        />
+      )}
+
       {showSettingsModal && (
         <SettingsModal
           settings={settings}
@@ -366,6 +380,10 @@ export default function App() {
           onResetDemoData={handleResetDemoData}
           onClearAllData={handleClearAllData}
           onClose={() => setShowSettingsModal(false)}
+          onOpenHelp={() => {
+            setShowSettingsModal(false);
+            setShowHelpModal(true);
+          }}
         />
       )}
     </div>

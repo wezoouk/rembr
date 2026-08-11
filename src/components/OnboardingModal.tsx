@@ -1,5 +1,5 @@
 import React from "react";
-import { Camera, Mic, Search, ShieldCheck, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Camera, Mic, Search, ShieldCheck, ArrowRight, CheckCircle2, HandHeart } from "lucide-react";
 
 interface OnboardingModalProps {
   onComplete: () => void;
@@ -71,7 +71,27 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ onComplete }) 
               </p>
             </div>
           </div>
+
+          <div className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E]">
+            <div className="w-9 h-9 rounded-xl bg-[#C2847A]/20 text-[#C2847A] dark:text-[#DA9E94] flex items-center justify-center shrink-0 font-bold">
+              4
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-[#2D2A26] dark:text-[#E8E4E1] flex items-center gap-1.5">
+                <HandHeart className="w-4 h-4 text-[#C2847A]" />
+                Track what you've lent out
+              </h3>
+              <p className="text-xs text-[#8C847E] dark:text-[#A3B0A5] mt-0.5">
+                Use Borrowed to log loans and get reminded until they're back.
+              </p>
+            </div>
+          </div>
         </div>
+
+        {/* Help hint */}
+        <p className="text-center text-[11px] text-[#8C847E] dark:text-[#A3B0A5] mb-4">
+          Tap the <span className="font-semibold">Help</span> icon anytime for tips and troubleshooting.
+        </p>
 
         {/* Privacy Note */}
         <div className="flex items-center justify-center gap-2 text-xs text-[#6B7E6D] dark:text-[#91A493] mb-6 bg-[#6B7E6D]/10 p-2.5 rounded-xl border border-[#6B7E6D]/20">
