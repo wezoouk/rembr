@@ -82,6 +82,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [isListening, setIsListening] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  const quickResults = useMemo(() => {
+    const q = quickQuery.trim().toLowerCase();
+    if (!q) return [];
+    const tokens = q.split(/\s+/).filter(Boolean);
+    return items
+      .map((it) => {
+        const name = (it.name || "").toLowerCase();
+        const loc = (it.location_name || "").toLowerCase();
+        const desc = (it.description || "").toLowerCase();
+        const tags = (it.tags || []).join(" ").toLowerCase();
+        const full = `${name} ${loc} ${desc} ${tags}`;
+        if (!tokens.every((t) => full.includes(t))) return null;
+        const score = name === q ? 3 : name.includes(q) ? 2 : 1;
+        return { item: it, score };
+      })
+      .filter((x): x is { item: Item; score: number } => x !== null)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map((x) => x.item);
+  }, [quickQuery, items]);
 
   // Group unique locations
   const locationMap = new Map<string, { name: string; items: Item[] }>();
@@ -267,41 +289,94 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* HERO SEARCH / ASK BAR */}
       <div className="space-y-2">
-        <form
-          onSubmit={handleQuickSearchSubmit}
-          className="relative flex items-center bg-[#EFEEE7] dark:bg-[#211F1B] rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
-        >
-          <Search className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2] ml-3 shrink-0" />
-          <input
-            type="text"
-            value={quickQuery}
-            onChange={(e) => setQuickQuery(e.target.value)}
-            placeholder="Ask Rembr... where are my keys?"
-            className="w-full py-2.5 pl-3 pr-2 text-[15px] text-[#30302E] dark:text-[#F2F0EA] bg-transparent placeholder-[#83827C] dark:placeholder-[#7A7972] focus:outline-none"
-          />
-          <div className="flex items-center gap-1.5 shrink-0">
-            <button
-              type="button"
-              onClick={toggleVoiceInput}
-              className={`p-2.5 rounded-full transition-all select-none active:scale-95 cursor-pointer ${
-                isListening
-                  ? "bg-[#7CA65B] text-white animate-pulse"
-                  : "bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10"
-              }`}
-              title={isListening ? "Tap to stop dictating" : "Ask by voice"}
-            >
-              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-            </button>
-            <button
-              type="button"
-              onClick={onOpenRemember}
-              className="p-2.5 rounded-full bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10 transition-all"
-              title="Snap a photo to remember something"
-            >
-              <Camera className="w-4 h-4" />
-            </button>
-          </div>
-        </form>
+        <div className="relative">
+          <form
+            onSubmit={handleQuickSearchSubmit}
+            className="relative flex items-center bg-[#EFEEE7] dark:bg-[#211F1B] rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
+          >
+            <Search className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2] ml-3 shrink-0" />
+            <input
+              type="text"
+              value={quickQuery}
+              onChange={(e) => setQuickQuery(e.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+              placeholder="Ask Rembr... where are my keys?"
+              className="w-full py-2.5 pl-3 pr-2 text-[15px] text-[#30302E] dark:text-[#F2F0EA] bg-transparent placeholder-[#83827C] dark:placeholder-[#7A7972] focus:outline-none"
+            />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                className={`p-2.5 rounded-full transition-all select-none active:scale-95 cursor-pointer ${
+                  isListening
+                    ? "bg-[#7CA65B] text-white animate-pulse"
+                    : "bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10"
+                }`}
+                title={isListening ? "Tap to stop dictating" : "Ask by voice"}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={onOpenRemember}
+                className="p-2.5 rounded-full bg-white/70 dark:bg-white/5 text-[#44433F] dark:text-[#E5E3DA] hover:bg-white dark:hover:bg-white/10 transition-all"
+                title="Snap a photo to remember something"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
+
+          {/* LIVE QUICK RESULTS — appears as soon as you start typing */}
+          {searchFocused && quickQuery.trim() && (
+            <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 bg-white dark:bg-[#211F1B] rounded-2xl shadow-lg overflow-hidden">
+              {quickResults.length > 0 ? (
+                <>
+                  {quickResults.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        onSelectItem(item);
+                        setQuickQuery("");
+                      }}
+                      className="w-full flex items-center gap-3 p-2.5 hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19] transition-colors text-left"
+                    >
+                      <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1E1C19] shrink-0">
+                        {item.image_path && (
+                          <img src={item.image_path} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA] truncate">{item.name}</p>
+                        <p className="text-xs text-[#83827C] dark:text-[#A8A7A2] truncate">{item.location_name}</p>
+                      </div>
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => onOpenFind(quickQuery.trim())}
+                    className="w-full p-2.5 text-center text-xs font-bold text-[#5F8A48] dark:text-[#A8C98B] hover:bg-[#EFEEE7] dark:hover:bg-[#1E1C19]"
+                  >
+                    See all results for "{quickQuery.trim()}"
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => onOpenFind(quickQuery.trim())}
+                  className="w-full p-3 text-center text-xs font-semibold text-[#83827C] dark:text-[#A8A7A2]"
+                >
+                  No quick matches for "{quickQuery.trim()}" — tap to search everything
+                </button>
+              )}
+            </div>
+          )}
+        </div>
 
         <DictationIndicator
           isListening={isListening}
