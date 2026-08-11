@@ -353,10 +353,20 @@ export async function clearAllData(): Promise<void> {
     tx1.objectStore("items").clear();
     const tx2 = db.transaction("spaces", "readwrite");
     tx2.objectStore("spaces").clear();
+    const tx3 = db.transaction("borrowed", "readwrite");
+    tx3.objectStore("borrowed").clear();
   } catch (err) {
     localStorage.removeItem("fms_items");
     localStorage.removeItem("fms_spaces");
+    localStorage.removeItem("fms_borrowed");
   }
+  // Always clear the localStorage fallback keys too, even when IndexedDB
+  // succeeds — otherwise stale borrowed/item data left over from an earlier
+  // fallback write can resurface (e.g. "Out on loan" items reappearing after
+  // a full data reset).
+  localStorage.removeItem("fms_items");
+  localStorage.removeItem("fms_spaces");
+  localStorage.removeItem("fms_borrowed");
 }
 
 // ---------------------------------------------------------------------------

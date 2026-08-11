@@ -194,6 +194,7 @@ export default function App() {
     await clearAllData();
     setItems([]);
     setSpaces([]);
+    setBorrowedItems([]);
   };
 
   const handleOpenFindWithQuery = (query?: string) => {
