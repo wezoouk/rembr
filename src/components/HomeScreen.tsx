@@ -164,7 +164,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   const pinnedItems = items.filter((item) => item.is_pinned);
-  const recentItems = items.filter((item) => !item.is_pinned).slice(0, 6);
+  const recentItems = items.filter((item) => !item.is_pinned).slice(0, 12);
   const heroPhoto = items[0]?.image_path;
 
   const handleQuickSearchSubmit = (e: React.FormEvent) => {
@@ -181,7 +181,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const ItemCard: React.FC<{ item: Item }> = ({ item }) => (
     <div
       onClick={() => onSelectItem(item)}
-      className="group text-left bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer relative"
+      className="group text-left bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer relative border border-transparent dark:border-white/[0.08]"
     >
       <div className="aspect-[4/3] relative overflow-hidden bg-[#E5E3DA] dark:bg-[#100F0D]">
         <img
@@ -295,7 +295,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <form
             onSubmit={handleQuickSearchSubmit}
             data-tour="hero-search"
-            className="relative flex items-center bg-[#EFEEE7] dark:bg-[#211F1B] rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
+            className="relative flex items-center bg-[#EFEEE7] dark:bg-white/[0.06] dark:backdrop-blur-xl border border-transparent dark:border-white/10 rounded-full overflow-hidden pl-1.5 pr-1.5 py-1.5 shadow-sm"
           >
             <Search className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2] ml-3 shrink-0" />
             <input
@@ -419,7 +419,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <button
         onClick={onOpenRemember}
         data-tour="remember-card"
-        className="group relative w-full text-left rounded-3xl overflow-hidden shadow-md active:scale-[0.99] transition-all h-32"
+        className="group relative w-full text-left rounded-3xl overflow-hidden shadow-md active:scale-[0.99] transition-all h-32 border border-transparent dark:border-white/[0.08]"
       >
         <img
           src={heroPhoto || "/images/remember-placeholder.png"}
@@ -442,7 +442,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <button
           onClick={onOpenScanSpace}
           data-tour="scan-space-card"
-          className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
+          className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24 border border-transparent dark:border-white/[0.08]"
         >
           {/* Placeholder background — drop a real photo in public/images/
               named scan-space-placeholder.png to replace this. */}
@@ -467,7 +467,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             onClick={onOpenBorrowed}
             data-tour="lend-item-card"
-            className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24"
+            className="group relative text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-24 border border-transparent dark:border-white/[0.08]"
           >
             {/* Placeholder background — drop a real photo in public/images/
                 named lend-item-placeholder.png to replace this. */}
@@ -502,9 +502,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <Pin className="w-3.5 h-3.5 text-[#5B84C4] fill-[#5B84C4]" />
             Pinned
           </h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1 snap-x">
             {pinnedItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <div key={item.id} className="shrink-0 w-[150px] snap-start">
+                <ItemCard item={item} />
+              </div>
             ))}
           </div>
         </section>
@@ -528,13 +530,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {items.length === 0 ? (
-          <div className="text-center py-10 px-6 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl">
-            <Camera className="w-8 h-8 text-[#83827C] mx-auto mb-2" />
+          <div className="text-center py-8 px-6 bg-white/[0.04] dark:bg-white/[0.04] backdrop-blur-md border border-[#E5E3DA]/60 dark:border-white/[0.08] rounded-3xl">
+            <Camera className="w-6 h-6 text-[#83827C] mx-auto mb-2" />
             <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
-              You don't have any items saved yet
+              Nothing saved yet
             </p>
-            <p className="text-xs text-[#83827C] mt-1 mb-3">
-              Want to add your first one?
+            <p className="text-xs text-[#83827C] dark:text-[#A8A7A2] mt-1 mb-3">
+              Take a photo or tell Rembr where you've put something.
             </p>
             <button
               type="button"
@@ -542,13 +544,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#7CA65B] hover:bg-[#6B9149] text-white text-xs font-bold rounded-full shadow-sm transition-colors"
             >
               <Camera className="w-3.5 h-3.5" />
-              Add your first item
+              Remember something
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1 snap-x">
             {recentItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <div key={item.id} className="shrink-0 w-[150px] snap-start">
+                <ItemCard item={item} />
+              </div>
             ))}
           </div>
         )}

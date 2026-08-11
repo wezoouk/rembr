@@ -124,8 +124,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         </div>
       )}
 
-      {/* BOTTOM TAB BAR */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-[#F5F4EF]/95 dark:bg-[#161412]/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
+      {/* BOTTOM TAB BAR — floating translucent dock */}
+      <nav className="fixed bottom-0 inset-x-0 z-40 bg-[#F5F4EF]/95 dark:bg-[#141612]/88 backdrop-blur-xl border-t border-transparent dark:border-white/[0.08] rounded-t-[28px] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
         <div className="max-w-2xl mx-auto px-2 flex items-center">
           <NavButton icon={<Home className="w-5 h-5" />} label="Home" onClick={onGoHome} active dataTour="nav-home" />
           <NavButton icon={<Search className="w-5 h-5" />} label="Items" onClick={onOpenFind} />
