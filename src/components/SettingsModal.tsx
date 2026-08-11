@@ -91,18 +91,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1A1816]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-[32px] max-w-md w-full p-5 sm:p-6 shadow-2xl relative my-auto overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-md w-full p-5 sm:p-6 shadow-2xl relative my-auto overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8E4E1] dark:border-[#38332E]">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A]">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1]">
+            <h2 className="text-lg font-bold text-[#30302E] dark:text-[#E5E3DA]">
               Settings & Privacy
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white rounded-xl hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -110,34 +110,34 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         <div className="py-4 space-y-4 text-sm">
           {/* PRIVACY BADGE */}
-          <div className="p-3.5 bg-[#6B7E6D]/10 border border-[#6B7E6D]/20 rounded-2xl flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-[#6B7E6D] dark:text-[#91A493] shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-[#D97757] dark:text-[#E8A785] shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-[#6B7E6D] dark:text-[#91A493] text-xs uppercase tracking-wider">
+              <p className="font-bold text-[#D97757] dark:text-[#E8A785] text-xs uppercase tracking-wider">
                 100% On-Device Storage
               </p>
-              <p className="text-xs text-[#4A443F] dark:text-[#A3B0A5] mt-0.5">
+              <p className="text-xs text-[#44433F] dark:text-[#A8A7A2] mt-0.5">
                 All photos and item location records are saved directly in your phone's browser storage. No cloud accounts required.
               </p>
             </div>
           </div>
 
           {/* APPEARANCE TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
               {settings.darkMode ? (
-                <Moon className="w-5 h-5 text-[#DA9E94]" />
+                <Moon className="w-5 h-5 text-[#E8A785]" />
               ) : (
-                <Sun className="w-5 h-5 text-[#8C847E]" />
+                <Sun className="w-5 h-5 text-[#83827C]" />
               )}
-              <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1]">
+              <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA]">
                 Dark Theme
               </span>
             </div>
             <button
               onClick={toggleDarkMode}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.darkMode ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.darkMode ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -149,14 +149,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* RETAIN FULL RESOLUTION PHOTOS */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <HardDrive className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <HardDrive className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   High Quality Photos
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Save clear preview photos on-device
                 </span>
               </div>
@@ -164,7 +164,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleRetainPhotos}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.retainOriginalPhotos ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.retainOriginalPhotos ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -176,14 +176,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BLUR RECENTLY SAVED PHOTO TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <EyeOff className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <EyeOff className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Blur Photos on Recently Saved
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Blur photo previews on home screen for privacy
                 </span>
               </div>
@@ -191,7 +191,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleBlurRecentlySaved}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.blurRecentlySaved ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.blurRecentlySaved ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -203,14 +203,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BLUR LOCATION RECENTLY SAVED TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <MapPin className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <MapPin className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Blur Location on Recently Saved
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Blur location text on home screen until hovered/tapped
                 </span>
               </div>
@@ -218,7 +218,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleBlurLocationRecentlySaved}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.blurLocationRecentlySaved ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.blurLocationRecentlySaved ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -230,14 +230,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* ALLOW DUPLICATE ITEMS TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <Copy className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <Copy className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Allow Duplicate Items
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   If off, prompts for a descriptive name (e.g. "Brown Wallet") when saving duplicates
                 </span>
               </div>
@@ -245,7 +245,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleAllowDuplicateItems}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                settings.allowDuplicateItems ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.allowDuplicateItems ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -257,14 +257,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* SHOW / HIDE LOCATIONS SECTION TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <MapPin className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <MapPin className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Show Locations Section
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Display the Browse Locations gallery and button on the home screen
                 </span>
               </div>
@@ -272,7 +272,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleHideLocationsSection}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                !settings.hideLocationsSection ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                !settings.hideLocationsSection ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -284,14 +284,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* SHOW / HIDE BORROWED SECTION TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <HandHeart className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <HandHeart className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Show Borrowed Section
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Display the Borrowed items tracker and reminders on the home screen
                 </span>
               </div>
@@ -299,7 +299,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleHideBorrowedSection}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-                !settings.hideBorrowedSection ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                !settings.hideBorrowedSection ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -311,14 +311,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* AUTO SECOND SCAN PASS TOGGLE */}
-          <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
             <div className="flex items-center gap-2.5">
-              <ScanLine className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
+              <ScanLine className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
               <div>
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1] block">
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
                   Auto Second Scan Pass
                 </span>
-                <span className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                   Automatically re-scan a space photo once more to catch items the first pass missed
                 </span>
               </div>
@@ -326,7 +326,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={toggleAutoSecondScanPass}
               className={`w-12 h-6 rounded-full transition-colors relative p-1 shrink-0 ${
-                settings.autoSecondScanPass ? "bg-[#6B7E6D]" : "bg-[#E8E4E1]"
+                settings.autoSecondScanPass ? "bg-[#D97757]" : "bg-[#E5E3DA]"
               }`}
             >
               <div
@@ -341,20 +341,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {onOpenHelp && (
             <button
               onClick={onOpenHelp}
-              className="w-full flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E] transition-colors"
+              className="w-full flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A] transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                <HelpCircle className="w-5 h-5 text-[#8C847E] dark:text-[#A3B0A5]" />
-                <span className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1]">
+                <HelpCircle className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA]">
                   Help & Tips
                 </span>
               </div>
-              <span className="text-xs text-[#8C847E] dark:text-[#A3B0A5]">View</span>
+              <span className="text-xs text-[#83827C] dark:text-[#A8A7A2]">View</span>
             </button>
           )}
 
           {/* RESET DEMO DATA */}
-          <div className="pt-2 border-t border-[#E8E4E1] dark:border-[#38332E] space-y-2">
+          <div className="pt-2 border-t border-[#E5E3DA] dark:border-[#3E3D3A] space-y-2">
             <button
               onClick={() => {
                 if (confirm("Restore sample items (Car Keys, Passport, AA Batteries, Screwdriver)?")) {
@@ -362,7 +362,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   onClose();
                 }
               }}
-              className="w-full py-3 px-4 bg-[#5A7D9A]/10 hover:bg-[#5A7D9A]/20 text-[#5A7D9A] dark:text-[#7A9DBA] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#5A7D9A]/20"
+              className="w-full py-3 px-4 bg-[#D97757]/10 hover:bg-[#D97757]/20 text-[#D97757] dark:text-[#E8A785] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#D97757]/20"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Restore Sample Demo Data</span>
@@ -372,24 +372,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="w-full py-3 px-4 bg-[#C2847A]/10 hover:bg-[#C2847A]/20 text-[#C2847A] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#C2847A]/20"
+                className="w-full py-3 px-4 bg-[#D97757]/10 hover:bg-[#D97757]/20 text-[#D97757] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#D97757]/20"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Delete All My Data</span>
               </button>
             ) : (
-              <div className="p-3 bg-[#C2847A]/10 border border-[#C2847A]/30 rounded-2xl space-y-2 text-xs">
-                <p className="font-bold text-[#C2847A] flex items-center gap-1">
+              <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/30 rounded-2xl space-y-2 text-xs">
+                <p className="font-bold text-[#D97757] flex items-center gap-1">
                   <AlertTriangle className="w-4 h-4" />
                   Are you sure you want to delete all saved items?
                 </p>
-                <p className="text-[#4A443F] dark:text-[#A3B0A5]">
+                <p className="text-[#44433F] dark:text-[#A8A7A2]">
                   This action cannot be undone. All photos and locations will be permanently removed.
                 </p>
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     onClick={() => setShowDeleteConfirm(false)}
-                    className="flex-1 py-2 bg-[#E8E4E1] dark:bg-[#38332E] text-[#2D2A26] dark:text-[#E8E4E1] rounded-xl font-semibold"
+                    className="flex-1 py-2 bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#30302E] dark:text-[#E5E3DA] rounded-xl font-semibold"
                   >
                     Cancel
                   </button>
@@ -399,7 +399,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       setShowDeleteConfirm(false);
                       onClose();
                     }}
-                    className="flex-1 py-2 bg-[#C2847A] text-white rounded-xl font-bold"
+                    className="flex-1 py-2 bg-[#D97757] text-white rounded-xl font-bold"
                   >
                     Yes, Delete Everything
                   </button>

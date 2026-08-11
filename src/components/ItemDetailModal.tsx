@@ -114,12 +114,12 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1A1816]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8E4E1] dark:border-[#38332E] shrink-0">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+            <h2 className="text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] truncate">
               {isEditing ? "Edit Item Details" : item.name}
             </h2>
           </div>
@@ -128,8 +128,8 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               onClick={togglePin}
               className={`p-2 rounded-xl transition-colors ${
                 item.is_pinned
-                  ? "bg-[#C2847A] text-white"
-                  : "bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#8C847E] hover:text-[#2D2A26]"
+                  ? "bg-[#D97757] text-white"
+                  : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#83827C] hover:text-[#30302E]"
               }`}
               title={item.is_pinned ? "Pinned Favorite" : "Pin to Favorites"}
             >
@@ -137,7 +137,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white rounded-xl hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] transition-colors"
+              className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -147,14 +147,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
         {/* Scrollable Body */}
         <div className="overflow-y-auto py-4 space-y-4 pr-1 flex-1">
           {/* Main Photo View */}
-          <div className="rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] relative flex items-center justify-center">
+          <div className="rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] border border-[#E5E3DA] dark:border-[#3E3D3A] relative flex items-center justify-center">
             <img
               src={item.image_path}
               alt={item.name}
               className="w-full max-h-[60vh] object-contain"
             />
             {item.space_name && (
-              <span className="absolute bottom-3 left-3 bg-[#C2847A] text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md">
+              <span className="absolute bottom-3 left-3 bg-[#D97757] text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md">
                 Part of: {item.space_name}
               </span>
             )}
@@ -164,34 +164,34 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             /* VIEW MODE */
             <div className="space-y-4">
               {/* Location Card */}
-              <div className="p-4 bg-[#6B7E6D]/10 border border-[#6B7E6D]/20 rounded-2xl space-y-1">
-                <p className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] uppercase tracking-wider flex items-center gap-1.5">
+              <div className="p-4 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl space-y-1">
+                <p className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] uppercase tracking-wider flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 shrink-0" />
                   Current Location
                 </p>
-                <p className="text-base font-bold text-[#2D2A26] dark:text-[#E8E4E1]">
+                <p className="text-base font-bold text-[#30302E] dark:text-[#E5E3DA]">
                   {item.location_name}
                 </p>
                 {item.description && (
-                  <p className="text-xs text-[#4A443F] dark:text-[#A3B0A5] pt-1">
+                  <p className="text-xs text-[#44433F] dark:text-[#A8A7A2] pt-1">
                     {item.description}
                   </p>
                 )}
               </div>
 
               {/* Saved Time & Confidence */}
-              <div className="flex flex-col gap-2 p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl text-xs">
+              <div className="flex flex-col gap-2 p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5 font-medium">
-                    <Clock className="w-3.5 h-3.5 text-[#6B7E6D]" />
-                    <span>Recorded Date: <strong className="text-[#2D2A26] dark:text-[#E8E4E1]">{formatFriendlyDateTime(item.created_at)}</strong></span>
+                  <span className="text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5 font-medium">
+                    <Clock className="w-3.5 h-3.5 text-[#D97757]" />
+                    <span>Recorded Date: <strong className="text-[#30302E] dark:text-[#E5E3DA]">{formatFriendlyDateTime(item.created_at)}</strong></span>
                   </span>
-                  <span className="font-bold text-[#6B7E6D] dark:text-[#91A493]">
+                  <span className="font-bold text-[#D97757] dark:text-[#E8A785]">
                     {item.confidence}
                   </span>
                 </div>
                 {item.updated_at && item.updated_at !== item.created_at && (
-                  <div className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] pl-5 border-t border-[#E8E4E1] dark:border-[#38332E] pt-1.5">
+                  <div className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] pl-5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] pt-1.5">
                     Last Updated / Re-stored: <strong>{formatFriendlyDateTime(item.updated_at)}</strong>
                   </div>
                 )}
@@ -200,14 +200,14 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               {/* Tags */}
               {item.tags && item.tags.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-2">
+                  <p className="text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-2">
                     Tags:
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {item.tags.map((t, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#4A443F] dark:text-[#E8E4E1] rounded-lg text-xs font-medium"
+                        className="px-2.5 py-1 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] rounded-lg text-xs font-medium"
                       >
                         #{t}
                       </span>
@@ -218,21 +218,21 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
               {/* LOCATION HISTORY TIMELINE */}
               {item.history && item.history.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-[#E8E4E1] dark:border-[#38332E]">
-                  <h3 className="text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider flex items-center gap-1.5">
-                    <History className="w-4 h-4 text-[#5A7D9A]" />
+                <div className="space-y-2 pt-2 border-t border-[#E5E3DA] dark:border-[#3E3D3A]">
+                  <h3 className="text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider flex items-center gap-1.5">
+                    <History className="w-4 h-4 text-[#D97757]" />
                     Previous Saved Locations ({item.history.length})
                   </h3>
-                  <div className="space-y-2 pl-3 border-l-2 border-[#5A7D9A]">
+                  <div className="space-y-2 pl-3 border-l-2 border-[#D97757]">
                     {item.history.map((hist) => (
                       <div
                         key={hist.id}
-                        className="p-2.5 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-xl text-xs space-y-0.5"
+                        className="p-2.5 bg-[#EFEEE7] dark:bg-[#33322F] rounded-xl text-xs space-y-0.5"
                       >
-                        <p className="font-bold text-[#2D2A26] dark:text-[#E8E4E1]">
+                        <p className="font-bold text-[#30302E] dark:text-[#E5E3DA]">
                           {hist.location_name}
                         </p>
-                        <p className="text-[10px] text-[#8C847E]">
+                        <p className="text-[10px] text-[#83827C]">
                           Saved: {formatFriendlyDateTime(hist.saved_at)}
                         </p>
                       </div>
@@ -245,19 +245,19 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             /* EDIT MODE FORM */
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1">
                   Item Name
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full py-2.5 px-3.5 text-sm font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                  className="w-full py-2.5 px-3.5 text-sm font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1">
                   Location Name
                 </label>
                 <div className="relative flex items-center">
@@ -265,7 +265,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     type="text"
                     value={locationName}
                     onChange={(e) => setLocationName(e.target.value)}
-                    className="w-full py-2.5 pl-3.5 pr-11 text-sm text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                    className="w-full py-2.5 pl-3.5 pr-11 text-sm text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
                   />
                   <button
                     type="button"
@@ -276,8 +276,8 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     onTouchEnd={handleEndHoldDictate}
                     className={`absolute right-1.5 p-1.5 rounded-lg transition-all select-none active:scale-95 ${
                       isListening
-                        ? "bg-[#C2847A] text-white animate-bounce"
-                        : "bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#F2EDE9]"
+                        ? "bg-[#D97757] text-white animate-bounce"
+                        : "bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] hover:bg-[#EFEEE7]"
                     }`}
                     title="Tap or hold to dictate location"
                   >
@@ -299,26 +299,26 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1">
                   Description / Notes
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
-                  className="w-full py-2.5 px-3.5 text-sm text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                  className="w-full py-2.5 px-3.5 text-sm text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1">
                   Tags (comma separated)
                 </label>
                 <input
                   type="text"
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  className="w-full py-2.5 px-3.5 text-sm text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                  className="w-full py-2.5 px-3.5 text-sm text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
                 />
               </div>
             </div>
@@ -326,7 +326,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-3.5 border-t border-[#E8E4E1] dark:border-[#38332E] shrink-0 flex items-center justify-between gap-2">
+        <div className="pt-3.5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0 flex items-center justify-between gap-2">
           {!isEditing ? (
             <>
               <button
@@ -334,7 +334,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   onClose();
                   onRememberNewSpot(item);
                 }}
-                className="py-3 px-4 bg-[#6B7E6D] hover:bg-[#586A5A] text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md"
+                className="py-3 px-4 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Remember New Spot</span>
@@ -343,7 +343,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] text-[#4A443F] dark:text-[#E8E4E1] rounded-2xl text-xs font-semibold flex items-center gap-1"
+                  className="p-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] rounded-2xl text-xs font-semibold flex items-center gap-1"
                 >
                   <Edit3 className="w-4 h-4" />
                   <span>Edit</span>
@@ -355,7 +355,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                       onClose();
                     }
                   }}
-                  className="p-3 text-[#C2847A] hover:bg-[#C2847A]/10 rounded-2xl text-xs font-semibold"
+                  className="p-3 text-[#D97757] hover:bg-[#D97757]/10 rounded-2xl text-xs font-semibold"
                   title="Delete Item"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -366,13 +366,13 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             <>
               <button
                 onClick={() => setIsEditing(false)}
-                className="py-3 px-4 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] text-[#4A443F] dark:text-[#E8E4E1] font-semibold rounded-2xl text-xs"
+                className="py-3 px-4 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-xs"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="py-3 px-5 bg-[#6B7E6D] hover:bg-[#586A5A] text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md"
+                className="py-3 px-5 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-2xl text-xs flex items-center gap-1.5 shadow-md"
               >
                 <Check className="w-4 h-4" />
                 <span>Save Changes</span>

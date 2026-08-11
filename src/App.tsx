@@ -233,7 +233,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F2] dark:bg-[#1A1816] text-[#4A443F] dark:text-[#E8E4E1] font-sans transition-colors duration-200 antialiased selection:bg-[#6B7E6D] selection:text-white">
+    <div className="min-h-screen bg-[#F5F4EF] dark:bg-[#262624] text-[#44433F] dark:text-[#E5E3DA] font-sans transition-colors duration-200 antialiased selection:bg-[#D97757] selection:text-white">
       {/* Header */}
       <Header
         settings={settings}

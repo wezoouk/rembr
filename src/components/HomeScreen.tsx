@@ -163,15 +163,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="space-y-2">
         <form
           onSubmit={handleQuickSearchSubmit}
-          className="relative flex items-center shadow-sm rounded-2xl bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] overflow-hidden p-1"
+          className="relative flex items-center shadow-sm rounded-2xl bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] overflow-hidden p-1"
         >
-          <Search className="w-5 h-5 text-[#8C847E] ml-3 shrink-0" />
+          <Search className="w-5 h-5 text-[#83827C] ml-3 shrink-0" />
           <input
             type="text"
             value={quickQuery}
             onChange={(e) => setQuickQuery(e.target.value)}
             placeholder='Ask "Where are my keys?" or "Passport"...'
-            className="w-full py-3 pl-3 pr-28 text-base text-[#2D2A26] dark:text-[#E8E4E1] bg-transparent placeholder-[#8C847E] focus:outline-none"
+            className="w-full py-3 pl-3 pr-28 text-base text-[#30302E] dark:text-[#E5E3DA] bg-transparent placeholder-[#83827C] focus:outline-none"
           />
           <div className="absolute right-2 flex items-center gap-1.5">
             {/* Dictate Button */}
@@ -180,8 +180,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={toggleVoiceInput}
               className={`px-3 py-2.5 rounded-xl shadow transition-all flex items-center gap-1.5 text-xs font-bold select-none active:scale-95 cursor-pointer ${
                 isListening
-                  ? "bg-[#C2847A] text-white animate-pulse"
-                  : "bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E]"
+                  ? "bg-[#D97757] text-white animate-pulse"
+                  : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A]"
               }`}
               title={isListening ? "Tap to stop dictating" : "Tap to start dictating"}
             >
@@ -201,7 +201,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {/* Search Button */}
             <button
               type="submit"
-              className="p-2.5 bg-[#6B7E6D] hover:bg-[#586A5A] text-white rounded-xl shadow transition-all"
+              className="p-2.5 bg-[#D97757] hover:bg-[#C15F3C] text-white rounded-xl shadow transition-all"
               title="Search Saved Stuff"
             >
               <Search className="w-4 h-4" />
@@ -223,24 +223,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {!hideBorrowedSection && overdueBorrowed.length > 0 && (
         <button
           onClick={onOpenBorrowed}
-          className="w-full text-left p-3.5 bg-[#C2847A]/15 border-2 border-[#C2847A] rounded-2xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
+          className="w-full text-left p-3.5 bg-[#D97757]/15 border-2 border-[#D97757] rounded-2xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
         >
           <div className="relative shrink-0">
-            <span className="absolute w-8 h-8 rounded-full bg-[#C2847A] opacity-40 animate-ping"></span>
-            <div className="relative w-8 h-8 rounded-full bg-[#C2847A] text-white flex items-center justify-center">
+            <span className="absolute w-8 h-8 rounded-full bg-[#D97757] opacity-40 animate-ping"></span>
+            <div className="relative w-8 h-8 rounded-full bg-[#D97757] text-white flex items-center justify-center">
               <Bell className="w-4 h-4" />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-black text-[#A85B50] dark:text-[#E2A097] uppercase tracking-wider">
+            <p className="text-xs font-black text-[#C15F3C] dark:text-[#E8A785] uppercase tracking-wider">
               {overdueBorrowed.length} borrowed item{overdueBorrowed.length === 1 ? "" : "s"} overdue
             </p>
-            <p className="text-xs font-semibold text-[#4A443F] dark:text-[#E8E4E1] truncate mt-0.5">
+            <p className="text-xs font-semibold text-[#44433F] dark:text-[#E5E3DA] truncate mt-0.5">
               {overdueBorrowed.slice(0, 2).map((b) => `${b.borrowed_to} has your ${b.item_name}`).join(" · ")}
               {overdueBorrowed.length > 2 ? "…" : ""}
             </p>
           </div>
-          <ChevronRight className="w-5 h-5 text-[#C2847A] shrink-0" />
+          <ChevronRight className="w-5 h-5 text-[#D97757] shrink-0" />
         </button>
       )}
 
@@ -249,16 +249,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* 1. REMEMBER */}
         <button
           onClick={onOpenRemember}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#6B7E6D]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
+          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
         >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#6B7E6D]/10 text-[#6B7E6D] dark:text-[#91A493] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
             <Camera className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
               Remember
             </h2>
-            <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
               Save item spot
             </p>
           </div>
@@ -267,16 +267,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* 2. FIND */}
         <button
           onClick={() => onOpenFind()}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#5A7D9A]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
+          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
         >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
             <Search className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
               Find
             </h2>
-            <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
               Search lost item
             </p>
           </div>
@@ -286,16 +286,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {!hideLocationsSection && (
           <button
             onClick={() => onOpenLocations()}
-            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#6B7E6D]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
+            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
           >
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#6B7E6D]/15 text-[#6B7E6D] dark:text-[#91A493] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
               <MapPin className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+              <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
                 Locations
               </h2>
-              <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
                 Browse by spot ({locationGroups.length})
               </p>
             </div>
@@ -306,21 +306,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {!hideBorrowedSection && (
           <button
             onClick={onOpenBorrowed}
-            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#5A7D9A]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between relative"
+            className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between relative"
           >
             {overdueBorrowed.length > 0 && (
-              <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#C2847A] text-white text-[10px] font-bold flex items-center justify-center shadow">
+              <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold flex items-center justify-center shadow">
                 {overdueBorrowed.length}
               </span>
             )}
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
               <HandHeart className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+              <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
                 Borrowed
               </h2>
-              <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
                 {activeBorrowed.length > 0 ? `${activeBorrowed.length} out on loan` : "Track lent items"}
               </p>
             </div>
@@ -330,16 +330,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* 4. SCAN A SPACE */}
         <button
           onClick={onOpenScanSpace}
-          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#C2847A]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
+          className="group text-center p-4 sm:p-5 bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/60 rounded-3xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col items-center justify-between"
         >
-          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#C2847A]/10 text-[#C2847A] dark:text-[#DA9E94] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] rounded-2xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
             <Grid className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] mb-0.5">
+            <h2 className="text-base sm:text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] mb-0.5">
               Scan Space
             </h2>
-            <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] leading-tight">
+            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] leading-tight">
               Catalog drawer/shelf
             </p>
           </div>
@@ -350,11 +350,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {pinnedItems.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
-              <Pin className="w-3.5 h-3.5 text-[#C2847A] fill-[#C2847A]" />
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+              <Pin className="w-3.5 h-3.5 text-[#D97757] fill-[#D97757]" />
               Pinned Items
             </h2>
-            <span className="text-xs text-[#8C847E] dark:text-[#A3B0A5]">
+            <span className="text-xs text-[#83827C] dark:text-[#A8A7A2]">
               {pinnedItems.length} items
             </span>
           </div>
@@ -364,9 +364,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={item.id}
                 onClick={() => onSelectItem(item)}
-                className="group text-left bg-white/70 dark:bg-[#23201C]/70 border border-[#E8E4E1] dark:border-[#38332E] rounded-3xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between overflow-hidden relative"
+                className="group text-left bg-white/70 dark:bg-[#2B2A28]/70 border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between overflow-hidden relative"
               >
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] relative mb-2.5">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] relative mb-2.5">
                   <img
                     src={item.image_path}
                     alt={item.name}
@@ -382,7 +382,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                           onUpdateItem({ ...item, is_pinned: false });
                         }
                       }}
-                      className="p-1.5 bg-[#C2847A] text-white rounded-xl shadow-md hover:scale-105 transition-transform"
+                      className="p-1.5 bg-[#D97757] text-white rounded-xl shadow-md hover:scale-105 transition-transform"
                       title="Unpin Item"
                     >
                       <Pin className="w-3.5 h-3.5 fill-current" />
@@ -393,7 +393,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         e.stopPropagation();
                         setDeletingItemId(item.id);
                       }}
-                      className="p-1.5 bg-black/60 hover:bg-[#C2847A] text-white rounded-xl shadow-md transition-colors"
+                      className="p-1.5 bg-black/60 hover:bg-[#D97757] text-white rounded-xl shadow-md transition-colors"
                       title="Delete Item"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -402,15 +402,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                  <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
                     {item.name}
                   </h3>
-                  <p className="text-xs text-[#8C847E] dark:text-[#A3B0A5] truncate flex items-center gap-1 mt-0.5 font-medium">
-                    <MapPin className="w-3 h-3 text-[#6B7E6D] shrink-0" />
+                  <p className="text-xs text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-0.5 font-medium">
+                    <MapPin className="w-3 h-3 text-[#D97757] shrink-0" />
                     <span className="truncate">{item.location_name}</span>
                   </p>
-                  <p className="text-[10px] text-[#8C847E] dark:text-[#A3B0A5] truncate flex items-center gap-1 mt-1 font-medium">
-                    <Clock className="w-2.5 h-2.5 text-[#6B7E6D] shrink-0" />
+                  <p className="text-[10px] text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-1 font-medium">
+                    <Clock className="w-2.5 h-2.5 text-[#D97757] shrink-0" />
                     <span className="truncate">Recorded: {formatShortDateTime(item.created_at || item.updated_at)}</span>
                   </p>
                 </div>
@@ -418,10 +418,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 {deletingItemId === item.id && (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute inset-0 bg-white/95 dark:bg-[#23201C]/95 backdrop-blur-sm p-3 rounded-3xl flex flex-col items-center justify-center text-center gap-2 z-10 animate-fade-in"
+                    className="absolute inset-0 bg-white/95 dark:bg-[#2B2A28]/95 backdrop-blur-sm p-3 rounded-3xl flex flex-col items-center justify-center text-center gap-2 z-10 animate-fade-in"
                   >
-                    <AlertCircle className="w-5 h-5 text-[#C2847A]" />
-                    <span className="text-xs font-bold text-[#2D2A26] dark:text-[#E8E4E1]">Are you sure?</span>
+                    <AlertCircle className="w-5 h-5 text-[#D97757]" />
+                    <span className="text-xs font-bold text-[#30302E] dark:text-[#E5E3DA]">Are you sure?</span>
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"
@@ -432,7 +432,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                           }
                           setDeletingItemId(null);
                         }}
-                        className="px-2.5 py-1 bg-[#C2847A] hover:bg-[#A86E64] text-white text-xs font-bold rounded-xl shadow"
+                        className="px-2.5 py-1 bg-[#D97757] hover:bg-[#C15F3C] text-white text-xs font-bold rounded-xl shadow"
                       >
                         Yes
                       </button>
@@ -442,7 +442,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                           e.stopPropagation();
                           setDeletingItemId(null);
                         }}
-                        className="px-2 py-1 bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#4A443F] dark:text-[#E8E4E1] text-xs font-semibold rounded-xl"
+                        className="px-2 py-1 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl"
                       >
                         Cancel
                       </button>
@@ -459,13 +459,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {!hideBorrowedSection && activeBorrowed.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
-              <HandHeart className="w-3.5 h-3.5 text-[#5A7D9A]" />
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+              <HandHeart className="w-3.5 h-3.5 text-[#D97757]" />
               Borrowed & Out on Loan
             </h2>
             <button
               onClick={onOpenBorrowed}
-              className="text-xs font-bold text-[#5A7D9A] dark:text-[#7A9DBA] hover:underline flex items-center gap-0.5"
+              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
             >
               View All ({activeBorrowed.length})
               <ChevronRight className="w-3.5 h-3.5" />
@@ -482,18 +482,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div
                   key={b.id}
                   onClick={onOpenBorrowed}
-                  className={`group cursor-pointer bg-white dark:bg-[#23201C] border rounded-2xl p-3 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 ${
-                    overdue ? "border-[#C2847A]" : "border-[#E8E4E1] dark:border-[#38332E]"
+                  className={`group cursor-pointer bg-white dark:bg-[#2B2A28] border rounded-2xl p-3 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 ${
+                    overdue ? "border-[#D97757]" : "border-[#E5E3DA] dark:border-[#3E3D3A]"
                   }`}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center shrink-0">
                     <HandHeart className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-xs sm:text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                    <h3 className="font-bold text-xs sm:text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
                       {b.item_name}
                     </h3>
-                    <p className="text-[11px] text-[#5A7D9A] dark:text-[#7A9DBA] font-medium truncate flex items-center gap-1 mt-0.5">
+                    <p className="text-[11px] text-[#D97757] dark:text-[#E8A785] font-medium truncate flex items-center gap-1 mt-0.5">
                       <User className="w-3 h-3 shrink-0" />
                       {b.borrowed_to}
                     </p>
@@ -505,7 +505,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         e.stopPropagation();
                         onMarkBorrowedReturned(b);
                       }}
-                      className="p-1.5 rounded-lg text-[#8C847E] hover:text-[#6B7E6D] hover:bg-[#6B7E6D]/10 transition-colors shrink-0"
+                      className="p-1.5 rounded-lg text-[#83827C] hover:text-[#D97757] hover:bg-[#D97757]/10 transition-colors shrink-0"
                       title="Mark as returned"
                     >
                       <CheckCircle2 className="w-4 h-4" />
@@ -522,17 +522,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#6B7E6D]" />
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#D97757]" />
               Recently Saved
             </h2>
-            <span className="text-[10px] bg-[#6B7E6D]/15 text-[#6B7E6D] dark:text-[#91A493] px-2 py-0.5 rounded-full font-bold">
+            <span className="text-[10px] bg-[#D97757]/15 text-[#D97757] dark:text-[#E8A785] px-2 py-0.5 rounded-full font-bold">
               {items.length} {items.length === 1 ? "item" : "items"}
             </span>
           </div>
           <button
             onClick={() => onOpenFind()}
-            className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] hover:underline flex items-center gap-0.5"
+            className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
           >
             View All
             <ChevronRight className="w-3.5 h-3.5" />
@@ -540,13 +540,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {recentItems.length === 0 ? (
-          <div className="text-center py-10 bg-white dark:bg-[#23201C] rounded-3xl border border-dashed border-[#E8E4E1] dark:border-[#38332E] p-6">
-            <Camera className="w-10 h-10 text-[#8C847E] mx-auto mb-2" />
-            <p className="text-sm font-semibold text-[#4A443F] dark:text-[#E8E4E1]">
+          <div className="text-center py-10 bg-white dark:bg-[#2B2A28] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+            <Camera className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
+            <p className="text-sm font-semibold text-[#44433F] dark:text-[#E5E3DA]">
               No items saved yet
             </p>
-            <p className="text-xs text-[#8C847E] mt-1">
-              Tap <span className="font-bold text-[#6B7E6D]">Remember</span> above to save your first item!
+            <p className="text-xs text-[#83827C] mt-1">
+              Tap <span className="font-bold text-[#D97757]">Remember</span> above to save your first item!
             </p>
           </div>
         ) : (
@@ -555,9 +555,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={item.id}
                 onClick={() => onSelectItem(item)}
-                className="group cursor-pointer bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl p-2.5 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 relative overflow-hidden"
+                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl p-2.5 shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 relative overflow-hidden"
               >
-                <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] shrink-0 relative">
+                <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
                   <img
                     src={item.image_path}
                     alt={item.name}
@@ -574,35 +574,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     </div>
                   )}
                   {item.source_type === "scan" && (
-                    <span className="absolute bottom-0.5 left-0.5 bg-[#C2847A] text-white text-[9px] font-bold px-1 py-0 rounded">
+                    <span className="absolute bottom-0.5 left-0.5 bg-[#D97757] text-white text-[9px] font-bold px-1 py-0 rounded">
                       Scan
                     </span>
                   )}
                   {item.is_pinned && (
-                    <span className="absolute top-0.5 left-0.5 bg-[#C2847A] text-white p-0.5 rounded shadow">
+                    <span className="absolute top-0.5 left-0.5 bg-[#D97757] text-white p-0.5 rounded shadow">
                       <Pin className="w-2.5 h-2.5 fill-current" />
                     </span>
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0 pr-1">
-                  <h3 className="font-bold text-xs sm:text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                  <h3 className="font-bold text-xs sm:text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
                     {item.name}
                   </h3>
 
                   <p
-                    className={`text-[11px] text-[#8C847E] dark:text-[#A3B0A5] font-medium truncate flex items-center gap-1 mt-0.5 transition-all duration-300 ${
+                    className={`text-[11px] text-[#83827C] dark:text-[#A8A7A2] font-medium truncate flex items-center gap-1 mt-0.5 transition-all duration-300 ${
                       blurLocationRecentlySaved
                         ? "blur-sm group-hover:blur-none hover:blur-none select-none"
                         : ""
                     }`}
                   >
-                    <MapPin className="w-3 h-3 text-[#6B7E6D] shrink-0" />
+                    <MapPin className="w-3 h-3 text-[#D97757] shrink-0" />
                     <span className="truncate">{item.location_name}</span>
                   </p>
 
-                  <p className="text-[10px] text-[#8C847E] dark:text-[#A3B0A5] truncate flex items-center gap-1 mt-0.5">
-                    <Clock className="w-2.5 h-2.5 text-[#6B7E6D] shrink-0" />
+                  <p className="text-[10px] text-[#83827C] dark:text-[#A8A7A2] truncate flex items-center gap-1 mt-0.5">
+                    <Clock className="w-2.5 h-2.5 text-[#D97757] shrink-0" />
                     <span className="truncate">{formatShortDateTime(item.created_at || item.updated_at)}</span>
                   </p>
                 </div>
@@ -611,9 +611,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 {deletingItemId === item.id ? (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute inset-0 bg-white/95 dark:bg-[#23201C]/95 backdrop-blur-sm p-2 rounded-2xl flex items-center justify-between gap-1 z-10 animate-fade-in"
+                    className="absolute inset-0 bg-white/95 dark:bg-[#2B2A28]/95 backdrop-blur-sm p-2 rounded-2xl flex items-center justify-between gap-1 z-10 animate-fade-in"
                   >
-                    <span className="text-[10px] font-bold text-[#C2847A] truncate">Delete?</span>
+                    <span className="text-[10px] font-bold text-[#D97757] truncate">Delete?</span>
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         type="button"
@@ -624,7 +624,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                           }
                           setDeletingItemId(null);
                         }}
-                        className="px-2 py-0.5 bg-[#C2847A] hover:bg-[#A86E64] text-white text-[10px] font-bold rounded-lg shadow"
+                        className="px-2 py-0.5 bg-[#D97757] hover:bg-[#C15F3C] text-white text-[10px] font-bold rounded-lg shadow"
                       >
                         Yes
                       </button>
@@ -634,7 +634,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                           e.stopPropagation();
                           setDeletingItemId(null);
                         }}
-                        className="px-1.5 py-0.5 bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#4A443F] dark:text-[#E8E4E1] text-[10px] font-semibold rounded-lg"
+                        className="px-1.5 py-0.5 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] text-[10px] font-semibold rounded-lg"
                       >
                         No
                       </button>
@@ -652,8 +652,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       }}
                       className={`p-1.5 rounded-lg transition-all ${
                         item.is_pinned
-                          ? "bg-[#C2847A] text-white shadow-sm"
-                          : "bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white"
+                          ? "bg-[#D97757] text-white shadow-sm"
+                          : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#83827C] hover:text-[#30302E] dark:hover:text-white"
                       }`}
                       title={item.is_pinned ? "Unpin item" : "Pin item to top"}
                     >
@@ -665,7 +665,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         e.stopPropagation();
                         setDeletingItemId(item.id);
                       }}
-                      className="p-1.5 rounded-lg text-[#8C847E] hover:text-[#C2847A] hover:bg-[#C2847A]/10 transition-colors"
+                      className="p-1.5 rounded-lg text-[#83827C] hover:text-[#D97757] hover:bg-[#D97757]/10 transition-colors"
                       title="Delete item"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -682,13 +682,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {locationGroups.length > 0 && !hideLocationsSection && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#6B7E6D]" />
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-[#D97757]" />
               Browse Locations
             </h2>
             <button
               onClick={() => onOpenLocations()}
-              className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] hover:underline flex items-center gap-0.5"
+              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline flex items-center gap-0.5"
             >
               View All ({locationGroups.length})
               <ChevronRight className="w-3.5 h-3.5" />
@@ -700,10 +700,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={group.name}
                 onClick={() => onOpenLocations(group.name)}
-                className="group cursor-pointer bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] hover:border-[#6B7E6D]/50 rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center justify-between gap-3"
+                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] hover:border-[#D97757]/50 rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] shrink-0 relative">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
                     {group.items[0]?.image_path ? (
                       <img
                         src={group.items[0].image_path}
@@ -712,26 +712,26 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#6B7E6D]">
+                      <div className="w-full h-full flex items-center justify-center text-[#D97757]">
                         <MapPin className="w-6 h-6" />
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate group-hover:text-[#6B7E6D] dark:group-hover:text-[#91A493] transition-colors">
+                    <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate group-hover:text-[#D97757] dark:group-hover:text-[#E8A785] transition-colors">
                       {group.name}
                     </h3>
-                    <p className="text-xs text-[#6B7E6D] dark:text-[#91A493] font-semibold mt-0.5">
+                    <p className="text-xs text-[#D97757] dark:text-[#E8A785] font-semibold mt-0.5">
                       {group.items.length} {group.items.length === 1 ? "item" : "items"} inside
                     </p>
-                    <p className="text-[11px] text-[#8C847E] truncate mt-0.5 font-medium">
+                    <p className="text-[11px] text-[#83827C] truncate mt-0.5 font-medium">
                       {group.items.map((i) => i.name).slice(0, 2).join(", ")}
                     </p>
                   </div>
                 </div>
 
-                <ChevronRight className="w-5 h-5 text-[#8C847E] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#83827C] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </div>
             ))}
           </div>
@@ -742,13 +742,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {spaces.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs uppercase tracking-widest font-bold text-[#8C847E] dark:text-[#A3B0A5] flex items-center gap-1.5">
-              <FolderOpen className="w-3.5 h-3.5 text-[#C2847A]" />
+            <h2 className="text-xs uppercase tracking-widest font-bold text-[#83827C] dark:text-[#A8A7A2] flex items-center gap-1.5">
+              <FolderOpen className="w-3.5 h-3.5 text-[#D97757]" />
               Scanned Spaces
             </h2>
             <button
               onClick={onOpenScanSpace}
-              className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] hover:underline"
+              className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] hover:underline"
             >
               Scan new space +
             </button>
@@ -759,9 +759,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <div
                 key={space.id}
                 onClick={() => onSelectSpace(space)}
-                className="group cursor-pointer bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center gap-3"
+                className="group cursor-pointer bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-3.5 shadow-sm hover:shadow-md transition-all active:scale-[0.99] flex items-center gap-3"
               >
-                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] shrink-0 relative">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative">
                   <img
                     src={space.image_path}
                     alt={space.name}
@@ -770,18 +770,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                  <h3 className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
                     {space.name}
                   </h3>
-                  <p className="text-xs text-[#C2847A] font-semibold mt-0.5">
+                  <p className="text-xs text-[#D97757] font-semibold mt-0.5">
                     {space.detected_items_count} items detected
                   </p>
-                  <p className="text-[11px] text-[#8C847E] mt-0.5 flex items-center gap-1 font-medium">
-                    <Clock className="w-3 h-3 text-[#C2847A]" />
+                  <p className="text-[11px] text-[#83827C] mt-0.5 flex items-center gap-1 font-medium">
+                    <Clock className="w-3 h-3 text-[#D97757]" />
                     Scanned: {formatShortDateTime(space.created_at)}
                   </p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#8C847E] shrink-0" />
+                <ChevronRight className="w-5 h-5 text-[#83827C] shrink-0" />
               </div>
             ))}
           </div>

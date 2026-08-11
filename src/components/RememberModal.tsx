@@ -301,19 +301,19 @@ export const RememberModal: React.FC<RememberModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1A1816]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* DUPLICATE ITEM PROMPT OVERLAY */}
         {showDuplicatePrompt && (
-          <div className="absolute inset-0 z-50 bg-white/95 dark:bg-[#23201C]/95 backdrop-blur-md p-6 flex flex-col justify-center animate-fade-in">
-            <div className="w-12 h-12 rounded-2xl bg-[#C2847A]/15 text-[#C2847A] flex items-center justify-center mb-4 mx-auto">
+          <div className="absolute inset-0 z-50 bg-white/95 dark:bg-[#2B2A28]/95 backdrop-blur-md p-6 flex flex-col justify-center animate-fade-in">
+            <div className="w-12 h-12 rounded-2xl bg-[#D97757]/15 text-[#D97757] flex items-center justify-center mb-4 mx-auto">
               <AlertCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-center text-[#2D2A26] dark:text-[#E8E4E1] mb-2">
+            <h3 className="text-xl font-bold text-center text-[#30302E] dark:text-[#E5E3DA] mb-2">
               Duplicate Item Name
             </h3>
-            <p className="text-sm text-center text-[#8C847E] dark:text-[#A3B0A5] mb-5">
-              An item named <span className="font-bold text-[#2D2A26] dark:text-[#E8E4E1]">"{itemName}"</span> already exists in your records. Please provide a more descriptive name to keep items easy to find:
+            <p className="text-sm text-center text-[#83827C] dark:text-[#A8A7A2] mb-5">
+              An item named <span className="font-bold text-[#30302E] dark:text-[#E5E3DA]">"{itemName}"</span> already exists in your records. Please provide a more descriptive name to keep items easy to find:
             </p>
 
             <div className="space-y-3 mb-6">
@@ -322,10 +322,10 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 value={descriptiveNameInput}
                 onChange={(e) => setDescriptiveNameInput(e.target.value)}
                 placeholder='e.g., "Brown Wallet", "Hallway Keys"'
-                className="w-full py-3 px-4 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                className="w-full py-3 px-4 text-base font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
                 autoFocus
               />
-              <p className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5]">
+              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
                 Tip: Adding details like color or location (e.g. "Brown Wallet") helps distinguish items easily.
               </p>
             </div>
@@ -341,7 +341,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                   }
                 }}
                 disabled={!descriptiveNameInput.trim()}
-                className="w-full py-3 px-4 bg-[#6B7E6D] hover:bg-[#586A5A] text-white font-bold rounded-2xl text-sm shadow-md transition-all disabled:opacity-50"
+                className="w-full py-3 px-4 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-2xl text-sm shadow-md transition-all disabled:opacity-50"
               >
                 Save with New Name
               </button>
@@ -353,14 +353,14 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                     setShowDuplicatePrompt(false);
                     handleSave(itemName);
                   }}
-                  className="flex-1 py-2.5 px-3 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] text-xs font-semibold rounded-xl"
+                  className="flex-1 py-2.5 px-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl"
                 >
                   Save Duplicate
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowDuplicatePrompt(false)}
-                  className="flex-1 py-2.5 px-3 bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] text-xs font-semibold rounded-xl"
+                  className="flex-1 py-2.5 px-3 bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] text-xs font-semibold rounded-xl"
                 >
                   Cancel
                 </button>
@@ -369,23 +369,23 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           </div>
         )}
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8E4E1] dark:border-[#38332E] shrink-0">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#6B7E6D]/10 text-[#6B7E6D] dark:text-[#91A493] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center">
               <Camera className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] leading-tight">
+              <h2 className="text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] leading-tight">
                 Remember Item
               </h2>
-              <p className="text-xs text-[#8C847E] dark:text-[#A3B0A5]">
+              <p className="text-xs text-[#83827C] dark:text-[#A8A7A2]">
                 Save by voice, typing, or photo
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white rounded-xl hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -394,9 +394,9 @@ export const RememberModal: React.FC<RememberModalProps> = ({
         {/* Scrollable Content */}
         <div className="overflow-y-auto py-4 space-y-4 pr-1 flex-1">
           {/* VOICE / DICTATION FAST BANNER */}
-          <div className="p-4 bg-[#6B7E6D]/10 border border-[#6B7E6D]/30 rounded-2xl flex flex-col gap-2">
+          <div className="p-4 bg-[#D97757]/10 border border-[#D97757]/30 rounded-2xl flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#6B7E6D] dark:text-[#91A493] uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-bold text-[#D97757] dark:text-[#E8A785] uppercase tracking-wider flex items-center gap-1.5">
                 <Mic className="w-4 h-4" /> Speak Full Phrase
               </span>
               <button
@@ -404,8 +404,8 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 onClick={() => toggleVoiceInput("both")}
                 className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm select-none active:scale-95 cursor-pointer ${
                   isListening && listeningTarget === "both"
-                    ? "bg-[#C2847A] text-white animate-bounce"
-                    : "bg-[#6B7E6D] text-white hover:bg-[#586A5A]"
+                    ? "bg-[#D97757] text-white animate-bounce"
+                    : "bg-[#D97757] text-white hover:bg-[#C15F3C]"
                 }`}
               >
                 {isListening && listeningTarget === "both" ? (
@@ -421,8 +421,8 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 )}
               </button>
             </div>
-            <p className="text-xs text-[#4A443F] dark:text-[#A3B0A5]">
-              Say e.g., <span className="italic font-medium text-[#2D2A26] dark:text-[#E8E4E1]">"Remember my spare keys are in the top kitchen drawer"</span>
+            <p className="text-xs text-[#44433F] dark:text-[#A8A7A2]">
+              Say e.g., <span className="italic font-medium text-[#30302E] dark:text-[#E5E3DA]">"Remember my spare keys are in the top kitchen drawer"</span>
             </p>
           </div>
 
@@ -449,7 +449,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
 
           {/* ITEM NAME & VOICE INPUT */}
           <div>
-            <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1.5">
               Item Name *
             </label>
             <div className="relative flex items-center">
@@ -458,15 +458,15 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
                 placeholder='e.g., "Car keys", "Passport", "Reading glasses"'
-                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                className="w-full py-3.5 pl-4 pr-12 text-base font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
               />
               <button
                 type="button"
                 onClick={() => toggleVoiceInput("item")}
                 className={`absolute right-2 p-2.5 rounded-xl transition-all select-none active:scale-95 cursor-pointer ${
                   isListening && listeningTarget === "item"
-                    ? "bg-[#C2847A] text-white animate-bounce"
-                    : "bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#F2EDE9]"
+                    ? "bg-[#D97757] text-white animate-bounce"
+                    : "bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] hover:bg-[#EFEEE7]"
                 }`}
                 title="Tap to dictate item name"
               >
@@ -481,30 +481,30 @@ export const RememberModal: React.FC<RememberModalProps> = ({
 
           {/* LOCATION DESCRIPTION */}
           <div>
-            <label className="block text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>Location / Spot</span>
               {aiAnalysis?.locationDescription && (
-                <span className="text-[10px] text-[#6B7E6D] dark:text-[#91A493] font-semibold flex items-center gap-1">
+                <span className="text-[10px] text-[#D97757] dark:text-[#E8A785] font-semibold flex items-center gap-1">
                   <Sparkles className="w-3 h-3" /> AI Suggested
                 </span>
               )}
             </label>
             <div className="relative flex items-center">
-              <MapPin className="w-4 h-4 text-[#6B7E6D] absolute left-3.5 shrink-0" />
+              <MapPin className="w-4 h-4 text-[#D97757] absolute left-3.5 shrink-0" />
               <input
                 type="text"
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
                 placeholder='e.g., "Top drawer of kitchen cabinet"'
-                className="w-full py-3 pl-10 pr-12 text-sm text-[#2D2A26] dark:text-[#E8E4E1] bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6B7E6D]"
+                className="w-full py-3 pl-10 pr-12 text-sm text-[#30302E] dark:text-[#E5E3DA] bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D97757]"
               />
               <button
                 type="button"
                 onClick={() => toggleVoiceInput("location")}
                 className={`absolute right-2 p-2 rounded-xl transition-all select-none active:scale-95 cursor-pointer ${
                   isListening && listeningTarget === "location"
-                    ? "bg-[#C2847A] text-white animate-bounce"
-                    : "bg-[#E8E4E1] dark:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] hover:bg-[#F2EDE9]"
+                    ? "bg-[#D97757] text-white animate-bounce"
+                    : "bg-[#E5E3DA] dark:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] hover:bg-[#EFEEE7]"
                 }`}
                 title="Tap to dictate location spot"
               >
@@ -518,9 +518,9 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           </div>
 
           {/* OPTIONAL PHOTO SECTION */}
-          <div className="pt-2 border-t border-[#E8E4E1] dark:border-[#38332E] space-y-3">
+          <div className="pt-2 border-t border-[#E5E3DA] dark:border-[#3E3D3A] space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider">
+              <label className="text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider">
                 Photo (Optional)
               </label>
               {photo && (
@@ -530,7 +530,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                     setPhoto(null);
                     setAiAnalysis(null);
                   }}
-                  className="text-xs font-semibold text-[#C2847A] hover:underline"
+                  className="text-xs font-semibold text-[#D97757] hover:underline"
                 >
                   Remove Photo
                 </button>
@@ -541,21 +541,21 @@ export const RememberModal: React.FC<RememberModalProps> = ({
               <div className="space-y-2">
                 <div
                   onClick={startCamera}
-                  className="group cursor-pointer aspect-video bg-[#2D2A26] rounded-2xl border-2 border-dashed border-[#6B7E6D]/50 hover:border-[#6B7E6D] p-5 flex flex-col items-center justify-center text-center transition-all"
+                  className="group cursor-pointer aspect-video bg-[#30302E] rounded-2xl border-2 border-dashed border-[#D97757]/50 hover:border-[#D97757] p-5 flex flex-col items-center justify-center text-center transition-all"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-[#6B7E6D]/20 text-[#A3B0A5] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-[#D97757]/20 text-[#A8A7A2] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
                     <Camera className="w-6 h-6" />
                   </div>
                   <h3 className="text-sm font-bold text-white">
                     Tap to Add Photo (Optional)
                   </h3>
-                  <p className="text-xs text-[#A3B0A5] mt-0.5">
+                  <p className="text-xs text-[#A8A7A2] mt-0.5">
                     Snap where you put it or skip if typing/dictating
                   </p>
                 </div>
 
                 {cameraError && (
-                  <div className="p-3 bg-[#C2847A]/10 text-[#C2847A] rounded-xl text-xs flex items-start gap-2">
+                  <div className="p-3 bg-[#D97757]/10 text-[#D97757] rounded-xl text-xs flex items-start gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>{cameraError}</span>
                   </div>
@@ -566,7 +566,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 py-2.5 px-3 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] font-semibold rounded-2xl text-xs flex items-center justify-center gap-2 transition-colors"
+                    className="flex-1 py-2.5 px-3 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-xs flex items-center justify-center gap-2 transition-colors"
                   >
                     <Upload className="w-4 h-4" />
                     <span>Upload Photo</span>
@@ -582,7 +582,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleSetPhoto(DEMO_PHOTOS.carKeys)}
-                    className="flex-1 py-2.5 px-3 bg-[#6B7E6D]/15 hover:bg-[#6B7E6D]/25 text-[#6B7E6D] dark:text-[#A3B0A5] font-semibold rounded-2xl text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    className="flex-1 py-2.5 px-3 bg-[#D97757]/15 hover:bg-[#D97757]/25 text-[#D97757] dark:text-[#A8A7A2] font-semibold rounded-2xl text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <ImageIcon className="w-4 h-4" />
                     <span>Sample Keys</span>
@@ -601,20 +601,20 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                 <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-4">
                   <button
                     onClick={stopCamera}
-                    className="px-4 py-2 bg-[#2D2A26]/80 text-white text-xs font-semibold rounded-xl backdrop-blur-md"
+                    className="px-4 py-2 bg-[#30302E]/80 text-white text-xs font-semibold rounded-xl backdrop-blur-md"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={capturePhoto}
-                    className="w-14 h-14 rounded-full bg-white border-4 border-[#6B7E6D] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
+                    className="w-14 h-14 rounded-full bg-white border-4 border-[#D97757] shadow-xl flex items-center justify-center active:scale-95 transition-transform"
                   >
-                    <div className="w-10 h-10 rounded-full bg-[#6B7E6D]" />
+                    <div className="w-10 h-10 rounded-full bg-[#D97757]" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div ref={photoSectionRef} className="relative rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] border border-[#E8E4E1] dark:border-[#38332E] shadow-sm flex items-center justify-center scroll-mt-4">
+              <div ref={photoSectionRef} className="relative rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] border border-[#E5E3DA] dark:border-[#3E3D3A] shadow-sm flex items-center justify-center scroll-mt-4">
                 <img
                   src={photo}
                   alt="Captured location"
@@ -634,7 +634,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
                     setPhoto(null);
                     setAiAnalysis(null);
                   }}
-                  className="absolute top-3 right-3 p-2 bg-[#2D2A26]/80 hover:bg-[#2D2A26] text-white rounded-xl backdrop-blur-md text-xs font-semibold flex items-center gap-1 shadow"
+                  className="absolute top-3 right-3 p-2 bg-[#30302E]/80 hover:bg-[#30302E] text-white rounded-xl backdrop-blur-md text-xs font-semibold flex items-center gap-1 shadow"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Retake
@@ -645,7 +645,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
 
           {/* AI ANALYSIS STATUS */}
           {isAnalyzing && (
-            <div className="p-3 bg-[#6B7E6D]/10 border border-[#6B7E6D]/20 rounded-2xl flex items-center gap-3 text-xs text-[#6B7E6D] dark:text-[#91A493] font-semibold animate-pulse">
+            <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-center gap-3 text-xs text-[#D97757] dark:text-[#E8A785] font-semibold animate-pulse">
               <Sparkles className="w-5 h-5 animate-spin" />
               <span>AI is analyzing photo context & detecting location...</span>
             </div>
@@ -653,11 +653,11 @@ export const RememberModal: React.FC<RememberModalProps> = ({
 
           {/* CONFIDENCE BADGE */}
           {aiAnalysis && (
-            <div className="flex items-center justify-between p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E] text-xs">
-              <span className="text-[#8C847E] dark:text-[#A3B0A5] font-medium">
+            <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A] text-xs">
+              <span className="text-[#83827C] dark:text-[#A8A7A2] font-medium">
                 AI Recognition Confidence:
               </span>
-              <span className="font-bold text-[#6B7E6D] dark:text-[#91A493] bg-[#6B7E6D]/15 px-2.5 py-1 rounded-lg">
+              <span className="font-bold text-[#D97757] dark:text-[#E8A785] bg-[#D97757]/15 px-2.5 py-1 rounded-lg">
                 {confidence}
               </span>
             </div>
@@ -665,17 +665,17 @@ export const RememberModal: React.FC<RememberModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-3.5 border-t border-[#E8E4E1] dark:border-[#38332E] shrink-0 flex items-center gap-3">
+        <div className="pt-3.5 border-t border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0 flex items-center gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-3 px-4 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E] text-[#4A443F] dark:text-[#E8E4E1] font-semibold rounded-2xl text-sm transition-colors"
+            className="flex-1 py-3 px-4 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-2xl text-sm transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={() => handleSave()}
             disabled={!itemName.trim()}
-            className="flex-1 py-3 px-4 bg-[#6B7E6D] hover:bg-[#586A5A] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="flex-1 py-3 px-4 bg-[#D97757] hover:bg-[#C15F3C] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Check className="w-5 h-5" />
             <span>Save Location</span>
@@ -691,7 +691,7 @@ export const RememberModal: React.FC<RememberModalProps> = ({
           <button
             type="button"
             onClick={() => handleSave()}
-            className="pointer-events-auto flex items-center gap-2 py-3.5 px-6 bg-[#6B7E6D] hover:bg-[#586A5A] text-white font-bold rounded-full text-sm shadow-2xl active:scale-95 transition-all cursor-pointer"
+            className="pointer-events-auto flex items-center gap-2 py-3.5 px-6 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-full text-sm shadow-2xl active:scale-95 transition-all cursor-pointer"
           >
             <Check className="w-5 h-5" />
             <span>Save Location</span>

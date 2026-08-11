@@ -253,21 +253,21 @@ export const FindModal: React.FC<FindModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1A1816]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-[32px] max-w-xl w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-xl w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8E4E1] dark:border-[#38332E] shrink-0">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#5A7D9A]/10 text-[#5A7D9A] dark:text-[#7A9DBA] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center">
               <Search className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1]">
+            <h2 className="text-lg font-bold text-[#30302E] dark:text-[#E5E3DA]">
               Find Saved Stuff
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white rounded-xl hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -275,8 +275,8 @@ export const FindModal: React.FC<FindModalProps> = ({
 
         {/* Search Input Bar */}
         <form onSubmit={handleSearchSubmit} className="mt-4 mb-3 shrink-0">
-          <div className="relative flex items-center shadow-sm rounded-2xl bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] overflow-hidden">
-            <Search className="w-5 h-5 text-[#8C847E] ml-4 shrink-0" />
+          <div className="relative flex items-center shadow-sm rounded-2xl bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] overflow-hidden">
+            <Search className="w-5 h-5 text-[#83827C] ml-4 shrink-0" />
             <input
               type="text"
               value={query}
@@ -285,15 +285,15 @@ export const FindModal: React.FC<FindModalProps> = ({
                 performSearch(e.target.value);
               }}
               placeholder='Ask e.g. "Where are my keys?"'
-              className="w-full py-3.5 pl-3 pr-24 text-base font-semibold text-[#2D2A26] dark:text-[#E8E4E1] bg-transparent placeholder-[#8C847E] focus:outline-none"
+              className="w-full py-3.5 pl-3 pr-24 text-base font-semibold text-[#30302E] dark:text-[#E5E3DA] bg-transparent placeholder-[#83827C] focus:outline-none"
             />
             <button
               type="button"
               onClick={toggleVoice}
               className={`absolute right-12 p-2 rounded-xl transition-all select-none active:scale-95 cursor-pointer ${
                 isListening
-                  ? "bg-[#C2847A] text-white animate-pulse"
-                  : "text-[#8C847E] hover:bg-[#E8E4E1] dark:hover:bg-[#38332E]"
+                  ? "bg-[#D97757] text-white animate-pulse"
+                  : "text-[#83827C] hover:bg-[#E5E3DA] dark:hover:bg-[#3E3D3A]"
               }`}
               title={isListening ? "Tap to stop dictating" : "Tap to start dictating"}
             >
@@ -301,7 +301,7 @@ export const FindModal: React.FC<FindModalProps> = ({
             </button>
             <button
               type="submit"
-              className="absolute right-2 p-2 bg-[#5A7D9A] hover:bg-[#4A6D8A] text-white rounded-xl shadow transition-colors"
+              className="absolute right-2 p-2 bg-[#D97757] hover:bg-[#C15F3C] text-white rounded-xl shadow transition-colors"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -327,7 +327,7 @@ export const FindModal: React.FC<FindModalProps> = ({
                   setQuery(q);
                   performSearch(q);
                 }}
-                className="whitespace-nowrap px-3 py-1 bg-[#5A7D9A]/15 hover:bg-[#5A7D9A]/25 text-[#5A7D9A] dark:text-[#7A9DBA] rounded-full text-xs font-semibold transition-colors"
+                className="whitespace-nowrap px-3 py-1 bg-[#D97757]/15 hover:bg-[#D97757]/25 text-[#D97757] dark:text-[#E8A785] rounded-full text-xs font-semibold transition-colors"
               >
                 "{q}"
               </button>
@@ -337,7 +337,7 @@ export const FindModal: React.FC<FindModalProps> = ({
 
         {/* Searching Status */}
         {isSearching && (
-          <div className="p-3 bg-[#5A7D9A]/10 border border-[#5A7D9A]/20 rounded-2xl flex items-center gap-3 text-xs text-[#5A7D9A] dark:text-[#7A9DBA] font-semibold mb-3 animate-pulse">
+          <div className="p-3 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl flex items-center gap-3 text-xs text-[#D97757] dark:text-[#E8A785] font-semibold mb-3 animate-pulse">
             <Search className="w-4 h-4 animate-spin" />
             <span>Searching index & memory...</span>
           </div>
@@ -345,10 +345,10 @@ export const FindModal: React.FC<FindModalProps> = ({
 
         {/* Index & Memory Answer Summary Banner */}
         {textAnswer && (
-          <div className="p-3.5 bg-[#5A7D9A]/10 border border-[#5A7D9A]/20 rounded-2xl mb-3 flex items-start gap-2.5 text-xs text-[#2D2A26] dark:text-[#E8E4E1] shadow-sm">
-            <Search className="w-4.5 h-4.5 text-[#5A7D9A] dark:text-[#7A9DBA] shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#D97757]/10 border border-[#D97757]/20 rounded-2xl mb-3 flex items-start gap-2.5 text-xs text-[#30302E] dark:text-[#E5E3DA] shadow-sm">
+            <Search className="w-4.5 h-4.5 text-[#D97757] dark:text-[#E8A785] shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold block text-[#5A7D9A] dark:text-[#7A9DBA]">
+              <span className="font-bold block text-[#D97757] dark:text-[#E8A785]">
                 Index & Memory Search:
               </span>
               <span>{textAnswer}</span>
@@ -359,12 +359,12 @@ export const FindModal: React.FC<FindModalProps> = ({
         {/* RESULTS LIST */}
         <div className="overflow-y-auto space-y-4 pr-1 flex-1">
           {matchedItems.length === 0 ? (
-            <div className="text-center py-12 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-3xl border border-dashed border-[#E8E4E1] dark:border-[#38332E] p-6">
-              <Search className="w-10 h-10 text-[#8C847E] mx-auto mb-2" />
-              <p className="text-sm font-bold text-[#2D2A26] dark:text-[#E8E4E1]">
+            <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#33322F] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+              <Search className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
+              <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
                 No matching item found for "{query}"
               </p>
-              <p className="text-xs text-[#8C847E] mt-1">
+              <p className="text-xs text-[#83827C] mt-1">
                 Try searching with different keywords or voice.
               </p>
             </div>
@@ -389,62 +389,62 @@ export const FindModal: React.FC<FindModalProps> = ({
                 if (idx === 0) {
                   // Top Result (Heatmap 🔥 Hot Match)
                   containerClasses =
-                    "bg-white dark:bg-[#23201C] border-2 border-[#6B7E6D] dark:border-[#91A493] rounded-3xl p-4 shadow-md shadow-[#6B7E6D]/15 dark:shadow-none space-y-3 relative ring-2 ring-[#6B7E6D]/20";
+                    "bg-white dark:bg-[#2B2A28] border-2 border-[#D97757] dark:border-[#E8A785] rounded-3xl p-4 shadow-md shadow-[#D97757]/15 dark:shadow-none space-y-3 relative ring-2 ring-[#D97757]/20";
                   titleClasses =
-                    "text-xl font-extrabold text-[#2D2A26] dark:text-[#E8E4E1] hover:text-[#6B7E6D] dark:hover:text-[#91A493]";
+                    "text-xl font-extrabold text-[#30302E] dark:text-[#E5E3DA] hover:text-[#D97757] dark:hover:text-[#E8A785]";
                   imageClasses =
                     "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300";
                   badgeClasses =
-                    "inline-flex items-center gap-1.5 text-xs font-extrabold text-white bg-[#6B7E6D] px-3 py-1 rounded-full shadow-sm mt-0.5";
+                    "inline-flex items-center gap-1.5 text-xs font-extrabold text-white bg-[#D97757] px-3 py-1 rounded-full shadow-sm mt-0.5";
                   badgeLabel = `🔥 #1 Best Match (${matchTypeLabel})`;
                   badgeIcon = <CheckCircle className="w-3.5 h-3.5 text-white" />;
                 } else if (idx === 1) {
                   // 2nd Result (High Match)
                   containerClasses =
-                    "bg-[#FAF8F5] dark:bg-[#201D1A] border border-[#6B7E6D]/40 dark:border-[#6B7E6D]/40 rounded-3xl p-4 shadow-sm opacity-90 saturate-90 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
+                    "bg-[#F5F4EF] dark:bg-[#262624] border border-[#D97757]/40 dark:border-[#D97757]/40 rounded-3xl p-4 shadow-sm opacity-90 saturate-90 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
                   titleClasses =
-                    "text-lg font-bold text-[#3A3632] dark:text-[#DCD7D2] hover:text-[#6B7E6D] dark:hover:text-[#91A493]";
+                    "text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] hover:text-[#D97757] dark:hover:text-[#E8A785]";
                   imageClasses =
                     "w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300";
                   badgeClasses =
-                    "inline-flex items-center gap-1 text-[11px] font-bold text-[#586A5A] dark:text-[#91A493] bg-[#6B7E6D]/20 px-2.5 py-0.5 rounded-lg mt-0.5";
+                    "inline-flex items-center gap-1 text-[11px] font-bold text-[#C15F3C] dark:text-[#E8A785] bg-[#D97757]/20 px-2.5 py-0.5 rounded-lg mt-0.5";
                   badgeLabel = `⚡ #2 Match (${matchTypeLabel})`;
                   badgeIcon = <CheckCircle className="w-3 h-3" />;
                 } else if (idx === 2) {
                   // 3rd Result (Medium Match)
                   containerClasses =
-                    "bg-[#F5F2EE] dark:bg-[#1C1A17] border border-[#8C847E]/35 dark:border-[#8C847E]/30 rounded-3xl p-4 opacity-70 saturate-75 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
+                    "bg-[#EFEEE7] dark:bg-[#2B2A28] border border-[#83827C]/35 dark:border-[#83827C]/30 rounded-3xl p-4 opacity-70 saturate-75 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
                   titleClasses =
-                    "text-base font-semibold text-[#5A544E] dark:text-[#B5AFA8] hover:text-[#2D2A26]";
+                    "text-base font-semibold text-[#55534D] dark:text-[#C4C2B8] hover:text-[#30302E]";
                   imageClasses =
                     "w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300";
                   badgeClasses =
-                    "inline-flex items-center gap-1 text-[11px] font-semibold text-[#7A736C] dark:text-[#A3B0A5] bg-[#8C847E]/20 px-2 py-0.5 rounded-md mt-0.5";
+                    "inline-flex items-center gap-1 text-[11px] font-semibold text-[#6B6A66] dark:text-[#A8A7A2] bg-[#83827C]/20 px-2 py-0.5 rounded-md mt-0.5";
                   badgeLabel = `#3 Match (${matchTypeLabel})`;
                   badgeIcon = <Tag className="w-3 h-3" />;
                 } else {
                   // 4th+ Result (Faded Secondary Match)
                   containerClasses =
-                    "bg-[#F2EDE9]/60 dark:bg-[#181614]/60 border border-dashed border-[#8C847E]/25 dark:border-[#8C847E]/25 rounded-3xl p-4 opacity-45 saturate-50 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
+                    "bg-[#EFEEE7]/60 dark:bg-[#1F1E1C]/60 border border-dashed border-[#83827C]/25 dark:border-[#83827C]/25 rounded-3xl p-4 opacity-45 saturate-50 hover:opacity-100 hover:saturate-100 transition-all duration-300 space-y-3";
                   titleClasses =
-                    "text-base font-medium text-[#7A736C] dark:text-[#8C847E] hover:text-[#2D2A26]";
+                    "text-base font-medium text-[#6B6A66] dark:text-[#83827C] hover:text-[#30302E]";
                   imageClasses =
                     "w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300";
                   badgeClasses =
-                    "inline-flex items-center gap-1 text-[10px] font-medium text-[#8C847E] bg-[#8C847E]/10 px-2 py-0.5 rounded-md mt-0.5";
+                    "inline-flex items-center gap-1 text-[10px] font-medium text-[#83827C] bg-[#83827C]/10 px-2 py-0.5 rounded-md mt-0.5";
                   badgeLabel = `#${idx + 1} Faded Match`;
                   badgeIcon = <Tag className="w-3 h-3" />;
                 }
               } else {
                 // Default view (no query entered)
                 containerClasses =
-                  "bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-3xl p-4 shadow-sm hover:shadow-md transition-all space-y-3";
+                  "bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-3xl p-4 shadow-sm hover:shadow-md transition-all space-y-3";
                 titleClasses =
-                  "text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] hover:text-[#6B7E6D] dark:hover:text-[#91A493]";
+                  "text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] hover:text-[#D97757] dark:hover:text-[#E8A785]";
                 imageClasses =
                   "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300";
                 badgeClasses =
-                  "inline-flex items-center gap-1 text-[11px] font-bold text-[#6B7E6D] dark:text-[#91A493] bg-[#6B7E6D]/15 px-2 py-0.5 rounded-md mt-0.5";
+                  "inline-flex items-center gap-1 text-[11px] font-bold text-[#D97757] dark:text-[#E8A785] bg-[#D97757]/15 px-2 py-0.5 rounded-md mt-0.5";
               }
 
               return (
@@ -453,7 +453,7 @@ export const FindModal: React.FC<FindModalProps> = ({
                   <div className="flex flex-col sm:flex-row gap-3.5">
                     <div
                       onClick={() => onSelectItem(item)}
-                      className="sm:w-36 h-40 rounded-2xl overflow-hidden bg-[#F2EDE9] dark:bg-[#1E1B18] shrink-0 relative cursor-pointer group"
+                      className="sm:w-36 h-40 rounded-2xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1F1E1C] shrink-0 relative cursor-pointer group"
                     >
                       <img
                         src={item.image_path}
@@ -461,7 +461,7 @@ export const FindModal: React.FC<FindModalProps> = ({
                         className={imageClasses}
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute top-2 right-2 p-1.5 bg-[#2D2A26]/80 text-white rounded-xl backdrop-blur-md">
+                      <div className="absolute top-2 right-2 p-1.5 bg-[#30302E]/80 text-white rounded-xl backdrop-blur-md">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </div>
                     </div>
@@ -482,8 +482,8 @@ export const FindModal: React.FC<FindModalProps> = ({
                         onClick={(e) => togglePin(item, e)}
                         className={`p-2 rounded-xl transition-colors ${
                           item.is_pinned
-                            ? "bg-[#C2847A] text-white"
-                            : "bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#8C847E] hover:text-[#2D2A26]"
+                            ? "bg-[#D97757] text-white"
+                            : "bg-[#EFEEE7] dark:bg-[#33322F] text-[#83827C] hover:text-[#30302E]"
                         }`}
                         title={item.is_pinned ? "Unpin Item" : "Pin Item"}
                       >
@@ -492,26 +492,26 @@ export const FindModal: React.FC<FindModalProps> = ({
                     </div>
 
                     {/* Location Box */}
-                    <div className="p-3 bg-[#F2EDE9] dark:bg-[#2E2A25] rounded-2xl border border-[#E8E4E1] dark:border-[#38332E]">
-                      <p className="text-xs font-semibold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5 text-[#6B7E6D]" />
+                    <div className="p-3 bg-[#EFEEE7] dark:bg-[#33322F] rounded-2xl border border-[#E5E3DA] dark:border-[#3E3D3A]">
+                      <p className="text-xs font-semibold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-[#D97757]" />
                         Last Saved Location:
                       </p>
-                      <p className="text-sm font-bold text-[#2D2A26] dark:text-[#E8E4E1] leading-snug">
+                      <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA] leading-snug">
                         {item.location_name}
                       </p>
                     </div>
 
                     {/* Saved Time */}
-                    <div className="flex flex-col gap-0.5 text-xs text-[#8C847E] dark:text-[#A3B0A5]">
+                    <div className="flex flex-col gap-0.5 text-xs text-[#83827C] dark:text-[#A8A7A2]">
                       <div className="flex items-center gap-1.5 font-medium">
-                        <Clock className="w-3.5 h-3.5 text-[#6B7E6D]" />
+                        <Clock className="w-3.5 h-3.5 text-[#D97757]" />
                         <span>
-                          Recorded Date: <strong className="text-[#2D2A26] dark:text-[#E8E4E1]">{formatFriendlyDateTime(item.created_at)}</strong>
+                          Recorded Date: <strong className="text-[#30302E] dark:text-[#E5E3DA]">{formatFriendlyDateTime(item.created_at)}</strong>
                         </span>
                       </div>
                       {item.updated_at && item.updated_at !== item.created_at && (
-                        <div className="text-[11px] text-[#8C847E] dark:text-[#A3B0A5] pl-5">
+                        <div className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] pl-5">
                           Last Updated: {formatFriendlyDateTime(item.updated_at)}
                         </div>
                       )}
@@ -521,18 +521,18 @@ export const FindModal: React.FC<FindModalProps> = ({
 
                 {/* ITEM HISTORY SECTION */}
                 {item.history && item.history.length > 0 && (
-                  <div className="pt-2 border-t border-[#E8E4E1] dark:border-[#38332E]">
-                    <p className="text-xs font-bold text-[#8C847E] dark:text-[#A3B0A5] uppercase tracking-wider mb-2 flex items-center gap-1">
-                      <History className="w-3.5 h-3.5 text-[#5A7D9A]" />
+                  <div className="pt-2 border-t border-[#E5E3DA] dark:border-[#3E3D3A]">
+                    <p className="text-xs font-bold text-[#83827C] dark:text-[#A8A7A2] uppercase tracking-wider mb-2 flex items-center gap-1">
+                      <History className="w-3.5 h-3.5 text-[#D97757]" />
                       Previous Locations ({item.history.length}):
                     </p>
-                    <div className="space-y-1.5 pl-2 border-l-2 border-[#5A7D9A]">
+                    <div className="space-y-1.5 pl-2 border-l-2 border-[#D97757]">
                       {item.history.map((hist) => (
                         <div key={hist.id} className="text-xs">
-                          <p className="font-semibold text-[#2D2A26] dark:text-[#E8E4E1]">
+                          <p className="font-semibold text-[#30302E] dark:text-[#E5E3DA]">
                             {hist.location_name}
                           </p>
-                          <p className="text-[10px] text-[#8C847E]">
+                          <p className="text-[10px] text-[#83827C]">
                             {formatFriendlyDateTime(hist.saved_at)}
                           </p>
                         </div>
@@ -542,10 +542,10 @@ export const FindModal: React.FC<FindModalProps> = ({
                 )}
 
                 {/* Bottom Action Row */}
-                <div className="flex items-center justify-between pt-2 border-t border-[#E8E4E1] dark:border-[#38332E] text-xs">
+                <div className="flex items-center justify-between pt-2 border-t border-[#E5E3DA] dark:border-[#3E3D3A] text-xs">
                   <button
                     onClick={() => onRememberNewSpot(item)}
-                    className="px-3 py-1.5 bg-[#6B7E6D] hover:bg-[#586A5A] text-white font-bold rounded-xl flex items-center gap-1 shadow-sm"
+                    className="px-3 py-1.5 bg-[#D97757] hover:bg-[#C15F3C] text-white font-bold rounded-xl flex items-center gap-1 shadow-sm"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Update Spot</span>
@@ -554,15 +554,15 @@ export const FindModal: React.FC<FindModalProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => onSelectItem(item)}
-                      className="px-3 py-1.5 bg-[#F2EDE9] dark:bg-[#2E2A25] hover:bg-[#E8E4E1] text-[#4A443F] dark:text-[#E8E4E1] font-semibold rounded-xl flex items-center gap-1"
+                      className="px-3 py-1.5 bg-[#EFEEE7] dark:bg-[#33322F] hover:bg-[#E5E3DA] text-[#44433F] dark:text-[#E5E3DA] font-semibold rounded-xl flex items-center gap-1"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>Edit</span>
                     </button>
 
                     {deletingItemId === item.id ? (
-                      <div className="flex items-center gap-1.5 p-1 bg-[#C2847A]/10 border border-[#C2847A]/30 rounded-xl">
-                        <span className="text-[11px] font-bold text-[#C2847A] px-1">Are you sure?</span>
+                      <div className="flex items-center gap-1.5 p-1 bg-[#D97757]/10 border border-[#D97757]/30 rounded-xl">
+                        <span className="text-[11px] font-bold text-[#D97757] px-1">Are you sure?</span>
                         <button
                           type="button"
                           onClick={() => {
@@ -570,14 +570,14 @@ export const FindModal: React.FC<FindModalProps> = ({
                             setMatchedItems((prev) => prev.filter((m) => m.item.id !== item.id));
                             setDeletingItemId(null);
                           }}
-                          className="px-2 py-1 bg-[#C2847A] hover:bg-[#A86E64] text-white text-[11px] font-bold rounded-lg shadow"
+                          className="px-2 py-1 bg-[#D97757] hover:bg-[#C15F3C] text-white text-[11px] font-bold rounded-lg shadow"
                         >
                           Yes, Delete
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeletingItemId(null)}
-                          className="px-2 py-1 bg-[#F2EDE9] dark:bg-[#2E2A25] text-[#4A443F] dark:text-[#E8E4E1] text-[11px] font-semibold rounded-lg"
+                          className="px-2 py-1 bg-[#EFEEE7] dark:bg-[#33322F] text-[#44433F] dark:text-[#E5E3DA] text-[11px] font-semibold rounded-lg"
                         >
                           Cancel
                         </button>
@@ -585,7 +585,7 @@ export const FindModal: React.FC<FindModalProps> = ({
                     ) : (
                       <button
                         onClick={() => setDeletingItemId(item.id)}
-                        className="p-1.5 text-[#C2847A] hover:bg-[#C2847A]/10 rounded-xl"
+                        className="p-1.5 text-[#D97757] hover:bg-[#D97757]/10 rounded-xl"
                         title="Delete Item"
                       >
                         <Trash2 className="w-4 h-4" />

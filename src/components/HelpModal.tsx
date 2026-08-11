@@ -35,7 +35,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "remember",
       icon: <Camera className="w-4 h-4" />,
-      color: "#6B7E6D",
+      color: "#D97757",
       title: "Remembering an Item",
       body: (
         <>
@@ -52,7 +52,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "find",
       icon: <Search className="w-4 h-4" />,
-      color: "#5A7D9A",
+      color: "#D97757",
       title: "Finding an Item",
       body: (
         <>
@@ -63,7 +63,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "scan",
       icon: <Grid className="w-4 h-4" />,
-      color: "#C2847A",
+      color: "#D97757",
       title: "Scanning a Space",
       body: (
         <>
@@ -74,7 +74,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "locations",
       icon: <MapPin className="w-4 h-4" />,
-      color: "#6B7E6D",
+      color: "#D97757",
       title: "Browsing Locations",
       body: (
         <>
@@ -85,7 +85,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "borrowed",
       icon: <HandHeart className="w-4 h-4" />,
-      color: "#5A7D9A",
+      color: "#D97757",
       title: "Tracking Borrowed Items",
       body: (
         <>
@@ -97,7 +97,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "voice",
       icon: <Mic className="w-4 h-4" />,
-      color: "#C2847A",
+      color: "#D97757",
       title: "Voice Dictation Tips",
       body: (
         <>
@@ -113,7 +113,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "settings",
       icon: <SettingsIcon className="w-4 h-4" />,
-      color: "#8C847E",
+      color: "#83827C",
       title: "Settings & Privacy",
       body: (
         <>
@@ -124,7 +124,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
     {
       id: "troubleshooting",
       icon: <Wrench className="w-4 h-4" />,
-      color: "#C2847A",
+      color: "#D97757",
       title: "Troubleshooting",
       body: (
         <>
@@ -140,26 +140,26 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1A1816]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#23201C] border border-[#E8E4E1] dark:border-[#38332E] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#262624]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-[#2B2A28] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-[32px] max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3.5 border-b border-[#E8E4E1] dark:border-[#38332E] shrink-0">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E3DA] dark:border-[#3E3D3A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#6B7E6D]/10 text-[#6B7E6D] dark:text-[#91A493] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-[#D97757]/10 text-[#D97757] dark:text-[#E8A785] flex items-center justify-center">
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#2D2A26] dark:text-[#E8E4E1] leading-tight">
+              <h2 className="text-lg font-bold text-[#30302E] dark:text-[#E5E3DA] leading-tight">
                 Help & Tips
               </h2>
-              <p className="text-xs text-[#8C847E] dark:text-[#A3B0A5]">
+              <p className="text-xs text-[#83827C] dark:text-[#A8A7A2]">
                 How everything in rembr works
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-[#8C847E] hover:text-[#2D2A26] dark:hover:text-white rounded-xl hover:bg-[#F2EDE9] dark:hover:bg-[#2E2A25] transition-colors"
+            className="p-2 text-[#83827C] hover:text-[#30302E] dark:hover:text-white rounded-xl hover:bg-[#EFEEE7] dark:hover:bg-[#33322F] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -171,7 +171,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
             <button
               type="button"
               onClick={onReplayTour}
-              className="w-full py-3 px-4 bg-[#6B7E6D]/10 hover:bg-[#6B7E6D]/20 text-[#6B7E6D] dark:text-[#91A493] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#6B7E6D]/20 mb-1"
+              className="w-full py-3 px-4 bg-[#D97757]/10 hover:bg-[#D97757]/20 text-[#D97757] dark:text-[#E8A785] font-bold rounded-2xl text-xs flex items-center justify-center gap-2 border border-[#D97757]/20 mb-1"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Replay Welcome Tour</span>
@@ -183,7 +183,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
             return (
               <div
                 key={topic.id}
-                className="bg-[#F2EDE9] dark:bg-[#2E2A25] border border-[#E8E4E1] dark:border-[#38332E] rounded-2xl overflow-hidden"
+                className="bg-[#EFEEE7] dark:bg-[#33322F] border border-[#E5E3DA] dark:border-[#3E3D3A] rounded-2xl overflow-hidden"
               >
                 <button
                   type="button"
@@ -197,18 +197,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
                     >
                       {topic.icon}
                     </div>
-                    <span className="font-bold text-sm text-[#2D2A26] dark:text-[#E8E4E1] truncate">
+                    <span className="font-bold text-sm text-[#30302E] dark:text-[#E5E3DA] truncate">
                       {topic.title}
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#8C847E] shrink-0 transition-transform ${
+                    className={`w-4 h-4 text-[#83827C] shrink-0 transition-transform ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-3.5 pb-3.5 -mt-1 text-xs leading-relaxed text-[#4A443F] dark:text-[#A3B0A5]">
+                  <div className="px-3.5 pb-3.5 -mt-1 text-xs leading-relaxed text-[#44433F] dark:text-[#A8A7A2]">
                     {topic.body}
                   </div>
                 )}
@@ -216,7 +216,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose, onReplayTour }) =
             );
           })}
 
-          <div className="flex items-center justify-center gap-2 text-xs text-[#6B7E6D] dark:text-[#91A493] mt-3 bg-[#6B7E6D]/10 p-2.5 rounded-xl border border-[#6B7E6D]/20">
+          <div className="flex items-center justify-center gap-2 text-xs text-[#D97757] dark:text-[#E8A785] mt-3 bg-[#D97757]/10 p-2.5 rounded-xl border border-[#D97757]/20">
             <ShieldCheck className="w-4 h-4 shrink-0" />
             <span>Everything stays 100% on your device — no cloud account needed.</span>
           </div>
