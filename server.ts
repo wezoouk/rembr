@@ -141,10 +141,11 @@ Also assign a confidence level ("High confidence", "Likely match", or "Possible 
                     bbox: {
                       type: Type.ARRAY,
                       items: { type: Type.NUMBER },
-                      description: "4 numbers [ymin, xmin, ymax, xmax] in percentages 0-100",
+                      description:
+                        "REQUIRED. Exactly 4 numbers [ymin, xmin, ymax, xmax], each a percentage 0-100 of the photo's height/width, marking a tight box around exactly this item. Every detected item MUST include this — never omit it.",
                     },
                   },
-                  required: ["name", "confidence", "tags"],
+                  required: ["name", "confidence", "tags", "bbox"],
                 },
               },
             },

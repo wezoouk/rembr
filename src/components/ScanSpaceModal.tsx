@@ -57,6 +57,32 @@ function isSameDetectedItem(
   return nameMatches || sameSpot;
 }
 
+// Simple fallback spots spread across the photo, used only when the AI
+// response is missing a bbox for a detected item (should be rare now that
+// the server schema requires it, but this keeps the green location ring
+// working even if a response ever comes back incomplete).
+const FALLBACK_BBOX_SPOTS: Array<[number, number, number, number]> = [
+  [15, 15, 40, 40],
+  [15, 55, 40, 85],
+  [55, 15, 80, 40],
+  [55, 55, 80, 85],
+  [30, 30, 55, 55],
+  [35, 60, 60, 90],
+  [10, 35, 30, 65],
+  [65, 30, 90, 65],
+];
+
+function ensureBbox<T extends { bbox?: [number, number, number, number] }>(
+  detected: T[]
+): (T & { bbox: [number, number, number, number] })[] {
+  return detected.map((it, idx) => {
+    if (Array.isArray(it.bbox) && it.bbox.length === 4) {
+      return it as T & { bbox: [number, number, number, number] };
+    }
+    return { ...it, bbox: FALLBACK_BBOX_SPOTS[idx % FALLBACK_BBOX_SPOTS.length] };
+  });
+}
+
 export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
   onClose,
   onSaveSpace,
@@ -194,7 +220,7 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
         setSpaceName(result.spaceNameSuggestion);
       }
       if (result.detectedItems && result.detectedItems.length > 0) {
-        setDetectedItems(result.detectedItems);
+        setDetectedItems(ensureBbox(result.detectedItems));
       } else {
         // Fallback demo detected items
         setDetectedItems([
@@ -235,10 +261,12 @@ export const ScanSpaceModal: React.FC<ScanSpaceModalProps> = ({
     setIsSecondPass(isAutomatic);
     try {
       const result = await analyzeImageWithAI(photo, "space", "image/jpeg", true);
-      const newItems = result.detectedItems || [
-        { name: "Box of Paperclips", confidence: "Likely match", tags: ["office", "stationery"], bbox: [35, 30, 50, 48] },
-        { name: "Spare USB Drive", confidence: "High confidence", tags: ["tech", "storage"], bbox: [60, 40, 75, 55] },
-      ];
+      const newItems = ensureBbox(
+        result.detectedItems || [
+          { name: "Box of Paperclips", confidence: "Likely match", tags: ["office", "stationery"], bbox: [35, 30, 50, 48] },
+          { name: "Spare USB Drive", confidence: "High confidence", tags: ["tech", "storage"], bbox: [60, 40, 75, 55] },
+        ]
+      );
 
       // Filter out items that are really just re-detections of items we
       // already have (fuzzy name match or same spot on the photo).
