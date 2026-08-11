@@ -419,15 +419,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         onClick={onOpenRemember}
         className="group relative w-full text-left rounded-[28px] overflow-hidden shadow-md active:scale-[0.99] transition-all h-44"
       >
-        {heroPhoto ? (
-          <img
-            src={heroPhoto}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#3F4A36] via-[#2E3628] to-[#1E1C19]" />
-        )}
+        <img
+          src={heroPhoto || "/images/remember-placeholder.jpg"}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
 
         <div className="relative h-full p-5 flex flex-col justify-end">
@@ -446,33 +442,53 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className={`grid gap-3 ${!hideBorrowedSection ? "grid-cols-2" : "grid-cols-1"}`}>
         <button
           onClick={onOpenScanSpace}
-          className="text-left p-4 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl hover:shadow-md transition-all active:scale-[0.98] flex flex-col gap-2.5"
+          className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#7CA65B]/15 text-[#5F8A48] dark:text-[#A8C98B] flex items-center justify-center">
-            <Grid className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA]">Scan a space</h3>
-            <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] mt-0.5">Catalog a drawer, shelf or room</p>
+          {/* Placeholder background — drop a real photo in public/images/
+              named scan-space-placeholder.jpg to replace this. */}
+          <img
+            src="/images/scan-space-placeholder.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
+          <div className="relative h-full p-3.5 flex flex-col justify-between">
+            <div className="w-8 h-8 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
+              <Grid className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white">Scan a space</h3>
+              <p className="text-[11px] text-white/75 mt-0.5">Catalog a drawer, shelf or room</p>
+            </div>
           </div>
         </button>
 
         {!hideBorrowedSection && (
           <button
             onClick={onOpenBorrowed}
-            className="text-left p-4 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl hover:shadow-md transition-all active:scale-[0.98] flex flex-col gap-2.5 relative"
+            className="group relative text-left rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] h-36"
           >
+            {/* Placeholder background — drop a real photo in public/images/
+                named lend-item-placeholder.jpg to replace this. */}
+            <img
+              src="/images/lend-item-placeholder.jpg"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
             {overdueBorrowed.length > 0 && (
-              <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#B0473A] text-white text-[10px] font-bold flex items-center justify-center">
+              <span className="absolute top-3 right-3 z-10 w-5 h-5 rounded-full bg-[#B0473A] text-white text-[10px] font-bold flex items-center justify-center">
                 {overdueBorrowed.length}
               </span>
             )}
-            <div className="w-10 h-10 rounded-2xl bg-[#5B84C4]/15 text-[#4A70AC] dark:text-[#8FADDE] flex items-center justify-center">
-              <HandHeart className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA]">Lend an item</h3>
-              <p className="text-[11px] text-[#83827C] dark:text-[#A8A7A2] mt-0.5">Keep track of things you've lent out</p>
+            <div className="relative h-full p-3.5 flex flex-col justify-between">
+              <div className="w-8 h-8 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center">
+                <HandHeart className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">Lend an item</h3>
+                <p className="text-[11px] text-white/75 mt-0.5">Keep track of things you've lent out</p>
+              </div>
             </div>
           </button>
         )}
@@ -635,18 +651,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 className="group shrink-0 w-40 cursor-pointer snap-start"
               >
                 <div className="aspect-square rounded-3xl overflow-hidden bg-[#EFEEE7] dark:bg-[#1E1C19] relative">
-                  {group.items[0]?.image_path ? (
-                    <img
-                      src={group.items[0].image_path}
-                      alt={group.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[#7CA65B]">
-                      <MapPin className="w-7 h-7" />
-                    </div>
-                  )}
+                  {/* Falls back to a placeholder photo (public/images/
+                      location-placeholder.jpg) until this location has a
+                      saved item photo of its own. */}
+                  <img
+                    src={group.items[0]?.image_path || "/images/location-placeholder.jpg"}
+                    alt={group.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    referrerPolicy="no-referrer"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                   <div className="absolute bottom-2.5 left-2.5 right-2.5">
                     <p className="text-white text-sm font-bold truncate drop-shadow">{group.name}</p>
