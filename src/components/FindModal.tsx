@@ -17,16 +17,26 @@ import {
   Tag,
   ChevronRight,
   ExternalLink,
+  HandHeart,
 } from "lucide-react";
-import { Item, ConfidenceLevel } from "../types";
+import { Item, ConfidenceLevel, BorrowedItem } from "../types";
 import { searchItemsWithAI } from "../lib/api";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { formatFriendlyDateTime, formatRelativeTime } from "../lib/imageUtils";
 import { DictationIndicator } from "./DictationIndicator";
 import { ItemLocationRing } from "./ItemLocationRing";
 
+// Blue family only — blue is reserved for the Borrowed/Loaned feature.
+const AVATAR_COLORS = ["#5B84C4", "#4A70AC", "#7B95C9", "#3E5F94"];
+function avatarColorFor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
 interface FindModalProps {
   items: Item[];
+  borrowedItems?: BorrowedItem[];
   initialQuery?: string;
   onClose: () => void;
   onSelectItem: (item: Item) => void;
@@ -34,10 +44,12 @@ interface FindModalProps {
   onDeleteItem: (id: string) => void;
   onRememberNewSpot: (item: Item) => void;
   onOpenRemember?: () => void;
+  onOpenBorrowed?: () => void;
 }
 
 export const FindModal: React.FC<FindModalProps> = ({
   items,
+  borrowedItems = [],
   initialQuery = "",
   onClose,
   onSelectItem,
@@ -45,6 +57,7 @@ export const FindModal: React.FC<FindModalProps> = ({
   onDeleteItem,
   onRememberNewSpot,
   onOpenRemember,
+  onOpenBorrowed,
 }) => {
   const [query, setQuery] = useState(initialQuery);
   const [isSearching, setIsSearching] = useState(false);
@@ -61,8 +74,26 @@ export const FindModal: React.FC<FindModalProps> = ({
     }>
   >([]);
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
+  const [matchedBorrowed, setMatchedBorrowed] = useState<BorrowedItem[]>([]);
 
   const voiceListenerRef = useRef<VoiceListener | null>(null);
+
+  const searchBorrowed = (searchQuery: string) => {
+    const q = searchQuery.toLowerCase().trim();
+    const activeBorrowed = borrowedItems.filter((b) => !b.is_returned);
+    if (!q) {
+      setMatchedBorrowed(activeBorrowed.slice(0, 5));
+      return;
+    }
+    const tokens = q.split(/\s+/).filter(Boolean);
+    const matches = activeBorrowed.filter((b) => {
+      const name = (b.item_name || "").toLowerCase();
+      const person = (b.borrowed_to || "").toLowerCase();
+      const full = `${name} ${person}`;
+      return tokens.every((t) => full.includes(t));
+    });
+    setMatchedBorrowed(matches);
+  };
 
   useEffect(() => {
     if (isSpeechRecognitionSupported()) {
@@ -93,11 +124,13 @@ export const FindModal: React.FC<FindModalProps> = ({
           matchTypeLabel: "Saved Item",
         }))
       );
+      searchBorrowed(initialQuery);
     }
   }, [initialQuery]);
 
   const performSearch = async (searchQuery: string) => {
     const q = searchQuery.toLowerCase().trim();
+    searchBorrowed(searchQuery);
     if (!q) {
       setMatchedItems(
         items.slice(0, 8).map((it) => ({
@@ -361,7 +394,7 @@ export const FindModal: React.FC<FindModalProps> = ({
 
         {/* RESULTS LIST */}
         <div className="overflow-y-auto space-y-4 pr-1 flex-1">
-          {items.length === 0 ? (
+          {items.length === 0 && borrowedItems.length === 0 ? (
             /* Nothing saved in the whole app yet — this is not a failed
                search, so don't say "no matching item found". */
             <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
@@ -382,17 +415,64 @@ export const FindModal: React.FC<FindModalProps> = ({
                 </button>
               )}
             </div>
-          ) : matchedItems.length === 0 ? (
-            <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
-              <Search className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
-              <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
-                No matching item found for "{query}"
-              </p>
-              <p className="text-xs text-[#83827C] mt-1">
-                Try searching with different keywords or voice.
-              </p>
-            </div>
           ) : (
+            <>
+              {/* LOANED OUT MATCHES */}
+              {matchedBorrowed.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-xs uppercase tracking-widest font-bold text-[#4A70AC] dark:text-[#8FADDE] flex items-center gap-1.5">
+                    <HandHeart className="w-3.5 h-3.5" />
+                    Loaned Out
+                  </h3>
+                  <div className="space-y-2">
+                    {matchedBorrowed.map((b) => (
+                      <button
+                        type="button"
+                        key={b.id}
+                        onClick={() => onOpenBorrowed && onOpenBorrowed()}
+                        className="w-full flex items-center gap-3 p-3 bg-[#5B84C4]/10 hover:bg-[#5B84C4]/18 rounded-2xl text-left transition-colors"
+                      >
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
+                          style={{ backgroundColor: avatarColorFor(b.borrowed_to) }}
+                        >
+                          {b.borrowed_to.trim().charAt(0).toUpperCase() || "?"}
+                        </div>
+                        {b.image_path ? (
+                          <img src={b.image_path} alt={b.item_name} className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                        ) : (
+                          <div className="w-9 h-9 rounded-xl bg-[#5B84C4]/15 text-[#4A70AC] dark:text-[#8FADDE] flex items-center justify-center shrink-0">
+                            <HandHeart className="w-4 h-4" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA] truncate">
+                            {b.borrowed_to} has your {b.item_name}
+                          </p>
+                          <p className="text-[11px] text-[#4A70AC] dark:text-[#8FADDE] font-semibold">
+                            Loaned out · Borrowed {formatRelativeTime(b.date_borrowed)}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-[#4A70AC] dark:text-[#8FADDE] shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {matchedItems.length === 0 ? (
+                items.length === 0 ? null : (
+                  <div className="text-center py-12 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-3xl border border-dashed border-[#E5E3DA] dark:border-[#3E3D3A] p-6">
+                    <Search className="w-10 h-10 text-[#83827C] mx-auto mb-2" />
+                    <p className="text-sm font-bold text-[#30302E] dark:text-[#E5E3DA]">
+                      No matching item found for "{query}"
+                    </p>
+                    <p className="text-xs text-[#83827C] mt-1">
+                      Try searching with different keywords or voice.
+                    </p>
+                  </div>
+                )
+              ) : (
             matchedItems.map(({ item, confidence, reasoning, isPrimaryMatch, matchTypeLabel, score }, idx) => {
               const isSearchingQuery = Boolean(query.trim());
 
@@ -621,6 +701,8 @@ export const FindModal: React.FC<FindModalProps> = ({
               </div>
             );
           })
+              )}
+            </>
           )}
         </div>
       </div>

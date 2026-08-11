@@ -106,6 +106,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       .map((x) => x.item);
   }, [quickQuery, items]);
 
+  const quickBorrowedResults = useMemo(() => {
+    const q = quickQuery.trim().toLowerCase();
+    if (!q) return [];
+    const tokens = q.split(/\s+/).filter(Boolean);
+    return borrowedItems
+      .filter((b) => !b.is_returned)
+      .filter((b) => {
+        const name = (b.item_name || "").toLowerCase();
+        const person = (b.borrowed_to || "").toLowerCase();
+        const full = `${name} ${person}`;
+        return tokens.every((t) => full.includes(t));
+      })
+      .slice(0, 3);
+  }, [quickQuery, borrowedItems]);
+
   // Group unique locations
   const locationMap = new Map<string, { name: string; items: Item[] }>();
   items.forEach((item) => {
@@ -334,6 +349,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* LIVE QUICK RESULTS — appears as soon as you start typing */}
           {searchFocused && quickQuery.trim() && (
             <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 bg-white dark:bg-[#211F1B] border-2 border-[#7CA65B] rounded-2xl shadow-lg overflow-hidden">
+              {quickBorrowedResults.length > 0 && (
+                <div className="border-b border-[#E5E3DA] dark:border-[#3E3D3A]">
+                  {quickBorrowedResults.map((b) => (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        onOpenBorrowed();
+                        setQuickQuery("");
+                      }}
+                      className="w-full flex items-center gap-3 p-2.5 bg-[#5B84C4]/8 hover:bg-[#5B84C4]/15 transition-colors text-left"
+                    >
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-xs shrink-0"
+                        style={{ backgroundColor: avatarColorFor(b.borrowed_to) }}
+                      >
+                        {b.borrowed_to.trim().charAt(0).toUpperCase() || "?"}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-[#30302E] dark:text-[#F2F0EA] truncate">{b.item_name}</p>
+                        <p className="text-xs text-[#4A70AC] dark:text-[#8FADDE] truncate font-semibold">
+                          Loaned to {b.borrowed_to}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
               {quickResults.length > 0 ? (
                 <>
                   {quickResults.map((item) => (

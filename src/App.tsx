@@ -340,6 +340,7 @@ export default function App() {
       {showFindModal && (
         <FindModal
           items={items}
+          borrowedItems={borrowedItems}
           initialQuery={findInitialQuery}
           onClose={() => setShowFindModal(false)}
           onSelectItem={(item) => {
@@ -353,6 +354,10 @@ export default function App() {
             setShowFindModal(false);
             setRememberInitialLocation("");
             setShowRememberModal(true);
+          }}
+          onOpenBorrowed={() => {
+            setShowFindModal(false);
+            setShowBorrowedModal(true);
           }}
         />
       )}
