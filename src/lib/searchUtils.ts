@@ -7,22 +7,22 @@
 // used for matching, while the raw query is still shown to the user as-is.
 
 const FILLER_PREFIX_REGEX =
-    /^(where\s+(is|are|was|were)|where\s+did\s+i\s+(put|leave|place|store)|where'?s|find|show\s+me|do\s+i\s+have|have\s+i\s+got|has\s+anyone\s+seen|have\s+you\s+seen|i\s+(can'?t\s+find|lost|need)|looking\s+for)\s+/i;
+  /^(where\s+(is|are|was|were)|where\s+did\s+i\s+(put|leave|place|store)|where'?s|find|show\s+me|do\s+i\s+have|have\s+i\s+got|has\s+anyone\s+seen|have\s+you\s+seen|i\s+(can'?t\s+find|lost|need)|looking\s+for)\s+/i;
 
 const POSSESSIVE_PREFIX_REGEX = /^(my|the|our|your|his|her|their|a|an)\s+/i;
 
 export function cleanSearchQuery(raw: string): string {
-    const original = raw.trim();
-    let q = original;
-    if (!q) return q;
+  const original = raw.trim();
+  let q = original;
+  if (!q) return q;
 
   // Iteratively strip stacked filler + possessive prefixes, since natural
   // speech often stacks them: "where is my keys" -> "my keys" -> "keys".
   for (let i = 0; i < 4; i++) {
-        const before = q;
-        q = q.replace(FILLER_PREFIX_REGEX, "").trim();
-        q = q.replace(POSSESSIVE_PREFIX_REGEX, "").trim();
-        if (q === before) break;
+    const before = q;
+    q = q.replace(FILLER_PREFIX_REGEX, "").trim();
+    q = q.replace(POSSESSIVE_PREFIX_REGEX, "").trim();
+    if (q === before) break;
   }
 
   q = q.replace(/[?!.]+$/g, "").trim();

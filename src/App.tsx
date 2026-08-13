@@ -257,6 +257,7 @@ export default function App() {
           blurLocationRecentlySaved={settings.blurLocationRecentlySaved}
           hideLocationsSection={settings.hideLocationsSection}
           hideBorrowedSection={settings.hideBorrowedSection}
+          useRecentPhotoOnRememberCard={settings.useRecentPhotoOnRememberCard}
           onOpenRemember={() => {
             setRememberInitialLocation("");
             setShowRememberModal(true);

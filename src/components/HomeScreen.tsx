@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Item, Space, BorrowedItem } from "../types";
 import { formatRelativeTime, formatShortDateTime } from "../lib/imageUtils";
+import { cleanSearchQuery } from "../lib/searchUtils";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { DictationIndicator } from "./DictationIndicator";
 import { ItemLocationRing } from "./ItemLocationRing";
@@ -31,6 +32,7 @@ interface HomeScreenProps {
   blurLocationRecentlySaved?: boolean;
   hideLocationsSection?: boolean;
   hideBorrowedSection?: boolean;
+  useRecentPhotoOnRememberCard?: boolean;
   onOpenRemember: () => void;
   onOpenFind: (initialQuery?: string) => void;
   onOpenScanSpace: () => void;
@@ -68,6 +70,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   blurLocationRecentlySaved = false,
   hideLocationsSection = false,
   hideBorrowedSection = false,
+  useRecentPhotoOnRememberCard = false,
   onOpenRemember,
   onOpenFind,
   onOpenScanSpace,
@@ -86,7 +89,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [searchFocused, setSearchFocused] = useState(false);
 
   const quickResults = useMemo(() => {
-    const q = quickQuery.trim().toLowerCase();
+    const q = cleanSearchQuery(quickQuery.trim()).toLowerCase();
     if (!q) return [];
     const tokens = q.split(/\s+/).filter(Boolean);
     return items
@@ -107,7 +110,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   }, [quickQuery, items]);
 
   const quickBorrowedResults = useMemo(() => {
-    const q = quickQuery.trim().toLowerCase();
+    const q = cleanSearchQuery(quickQuery.trim()).toLowerCase();
     if (!q) return [];
     const tokens = q.split(/\s+/).filter(Boolean);
     return borrowedItems
@@ -173,6 +176,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       voiceListenerRef.current.stop();
       setIsListening(false);
     } else {
+      // Keep the live quick-results dropdown open for the whole dictation —
+      // otherwise it only appears once the user manually taps back into the
+      // text field, making it look like nothing happened while speaking.
+      setSearchFocused(true);
       setIsListening(true);
       await voiceListenerRef.current.start();
     }
@@ -180,7 +187,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   const pinnedItems = items.filter((item) => item.is_pinned);
   const recentItems = items.filter((item) => !item.is_pinned).slice(0, 12);
-  const heroPhoto = items[0]?.image_path;
+  // Only swap the Remember card's background to the most recent item's photo
+  // when the user has opted into it in Settings — otherwise keep showing the
+  // original placeholder photo, and only ever replace it with a real image
+  // (never an empty/broken path).
+  const heroPhoto = useRecentPhotoOnRememberCard && items[0]?.image_path ? items[0].image_path : undefined;
 
   const handleQuickSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -325,6 +336,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div className="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={toggleVoiceInput}
                 className={`p-2.5 rounded-full transition-all select-none active:scale-95 cursor-pointer ${
                   isListening

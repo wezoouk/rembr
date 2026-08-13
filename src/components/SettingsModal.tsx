@@ -15,6 +15,7 @@ import {
   HandHeart,
   HelpCircle,
   ScanLine,
+  Image as ImageIcon,
 } from "lucide-react";
 import { AppSettings } from "../types";
 
@@ -87,6 +88,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onUpdateSettings({
       ...settings,
       autoSecondScanPass: !settings.autoSecondScanPass,
+    });
+  };
+
+  const toggleUseRecentPhotoOnRememberCard = () => {
+    onUpdateSettings({
+      ...settings,
+      useRecentPhotoOnRememberCard: !settings.useRecentPhotoOnRememberCard,
     });
   };
 
@@ -332,6 +340,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
                   settings.autoSecondScanPass ? "translate-x-6" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* USE RECENT PHOTO ON REMEMBER CARD TOGGLE */}
+          <div className="flex items-center justify-between p-3 bg-[#EFEEE7] dark:bg-[#1E1C19] rounded-2xl ">
+            <div className="flex items-center gap-2.5">
+              <ImageIcon className="w-5 h-5 text-[#83827C] dark:text-[#A8A7A2]" />
+              <div>
+                <span className="font-semibold text-[#30302E] dark:text-[#E5E3DA] block">
+                  Use Recent Photo on Remember Card
+                </span>
+                <span className="text-[11px] text-[#83827C] dark:text-[#A8A7A2]">
+                  If off, keeps the original background photo instead of swapping in your most recently saved item's photo
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={toggleUseRecentPhotoOnRememberCard}
+              className={`w-12 h-6 rounded-full transition-colors relative p-1 shrink-0 ${
+                settings.useRecentPhotoOnRememberCard ? "bg-[#7CA65B]" : "bg-[#E5E3DA]"
+              }`}
+            >
+              <div
+                className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                  settings.useRecentPhotoOnRememberCard ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>

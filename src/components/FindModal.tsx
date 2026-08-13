@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Item, ConfidenceLevel, BorrowedItem } from "../types";
 import { searchItemsWithAI } from "../lib/api";
+import { cleanSearchQuery } from "../lib/searchUtils";
 import { VoiceListener, isSpeechRecognitionSupported } from "../lib/speech";
 import { formatFriendlyDateTime, formatRelativeTime } from "../lib/imageUtils";
 import { DictationIndicator } from "./DictationIndicator";
@@ -79,7 +80,7 @@ export const FindModal: React.FC<FindModalProps> = ({
   const voiceListenerRef = useRef<VoiceListener | null>(null);
 
   const searchBorrowed = (searchQuery: string) => {
-    const q = searchQuery.toLowerCase().trim();
+    const q = cleanSearchQuery(searchQuery.trim()).toLowerCase();
     const activeBorrowed = borrowedItems.filter((b) => !b.is_returned);
     if (!q) {
       setMatchedBorrowed(activeBorrowed.slice(0, 5));
@@ -129,7 +130,7 @@ export const FindModal: React.FC<FindModalProps> = ({
   }, [initialQuery]);
 
   const performSearch = async (searchQuery: string) => {
-    const q = searchQuery.toLowerCase().trim();
+    const q = cleanSearchQuery(searchQuery.trim()).toLowerCase();
     searchBorrowed(searchQuery);
     if (!q) {
       setMatchedItems(

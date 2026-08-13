@@ -55,6 +55,7 @@ export interface AppSettings {
   hideLocationsSection?: boolean;
   hideBorrowedSection?: boolean;
   autoSecondScanPass?: boolean;
+  useRecentPhotoOnRememberCard?: boolean;
 }
 
 // How long after the borrow date to send the first reminder. "none" = no reminder.
