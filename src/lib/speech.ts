@@ -259,6 +259,19 @@ export class VoiceListener {
       this.stop();
     }
 
+    await this.attemptStart(0);
+  }
+
+  // Starting a second dictation right after the first one just finished can
+  // hit the browser's speech engine before it has fully released the prior
+  // session (very common on Chrome/mobile) - recognition.start() throws
+  // InvalidStateError even though nothing is actually listening yet.
+  // Previously we treated that error as "must already be listening" and
+  // gave up, which left the UI stuck showing "Listening..." with no real
+  // session underneath - the exact "can't dictate twice in a row" bug.
+  // Instead, retry with a brand-new recognition instance after a short
+  // delay, since the engine just needs a moment to become available again.
+  private async attemptStart(retryCount: number) {
     // Always build a fresh recognition instance for this session (see
     // createRecognition() for why re-using one across sessions breaks).
     this.recognition = this.createRecognition();
@@ -285,15 +298,24 @@ export class VoiceListener {
       playAudioChime("start");
     } catch (e: any) {
       console.warn("Failed to start speech recognition:", e);
-      if (e?.name === "InvalidStateError" || e?.message?.includes("already started")) {
-        this.isListening = true;
+      const isBusyError = e?.name === "InvalidStateError" || e?.message?.includes("already started");
+
+      if (isBusyError && retryCount < 3) {
+        this.cleanupAudioAnalyzer();
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        await this.attemptStart(retryCount + 1);
         return;
       }
+
       this.isListening = false;
       this.cleanupAudioAnalyzer();
       this.clearSilenceTimer();
       if (this.onError) {
-        this.onError("Failed to start voice recognition.");
+        this.onError(
+          isBusyError
+            ? "Voice recognition is still finishing up - please try again in a moment."
+            : "Failed to start voice recognition."
+        );
       }
     }
   }
